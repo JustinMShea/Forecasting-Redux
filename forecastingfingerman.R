@@ -62,5 +62,6 @@ plot_62 +  geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed", s
 period_3_example <- table_62_series[6:8,]
 smooth <- round(mean(table_62_series[6:8,2]), digits = 2)
 period_3_example$Smoothing <- c("...",smooth,"...")
+colnames(period_3_example) <- c("Period", "Actual", "Smoothing")
 
 

@@ -166,19 +166,19 @@ $Y_{T+\ell}$ is the future observation of $Y$, $\ell$ period ahead, and unkown a
 $\hat{Y_T}{\ell}$ is the forecast of the future observation, $\ell$ periods ahead, made at time $T$.
 
 
-## Stage 1 Continued: The Theory of Collecting & Analyzing Data
+# Stage 1 Continued: The Theory of Collecting & Analyzing Data
 
    We devote most of this chapter to Stage 1 of the Forecasting Process. With time
 series we recommend considerable investigation and analysis, to really understand the time
 series data, to really understand what the data are “telling us" before attempting to develop forecasting models. Consequently we shall begin this time series analysis with some easy, straightforward methods of analysis.
 
-**Smothing Out Time Series Data**
+## Smothing Out Time Series Data
 
    Almost all time series data are rough, having a stochastic element to the series. We
 shall discuss methods of "smoothing out" the data so that we may observe an underlying
 structure or pattern. The first, and simplest, method of smoothing time series data is through averaging.
 
-**Smoothing Out the Data by Averaging**
+## Smoothing Out the Data by Averaging
 
    If we believe there exists some underlying trend or pattern in the time series data,
 then by “smoothing the data" we smooth out (or average out) the random variations to reveal
@@ -189,7 +189,7 @@ the underlying pattern in the series.
 
    We begin with a time series of 30 observations, $T = 30$, which has a constant
 mean, or a slowly changing mean, over time, we call this "horizontal data". 
-As in Table 6.2 and Figure 6-3.
+As in Table 6.2 and Figure 6.3.
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  # Import data from table 6.2 text file
@@ -199,7 +199,7 @@ table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
 colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
 
 library(knitr)
-kable(table_62, caption = "Horizontal Data")
+kable(table_62, caption = "Horizontal Data: Table 6.2")
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -215,12 +215,12 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
 library(ggplot2)
 plot_62 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
         geom_line(size = 1) +
-        ggtitle("Table 6.2: Horizonal Data")
+        ggtitle("Figure 6.3: Horizonal Data")
 
 plot_62
 ```
 
-Becuase the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$^[ Smoothing using the sample mean
+Becuase the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$^[Smoothing using the sample mean
 $$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$]
 
 
@@ -235,36 +235,34 @@ ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
 ```
 
 
-## Moving Average Smoothings
+# Moving Average Smoothings
 
    The simple average discussed above is a smoothing method over all observations.
 A _moving average_ is the technique of creating successive new averages by dropping the
 "oldest" observation and adding the most recent observation to calculate the new average.
 
-
-
-*3-period Centered Moving Average Smoothing for period $t$*
-```{marginfigure}
-$$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$
-```
-We shall use the data from Table 6.2 to illustrate this method. For example, for period 7, a 3-period Centered (at period 7) Moving Average is:
-
-$$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$$
-
-Specifically,
-
-$$CMA_{7}(3) = \frac{364+367+375{3} = `r round(mean(table_62_series[6:8,2]`$$
-
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Smoothing moving average, pg 8.
 period_3_example <- table_62_series[6:8,]
-smooth <- round(mean(period_3_example[,2]), digits = 2)
+smooth <- round(mean(table_62_series[6:8,2]), digits = 2)
 period_3_example$Smoothing <- c("...",smooth,"...")
-
-
-kable(period_3_example)
+colnames(period_3_example) <- c("Period", "Actual", "Smoothing")
 ```
 
+## 3-period Centered Moving Average Smoothing for period $t$
+
+To begin with an example, examine the notation in the margin^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$]. Next, we shall use the data from Table 6.2 to illustrate this method. For example, a 3-period Centered Moving Average (at period 7) is:
+
+$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$
+
+
+$CMA_{7}(3) = \frac{364+367+375}{3} = `r smooth`$
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.margin = TRUE}
+kable(period_3_example, align = "l", row.names=FALSE, caption="Horizontal Data Table 6.2 subset: Centered Smoothing Average")
+```
+
+   This smoothing method is called a 3-period centered moving average because the computed value is placed at the center, or middle, of the 3 periods being used in the calculations.
 
 The Tufte handout style is a style that Edward Tufte uses in his books and handouts. Tufte's style is known for its extensive use of sidenotes, tight integration of graphics with text, and well-set typography. This style has been implemented in LaTeX and HTML/CSS^[See Github repositories [tufte-latex](https://github.com/tufte-latex/tufte-latex) and [tufte-css](https://github.com/edwardtufte/tufte-css)], respectively. We have ported both implementations into the [**tufte** package](https://github.com/rstudio/tufte). If you want LaTeX/PDF output, you may use the `tufte_handout` format for handouts, and `tufte_book` for books. For HTML output, use `tufte_html`. These formats can be either specified in the YAML metadata at the beginning of an R Markdown document (see an example below), or passed to the `rmarkdown::render()` function. See @R-rmarkdown more information about **rmarkdown**.
 
