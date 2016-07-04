@@ -1,7 +1,7 @@
 ---
 title: "Chapter 6"
 subtitle: "Introduction to Time Series"
-author: "Joel Fingerman and Justin Shea"
+author: "Dr. Joel Fingerman"
 date: "`r Sys.Date()`"
 output:
   tufte::tufte_html: default
@@ -32,10 +32,9 @@ to find a discernible pattern. Using this pattern, we forecast forward the futur
 
 # Stage 1 Collection and Analysis of Times Series Data
 
-```{marginfigure}
-The future lies ahead. 
-~Mort Sahl
-```
+> "The future lies ahead."
+>
+> `r tufte::quote_footer('--- Mort Sahl')`
 
    A time series of data is data collected sequentially over equal periods of time. There are many forms of time series: time series can be collected as daily data (such as daily stock market data), weekly (such as weekly receipts data), monthly (such as monthly sales data), quarterly (such as quarterly revenue data), or yearly (such as annual profits data).
 
@@ -74,13 +73,197 @@ colnames(table_61_series) <- c("Period", "Sales Volume")
  #Creat chjart
 library(ggplot2)
 ggplot(data = table_61_series, aes(y = `Sales Volume`, x = Period)) +
-        geom_line() + 
+        geom_line(size = 1) + 
         ggtitle("Table 6.1: Sales Volume")
 
 ```
 
 \newpage
 
+## Tips on Graphing Times Series Data: The Practice
+
+   Good graphical presentations of time series data and forecasts can be very useful
+and very powerful in the presentation of ideas. A good layout for a time series graph is
+always helpful in the data analysis, model fitting, and forecasting.
+
+   Notice in our graph, that we allowed for additional space to the right of the last
+observation of our data series. We have 48 observations but allowed for 54 observations.
+Notice too that because the time series graph reveals an upward direction of the data series
+we also allowed for additional space above the last observation. The value of the last
+observation is 677.4 but allowed for values up to 800. In other words we have provided for
+plenty of "white space" for our graph.
+
+   Along the horizontal or time period axis we created horizontal reference lines at
+every six periods. It would be too dense to create horizontal reference lines at every of 54
+periods. And it would be too sparse to form lines at every 12th period. These are monthly
+data so every 6 periods denotes a half year. Period 6 is a June, Period 12 is a December,
+Period 18 is June again, and so on.
+
+   Along the vertical or Sales Volume axis we set vertical reference lines at every 100
+units. Units of 100 allow for sufficient spacing so the graph does not become crowded, and
+yet detailed enough so that we can estimate values with reasonable accuracy.
+
+   In summary, when producing time series graph, try to make the graphs uncluttered
+without sacrificing accuracy or information.
+
+
+## Time Series Data: Time Series Notation
+
+
+
+```{marginfigure}
+In our example data series,
+
+
+ $Y_1 = 95.5$
+ 
+ $Y_2 = 127.0$
+ 
+ $Y_3 = 118.0$
+ 
+ $\vdots$
+ 
+ $Y_{48} = 677.4$
+```
+
+When discussing observations in our data set we think of the data in the form
+
+$Y_1, Y_2, Y_3, ..., Y_T$
+     
+        
+$Y_1$ is the first observation, $Y_2$ is the second observation, and so on. is the oldest observation
+down through $Y_T$ which is the most recent observation.
+
+
+
+```{marginfigure}
+Past or historical observations
+
+$\dotso$, $Y_{T-1}$, $Y_{T-2}$, $Y_{T-3}$
+
+Most recent observation
+
+$Y_T$
+
+Future observation
+
+$Y_{T+1}$, $Y_{T+2}$, $Y_{T+3}$, $\dotso$
+```
+
+The uppercase letter $T$ of $Y_T$ will always mean the most recent observation in our time series. $Y_{T+1}$ means then an observation one period into the future. Thus, $Y_{T+1}$, $Y_{T+2}$, $Y_{T+3}$, denote future
+observations one, two, and three periods beyond the present time $Y_T$. Similarly, $Y_{T-1}$ denotes an
+observation one period in the past, so that $Y_{T-1}$, $Y_{T-2}$, $Y_{T-3}$, denote observations one, two, and three periods in the past.
+
+We can generalize this notation to:
+
+$Y_{T+\ell}$: A future observation of $\ell$ periods ahead
+$Y_{T-\ell}$: A historical observation of $\ell$ periods back
+
+   As we distinguish between $Y_i$ and $\hat{Y_i}$ in regression models, we shall destinguish between $Y_{T+\ell}$ and $\hat{Y_T}{\ell}$ in time series models.
+   
+$Y_{T+\ell}$ is the future observation of $Y$, $\ell$ period ahead, and unkown at time $T$.
+
+$\hat{Y_T}{\ell}$ is the forecast of the future observation, $\ell$ periods ahead, made at time $T$.
+
+
+## Stage 1 Continued: The Theory of Collecting & Analyzing Data
+
+   We devote most of this chapter to Stage 1 of the Forecasting Process. With time
+series we recommend considerable investigation and analysis, to really understand the time
+series data, to really understand what the data are “telling us" before attempting to develop forecasting models. Consequently we shall begin this time series analysis with some easy, straightforward methods of analysis.
+
+**Smothing Out Time Series Data**
+
+   Almost all time series data are rough, having a stochastic element to the series. We
+shall discuss methods of "smoothing out" the data so that we may observe an underlying
+structure or pattern. The first, and simplest, method of smoothing time series data is through averaging.
+
+**Smoothing Out the Data by Averaging**
+
+   If we believe there exists some underlying trend or pattern in the time series data,
+then by “smoothing the data" we smooth out (or average out) the random variations to reveal
+the underlying pattern in the series.
+
+
+## The Practice: Simple Average Smoothing
+
+   We begin with a time series of 30 observations, $T = 30$, which has a constant
+mean, or a slowly changing mean, over time, we call this "horizontal data". 
+As in Table 6.2 and Figure 6-3.
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+ # Import data from table 6.2 text file
+Table_62_path <- path.expand("~/R/forecasting/Table 6.2.txt")
+table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
+ # add column names
+colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
+
+library(knitr)
+kable(table_62, caption = "Horizontal Data")
+```
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+## Page 3, create plot
+# First, gather the time series data table into one column.
+library(tidyr)
+table_62_series <- gather(table_62[,c(2,4)])
+table_62_series$key<- as.numeric(rownames(table_62_series))
+colnames(table_62_series) <- c("Period", "Horizontal Data")
+
+ #Creat chart
+#Creat chart
+library(ggplot2)
+plot_62 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
+        geom_line(size = 1) +
+        ggtitle("Table 6.2: Horizonal Data")
+
+plot_62
+```
+
+Becuase the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$^[ Smoothing using the sample mean
+$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$]
+
+
+In this example, the sample mean of $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$.
+
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
+        geom_line(size = 1) +
+        ggtitle("Horizonal Data with Plotted Mean") +
+        geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed", size = 1.3)
+```
+
+
+## Moving Average Smoothings
+
+   The simple average discussed above is a smoothing method over all observations.
+A _moving average_ is the technique of creating successive new averages by dropping the
+"oldest" observation and adding the most recent observation to calculate the new average.
+
+
+
+*3-period Centered Moving Average Smoothing for period $t$*
+```{marginfigure}
+$$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$
+```
+We shall use the data from Table 6.2 to illustrate this method. For example, for period 7, a 3-period Centered (at period 7) Moving Average is:
+
+$$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$$
+
+Specifically,
+
+$$CMA_{7}(3) = \frac{364+367+375{3} = `r round(mean(table_62_series[6:8,2]`$$
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+## Smoothing moving average, pg 8.
+period_3_example <- table_62_series[6:8,]
+smooth <- round(mean(period_3_example[,2]), digits = 2)
+period_3_example$Smoothing <- c("...",smooth,"...")
+
+
+kable(period_3_example)
+```
 
 
 The Tufte handout style is a style that Edward Tufte uses in his books and handouts. Tufte's style is known for its extensive use of sidenotes, tight integration of graphics with text, and well-set typography. This style has been implemented in LaTeX and HTML/CSS^[See Github repositories [tufte-latex](https://github.com/tufte-latex/tufte-latex) and [tufte-css](https://github.com/edwardtufte/tufte-css)], respectively. We have ported both implementations into the [**tufte** package](https://github.com/rstudio/tufte). If you want LaTeX/PDF output, you may use the `tufte_handout` format for handouts, and `tufte_book` for books. For HTML output, use `tufte_html`. These formats can be either specified in the YAML metadata at the beginning of an R Markdown document (see an example below), or passed to the `rmarkdown::render()` function. See @R-rmarkdown more information about **rmarkdown**.
