@@ -1,7 +1,7 @@
 ---
-title: "Tufte Handout"
-subtitle: "An implementation in R Markdown"
-author: "JJ Allaire and Yihui Xie"
+title: "Chapter 6"
+subtitle: "Introduction to Time Series"
+author: "Joel Fingerman and Justin Shea"
 date: "`r Sys.Date()`"
 output:
   tufte::tufte_html: default
@@ -22,7 +22,66 @@ knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
 options(htmltools.dir.version = FALSE)
 ```
 
-# Introduction
+The preceding three chapters of this book dealt with regression methods applied to cross sectional data. When we have cross sectional data our approach to forecasting is to use the
+explanatory variables to forecast the value of the dependent variable. This approach to forecasting is often termed _interpolation_.
+
+The other broad method of quantitative business forecasting is to use the history of the data we wish to forecast. We examine the historical pattern of the data we wish to forecast and try
+to find a discernible pattern. Using this pattern, we forecast forward the future pattern of the data. This is method of forecasting is often termed _extrapolation_. The use of the historical pattern of the data to be forecast is known as _time series methods_.
+
+\newpage
+
+# Stage 1 Collection and Analysis of Times Series Data
+
+```{marginfigure}
+The future lies ahead. 
+~Mort Sahl
+```
+
+   A time series of data is data collected sequentially over equal periods of time. There are many forms of time series: time series can be collected as daily data (such as daily stock market data), weekly (such as weekly receipts data), monthly (such as monthly sales data), quarterly (such as quarterly revenue data), or yearly (such as annual profits data).
+
+   Remember though, the time period of data collection must be consistent. If our time series data are both in monthly and quarterly form then forecasting can be exceedingly
+difficult. When you collect time series data be certain that the time period of collection will remain consistent.
+
+   To create a time series of data from our example of Sales Volume data we now collect a series of Sales Volume data from _just one location over consecutive monthly periods_. We collected a data set of four years, 48 consecutive months (48 periods) of Sales Volume.
+
+\newpage
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+## Import data from table 6.1 text file
+Table_61_path <- path.expand("~/R/forecasting/Table 6.1.txt")
+table_61 <- read.delim(Table_61_path, header = FALSE, sep = " ", skip = 1)
+ # add column names
+colnames(table_61) <- c("Period", "Year 1", "Period", "Year 2", "Period", "Year 3", "Period", "Year 4")
+
+library(knitr)
+kable(table_61, caption = "Four Years of Time Series Data")
+```
+
+
+## Graphically displaying Time Series Data: Time Series Plot
+
+The corresponding _time series plot_ or _time series graph_ of the Sales Volume is in Figure 6-1 below.
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+## Page 3, create plot
+ # First, gather the time series data table into one column.
+library(tidyr)
+table_61_series <- gather(table_61, Period)
+table_61_series <- table_61_series[,-(2:5)]
+table_61_series$Period <- as.numeric(rownames(table_61_series))
+colnames(table_61_series) <- c("Period", "Sales Volume")
+
+ #Creat chjart
+library(ggplot2)
+ggplot(data = table_61_series, aes(y = `Sales Volume`, x = Period)) +
+        geom_line() + 
+        ggtitle("Table 6.1: Sales Volume")
+
+```
+
+\newpage
+
+
 
 The Tufte handout style is a style that Edward Tufte uses in his books and handouts. Tufte's style is known for its extensive use of sidenotes, tight integration of graphics with text, and well-set typography. This style has been implemented in LaTeX and HTML/CSS^[See Github repositories [tufte-latex](https://github.com/tufte-latex/tufte-latex) and [tufte-css](https://github.com/edwardtufte/tufte-css)], respectively. We have ported both implementations into the [**tufte** package](https://github.com/rstudio/tufte). If you want LaTeX/PDF output, you may use the `tufte_handout` format for handouts, and `tufte_book` for books. For HTML output, use `tufte_html`. These formats can be either specified in the YAML metadata at the beginning of an R Markdown document (see an example below), or passed to the `rmarkdown::render()` function. See @R-rmarkdown more information about **rmarkdown**.
 
