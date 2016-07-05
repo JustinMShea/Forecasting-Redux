@@ -351,6 +351,7 @@ $CMA_{t}(4) = \frac{389+329+368+354}{4} = 360$
 The next 4-period centered smoothing is placed at "period 3.5"
 
 $CMA_{t}(4) = \frac{Y_{5}+Y_{4}+Y_{3}+Y_{2}}{4}$
+
 $CMA_{t}(4) = \frac{375+389+329+368}{4} = 365.25$
 
 Then the "adjusted centered smoothing" for period 3 is the average of period 2.5 and period 3.5 smoothing.
