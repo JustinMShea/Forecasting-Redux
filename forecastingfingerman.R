@@ -65,3 +65,7 @@ period_3_example$Smoothing <- c("...",smooth,"...")
 colnames(period_3_example) <- c("Period", "Actual", "Smoothing")
 
 
+library(forecast)
+smooth_63 <- round(ma(table_62_series[,2], order = 3, centre = TRUE), digits = 1)
+table_63 <- data.frame(table_62_series, "CMA_{t}(3)"=smooth_63)
+
