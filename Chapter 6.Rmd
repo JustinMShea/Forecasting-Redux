@@ -21,6 +21,7 @@ options(htmltools.dir.version = FALSE)
 The preceding three chapters of this book dealt with regression methods applied to cross sectional data. When we have cross sectional data our approach to forecasting is to use the
 explanatory variables to forecast the value of the dependent variable. This approach to forecasting is often termed _interpolation_.
 
+
 The other broad method of quantitative business forecasting is to use the history of the data we wish to forecast. We examine the historical pattern of the data we wish to forecast and try to find a discernible pattern. Using this pattern, we forecast forward the future pattern of the data. This is method of forecasting is often termed _extrapolation_. The use of the historical pattern of the data to be forecast is known as _time series methods_.
 
 \newpage
@@ -136,21 +137,20 @@ $$Y_{48} = 677.4$$
 
 
 The uppercase letter $T$ of $Y_T$ will always mean the most recent observation in our time series. $Y_{T+1}$ means then an observation one period into the future. Thus, $Y_{T+1}$, $Y_{T+2}$, $Y_{T+3}$, denote future observations one, two, and three periods beyond the present time $Y_T$. Similarly, $Y_{T-1}$ denotes an observation one period in the past, so that $Y_{T-1}$, $Y_{T-2}$, $Y_{T-3}$, denote observations one, two, and three periods in the past.
-\newline
+
 
 We can generalize this notation to:  
-\newline
+
 $Y_{T+\ell}$: A future observation of $\ell$ periods ahead.  
 
 $Y_{T-\ell}$: A historical observation of $\ell$ periods back.
-\newline
+
 
 As we distinguish between $Y_i$ and $\hat{Y_i}$ in regression models, we shall destinguish between $Y_{T+\ell}$ and $\hat{Y_T}{\ell}$ in time series models.
-\newline
 
 $Y_{T+\ell}$ is the future observation of $Y$, $\ell$ period ahead,
 and unkown at time $T$.
-\newline
+
 
 $\hat{Y_T}{\ell}$ is the forecast of the future observation, 
 $\ell$ periods ahead, made at time $T$.
