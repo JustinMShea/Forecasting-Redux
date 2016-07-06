@@ -77,12 +77,68 @@ colnames(table_63) <- c("Period", "Actual", "CMA(3)", "Period", "Actual", "CMA(3
 table_63_chart <- table_63_series
 colnames(table_63_chart) <- c("Period", "Actual", "CMA(3)")
 table_63_chart <- gather(table_63_chart, Period)
+colnames(table_63_chart) <- c("Period", "Series", "Value")
 
-ggplot(data = table_63_chart, aes(y = `value`, x = Period)) +
-  geom_line() 
+chart_63 <- ggplot(data = table_63_chart, aes(y = Value, x = Period, col = Series)) +
+            geom_line(position = "jitter", size = 1) +
+            ggtitle("3-Period Centered Moving Average") 
 
-+
-            ggtitle("3-Period Centered Moving Average")
+
+
+ggdraw(switch_axis_position(chart_63 + theme_grey(), axis = 'y'))
+
+## creating table 6.4
+library(forecast)
+smooth_64 <- round(ma(table_62_series[,2], order = 5, centre = TRUE), digits = 1)
+table_64_series <- data.frame(table_62_series, "CMA(3)" = smooth_63, "CMA(5)" = smooth_64)
+colnames(table_64_series) <- c("Period", "Actual", "CMA(3)", "CMA(5)")
+
+table_64 <- data.frame(table_64_series[1:15,], table_64_series[16:30,])
+colnames(table_64) <- c("Period", "Actual", "CMA(3)","CMA(5)","Period", "Actual", "CMA(3)", "CMA(5)")
+
+table_64_series
+
+# first chart
+table_641_chart <- table_64_series[,c(1,2,4)]
+table_641_chart <- gather(table_641_chart, Period)
+colnames(table_641_chart) <- c("Period", "Series", "Value")
+
+chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line(position = "jitter") +
+  ggtitle("Actual ~ CMA(5)")
+
+#figure_641 <- ggplot(data = table_64, aes(y = `Actual`, x = Period)) +
+ # geom_line(color = "blue", size = 1) +
+  #ggtitle("5-Period Centered Moving Average") +
+  #geom_line(aes(y = `CMA(5)`), color = "red", linetype="dashed", size = 1.4)
+
+ggdraw(switch_axis_position(figure_641 + theme_grey(), axis = 'y'))
+
+
+# second chart
+table_642_chart <- table_64_series
+table_642_chart <- gather(table_642_chart, Period)
+colnames(table_642_chart) <- c("Period", "Series", "Value")
+
+chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line(position = "jitter") +
+  ggtitle("Actual ~ CMA(3,5)")
+
+
+library(ggthemes)
+chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line(position = "jitter") +
+theme_tufte() +
+  xlab("Period") + ylab("Value") + 
+  theme(axis.title.x = element_text(vjust=-0.5), axis.title.y = element_text(vjust=1.5))
+
+
+#figure_642 <- ggplot(data = table_64, aes(y = `Actual`, x = Period))+ geom_line(color = "darkgreen", size = 1) +
+ # geom_line(aes(y = `CMA(3)`), color = "red", linetype="dashed", size = 1.4) +
+  #geom_line(aes(y = `CMA(5)`), color = "blue", linetype="dashed", size = 1.4) + 
+  #ggtitle("3-Period and 5-Period CMA") 
+
+ggdraw(switch_axis_position(chart_642 + theme_grey(), axis = 'y'))
 
 
 ggplot(data = table_63_series, aes(y = `Actual`, x = Period)) +
@@ -90,3 +146,6 @@ ggplot(data = table_63_series, aes(y = `Actual`, x = Period)) +
   ggtitle("3-Period Centered Moving Average") +
   geom_line(aes(y = `Centered Moving Average (3)`))
 
+geom_rangeframe() + theme_tufte() +
+xlab("Car weight (lb/1000)") + ylab("Miles per gallon of fuel") + 
+            theme(axis.title.x = element_text(vjust=-0.5), axis.title.y = element_text(vjust=1.5))
