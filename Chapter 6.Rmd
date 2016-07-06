@@ -256,16 +256,16 @@ kable(period_3_example, align = "l", row.names=FALSE, caption="Horizontal Data T
 ## creating table 63
 library(forecast)
 smooth_63 <- round(ma(table_62_series[,2], order = 3, centre = TRUE), digits = 1)
-table_63 <- data.frame(table_62_series, "CMA(3)" = smooth_63)
-colnames(table_63) <- c("Period", "Actual", "Centered Moving Average (3)")
-
-
+table_63_series <- data.frame(table_62_series, "CMA(3)" = smooth_63)
+colnames(table_63_series) <- c("Period", "Actual", "Centered Moving Average (3)")
+table_63 <- data.frame(table_63_series[1:15,], table_63_series[16:30,])
+colnames(table_63) <- c("Period", "Actual", "CMA(3)", "Period", "Actual", "CMA(3)")
 kable(table_63, align = "l", row.names=FALSE, caption="Table 6.3: 
 Centered Smoothing Average (3)")
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-ggplot(data = table_63, aes(y = `Actual`, x = Period)) +
+ggplot(data = table_63_series, aes(y = `Actual`, x = Period)) +
         geom_line(color = "blue", size = 1) +
         ggtitle("3-Period Centered Moving Average") +
         geom_line(aes(y = `Centered Moving Average (3)`), color = "red", linetype="dashed", size = 1.3)

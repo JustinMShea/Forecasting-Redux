@@ -46,6 +46,7 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
 str(table_62_series)
 
 
+
 #Creat chart
 library(ggplot2)
 plot_62 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
@@ -67,5 +68,25 @@ colnames(period_3_example) <- c("Period", "Actual", "Smoothing")
 
 library(forecast)
 smooth_63 <- round(ma(table_62_series[,2], order = 3, centre = TRUE), digits = 1)
-table_63 <- data.frame(table_62_series, "CMA_{t}(3)"=smooth_63)
+table_63_series <- data.frame(table_62_series, "CMA(3)" = smooth_63)
+colnames(table_63_series) <- c("Period", "Actual", "Centered Moving Average (3)")
+table_63 <- data.frame(table_63_series[1:15,], table_63_series[16:30,])
+colnames(table_63) <- c("Period", "Actual", "CMA(3)", "Period", "Actual", "CMA(3)")
+
+# tablef for chart
+table_63_chart <- table_63_series
+colnames(table_63_chart) <- c("Period", "Actual", "CMA(3)")
+table_63_chart <- gather(table_63_chart, Period)
+
+ggplot(data = table_63_chart, aes(y = `value`, x = Period)) +
+  geom_line() 
+
++
+            ggtitle("3-Period Centered Moving Average")
+
+
+ggplot(data = table_63_series, aes(y = `Actual`, x = Period)) +
+  geom_line(color="blue,size = 1) +
+  ggtitle("3-Period Centered Moving Average") +
+  geom_line(aes(y = `Centered Moving Average (3)`))
 
