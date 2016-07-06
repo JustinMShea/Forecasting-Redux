@@ -260,7 +260,7 @@ kable(period_3_example, align = "r", row.names=FALSE, caption="Horizontal Data T
 
    This smoothing method is called a 3-period centered moving average because the computed value is placed at the center, or middle, of the 3 periods being used in the calculations.
    
-```{r, fig.margin = TRUE, fig.width=3.5, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## creating table 63
 library(forecast)
 smooth_63 <- round(ma(table_62_series[,2], order = 3, centre = TRUE), digits = 1)
@@ -268,7 +268,9 @@ table_63_series <- data.frame(table_62_series, "CMA(3)" = smooth_63)
 colnames(table_63_series) <- c("Period", "Actual", "Centered Moving Average (3)")
 table_63 <- data.frame(table_63_series[1:15,], table_63_series[16:30,])
 colnames(table_63) <- c("Period", "Actual", "CMA(3)", "Period", "Actual", "CMA(3)")
+```
 
+```{r, fig.margin = TRUE, fig.width=3.5, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_63_chart <- table_63_series
 colnames(table_63_chart) <- c("Period", "Actual", "CMA(3)")
 table_63_chart <- gather(table_63_chart, Period)
@@ -276,11 +278,11 @@ colnames(table_63_chart) <- c("Period", "Series", "Value")
 
 chart_63 <- ggplot(data = table_63_chart, aes(y = Value, x = Period, col = Series)) +
             geom_line(position = "jitter") +
-            ggtitle("Actual ~ CMA(3)") +
-            theme_tufte() +
-            theme(legend.position = "bottom")
+            ggtitle("Actual ~ CMA(3)")
+        
             
-chart_63
+ggdraw(switch_axis_position(chart_63 + theme_tufte() +
+            theme(legend.position = "bottom"), axis = 'y'))
 
 #figure_63 <- ggplot(data = table_63_series, aes(y = `Actual`, x = Period)) +
  #       geom_line(color = "blue", size = 1) +
@@ -291,10 +293,13 @@ chart_63
 ```
 
 
-```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.margin = TRUE}
 
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 kable(table_63, align = "l", row.names=FALSE, caption="Table 6.3: 
 Centered Smoothing Average (3)")
+
+ggdraw(switch_axis_position(chart_63 + theme_tufte() +
+            theme(legend.position = "bottom"), axis = 'y'))
 ```
 
 
@@ -339,18 +344,15 @@ chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Ser
   ggtitle("Actual ~ CMA(5)") +
   theme(legend.position = 'bottom')
 
-chart_641
+ggdraw(switch_axis_position(chart_641 + theme_tufte() +
+            theme(legend.position = "bottom"), axis = 'y'))
 ```
-
-
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.margin = TRUE}
 kable(period_5_example, align = "l", row.names=FALSE, caption="Horizontal Data Table 6.3 subset: Centered Smoothing Average (5)")
 ```
 
-
    We list below both the 3-period and 5-period moving average smoothing and a graph of the actual values with the two smoothings superimposed.
-
 
 ```{r, fig.margin = TRUE, fig.width=3.5, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # chart 2
@@ -363,10 +365,13 @@ chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Ser
   ggtitle("Actual ~ CMA(3,5)") +
    theme(legend.position = 'bottom')
 
-chart_642
+ggdraw(switch_axis_position(chart_642 + theme_tufte() +
+            theme(legend.position = "bottom"), axis = 'y'))
 ```
 
-```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.margin = TRUE}
+
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## creating table 6.4
 library(forecast)
 smooth_64 <- round(ma(table_62_series[,2], order = 5, centre = TRUE), digits = 1)
@@ -380,10 +385,43 @@ kable(table_64, align = "l", row.names=FALSE, caption="Table 6.4:
 Centered Smoothing Average (3) & (5)")
 ```
    
-
 \newpage
 
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE}
+library(forecast)
+smooth_64 <- round(ma(table_62_series[,2], order = 5, centre = TRUE), digits = 1)
+table_64_series <- data.frame(table_62_series, "CMA(3)" = smooth_63, "CMA(5)" = smooth_64)
+colnames(table_64_series) <- c("Period", "Actual", "CMA(3)", "CMA(5)")
 
+table_64 <- data.frame(table_64_series[1:15,], table_64_series[16:30,])
+colnames(table_64) <- c("Period", "Actual", "CMA(3)","CMA(5)","Period", "Actual", "CMA(3)", "CMA(5)")
+
+library(ggplot2)
+table_641_chart <- table_64_series[,c(1,2,4)]
+table_641_chart <- gather(table_641_chart, Period)
+colnames(table_641_chart) <- c("Period", "Series", "Value")
+
+chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line(position = "jitter") +
+  ggtitle("Actual ~ CMA(5)") 
+
+ggdraw(switch_axis_position(chart_641 + theme_tufte() +
+            theme(legend.position = "bottom"), axis = 'y'))
+
+# chart 2
+table_642_chart <- table_64_series
+table_642_chart <- gather(table_642_chart, Period)
+colnames(table_642_chart) <- c("Period", "Series", "Value")
+
+chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line(position = "jitter") +
+  ggtitle("Actual ~ CMA(3,5)") 
+
+ggdraw(switch_axis_position(chart_642 + theme_tufte() +
+            theme(legend.position = "bottom"), axis = 'y'))
+```
+
+\newpage
 ## 4-Period Centered Moving Average Smoothing
 
 A 4-period Centered Moving Average is possible, but the issue of the placing of the results remains.^[4-period Centered Moving Average: $$CMA_{t}(4) = \frac{Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+Y_{T-2}}{8}$$] 
