@@ -159,7 +159,7 @@ $\hat{Y_T}{\ell}$ is the forecast of the future observation,
 $\ell$ periods ahead, made at time $T$.
 
 
-# Stage 1 Continued: The Theory of Collecting & Analyzing Data
+## Stage 1 Continued: The Theory of Collecting & Analyzing Data
 
 We devote most of this chapter to Stage 1 of the Forecasting Process. With time series we recommend considerable investigation and analysis, to really understand the time series data, to really understand what the data are “telling us" before attempting to develop forecasting models. Consequently we shall begin this time series analysis with some easy, straightforward methods of analysis.
 
