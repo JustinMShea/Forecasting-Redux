@@ -21,7 +21,7 @@ The preceding three chapters of this book dealt with regression methods applied 
 explanatory variables to forecast the value of the dependent variable. This approach to forecasting is often termed _interpolation_.
 
 
-The other broad method of quantitative business forecasting is to use the history of the data we wish to forecast. We examine the historical pattern of the data we wish to forecast and try to find a discernible pattern. Using this pattern, we forecast forward the future pattern of the data. This is method of forecasting is often termed _extrapolation_. The use of the historical pattern of the data to be forecast is known as _time series methods_.
+The other broad method of quantitative business forecasting is to use the history of the data we wish to forecast. We examine the historical pattern of the data we wish to forecast and try to find a discernible pattern. Using this pattern, we forecast forward the future pattern of the data. This method of forecasting is often termed _extrapolation_. The use of the historical pattern of the data to be forecast is known as _time series methods_.
 
 \newpage
 
@@ -31,12 +31,11 @@ The other broad method of quantitative business forecasting is to use the histor
 >
 > `r tufte::quote_footer('--- Mort Sahl')`
 
-   A time series of data is data collected sequentially over equal periods of time. There are many forms of time series: time series can be collected as daily data (such as daily stock market data), weekly (such as weekly receipts data), monthly (such as monthly sales data), quarterly (such as quarterly revenue data), or yearly (such as annual profits data).
+   A time series of data is data collected sequentially over equal periods of time. There are many forms of time series data. Time series can be collected as daily data (such as the daily closing price of a stock), weekly (such as weekly receipts data), monthly (such as monthly sales data), quarterly (such as quarterly revenue data), or yearly (such as annual profits data).
 
-   Remember though, the time period of data collection must be consistent. If our time series data are both in monthly and quarterly form then forecasting can be exceedingly
-difficult. When you collect time series data be certain that the time period of collection will remain consistent.
+   Remember though, the time period of data collection must be consistent. If our time series data are both in monthly and quarterly form then forecasting can be exceedingly difficult. When one collects time series data, be certain that the time period of collection will remain consistent.
 
-   To create a time series of data from our example of Sales Volume data we now collect a series of Sales Volume data from _just one location over consecutive monthly periods_. We collected a data set of four years, 48 consecutive months (48 periods) of Sales Volume.
+   To create a time series of data from our example of Sales Volume data we now collect a series of Sales Volume data from _just one location over consecutive monthly periods_. We collected a data set of four years, or 48 consecutive months (48 periods), of Sales Volume.
 
 
 
@@ -73,7 +72,9 @@ library(cowplot)
 
 figure_61 <- ggplot(data = table_61_series, aes(y = `Sales Volume`, x = Period)) +
         geom_line() + 
-        ggtitle("Table 6.1: Sales Volume") 
+        ylim(0,800) + 
+        scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54)) +
+        ggtitle("Figure 6.1: Sales Volume") 
 
 ggdraw(switch_axis_position(figure_61 + theme_tufte(), axis = 'y'))
 
@@ -83,26 +84,14 @@ ggdraw(switch_axis_position(figure_61 + theme_tufte(), axis = 'y'))
 
 ## Tips on Graphing Times Series Data: The Practice
 
-   Good graphical presentations of time series data and forecasts can be very useful
-and very powerful in the presentation of ideas. A good layout for a time series graph is
-always helpful in the data analysis, model fitting, and forecasting.
+   Good graphical presentations of time series data and forecasts is useful and powerful in the presentation of ideas. A good layout for a time series graph is always helpful in the data analysis, model fitting, and forecasting.
 
-   Notice in our graph, that we allowed for additional space to the right of the last
-observation of our data series. We have 48 observations but allowed for 54 observations.
-Notice too that because the time series graph reveals an upward direction of the data series
-we also allowed for additional space above the last observation. The value of the last
-observation is 677.4 but allowed for values up to 800. In other words we have provided for
-plenty of "white space" for our graph.
+   Notice in our graph, that we allowed for additional space to the right of the last observation of our data series. We have 48 observations but allowed for 54 observations. Notice too that because the time series graph reveals an upward direction of the data series
+we also allowed for additional space above the last observation. The value of the last observation is 677.4 but allowed for values up to 800. In other words we have provided for plenty of "white space" for our graph.
 
-   Along the horizontal or time period axis we created horizontal reference lines at
-every six periods. It would be too dense to create horizontal reference lines at every of 54
-periods. And it would be too sparse to form lines at every 12th period. These are monthly
-data so every 6 periods denotes a half year. Period 6 is a June, Period 12 is a December,
-Period 18 is June again, and so on.
+   Along the horizontal or time period axis we created horizontal reference lines at every six periods. It would be too dense to create horizontal reference lines at every of 54 periods. And it would be too sparse to form lines at every 12th period. These are monthly data so every 6 periods denotes a half year. Period 6 is a June, Period 12 is a December, Period 18 is June again, and so on.
 
-   Along the vertical or Sales Volume axis we set vertical reference lines at every 100
-units. Units of 100 allow for sufficient spacing so the graph does not become crowded, and
-yet detailed enough so that we can estimate values with reasonable accuracy.
+   Along the vertical or Sales Volume axis we set vertical reference lines at every 100 units. Units of 100 allow for sufficient spacing so the graph does not become crowded, and yet detailed enough so that we can estimate values with reasonable accuracy.
 
    In summary, when producing time series graph, try to make the graphs uncluttered
 without sacrificing accuracy or information.
@@ -205,7 +194,8 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
 #Creat chart
 library(ggplot2)
 figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
-geom_line(position = "jitter")
+        ylim(0,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(switch_axis_position(figure_621 + theme_tufte(), axis = 'y'))
 ```
@@ -217,7 +207,8 @@ Becuase the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$
 
 ```{r, fig.width = 5, fig.height = 2.15, fig.fullwidth = TRUE, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
-        geom_line(position = "jitter") +
+        ylim(0,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) +
         geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed")
 
 ggdraw(switch_axis_position(figure_622 + theme_tufte(), axis = 'y'))

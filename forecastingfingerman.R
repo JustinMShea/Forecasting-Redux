@@ -25,9 +25,11 @@ str(table_61_series)
  #Creat chart
 library(ggplot2)
 plot_61 <- ggplot(data = table_61_series, aes(y = `Sales Volume`, x = Period)) +
-           geom_line() 
+           geom_line() +
+           ylim(0,800)
+          
 
-
+plot_61 + scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 ## page 6, create table 2
  # Import data from table 6.2 text file
 Table_62_path <- path.expand("~/R/forecasting/Table 6.2.txt")
