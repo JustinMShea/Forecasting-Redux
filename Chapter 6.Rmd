@@ -193,7 +193,10 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
  #Creat chart
 #Creat chart
 library(ggplot2)
-figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) 
+figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
+        geom_line() + 
+        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(switch_axis_position(figure_621 + theme_tufte() , axis = 'y'))
 ```
@@ -205,7 +208,10 @@ Becuase the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$
 
 ```{r, fig.width = 5, fig.height = 2.15, fig.fullwidth = TRUE, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period))  +
-        geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed")
+        geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed") +
+        geom_line() + 
+        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(switch_axis_position(figure_622 + theme_tufte(), axis = 'y'))
 ```
@@ -254,7 +260,10 @@ table_63_chart <- gather(table_63_chart, Period)
 colnames(table_63_chart) <- c("Period", "Series", "Value")
 
 chart_63 <- ggplot(data = table_63_chart, aes(y = Value, x = Period, col = Series)) +
-            geom_line(position = "jitter") 
+            geom_line() +
+        geom_line() + 
+        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
         
 ggdraw(switch_axis_position(chart_63 + theme_tufte() +
             theme(legend.position = "top"), axis = 'y'))
@@ -314,7 +323,10 @@ table_641_chart <- gather(table_641_chart, Period)
 colnames(table_641_chart) <- c("Period", "Series", "Value")
 
 margin_chart_64 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line(position = "jitter")
+  geom_line() +
+        geom_line() + 
+        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(switch_axis_position(margin_chart_64 + theme_tufte() +
             theme(legend.position = "top"), axis = 'y'))
@@ -350,8 +362,11 @@ table_641_chart <- gather(table_641_chart, Period)
 colnames(table_641_chart) <- c("Period", "Series", "Value")
 
 chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line(position = "jitter") +
-  ggtitle("Actual ~ Centered Moving Average(5)") 
+  geom_line() +
+  ggtitle("Actual ~ Centered Moving Average(5)") +
+        geom_line() + 
+        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(switch_axis_position(chart_641 + theme_tufte() +
             theme(legend.position = "bottom"), axis = 'y'))
@@ -364,8 +379,11 @@ table_642_chart <- gather(table_642_chart, Period)
 colnames(table_642_chart) <- c("Period", "Series", "Value")
 
 chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line(position = "jitter") +
-  ggtitle("Actual ~ Centered Moving Average (3) and (5)") 
+  geom_line() +
+  ggtitle("Actual ~ Centered Moving Average (3) and (5)") +
+        geom_line() + 
+        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(switch_axis_position(chart_642 + theme_tufte() +
             theme(legend.position = "bottom"), axis = 'y'))
@@ -390,7 +408,10 @@ table_65_chart <- gather(table_65, Period)
 colnames(table_65_chart) <- c("Period", "Series", "Value")
 
 chart_65 <- ggplot(data = table_65_chart, aes(y = Value, x = Period, col = Series)) +
-            geom_line(position = "jitter")
+            geom_line() +
+        geom_line() + 
+        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(switch_axis_position(chart_65 + theme_tufte() +
             theme(legend.position = "top"), axis = 'y'))
@@ -448,8 +469,11 @@ table_66_chart <- gather(table_66_series, Period)
 colnames(table_66_chart) <- c("Period", "Series", "Value")
 
 chart_66 <- ggplot(data = table_66_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line(position = "jitter") +
-  ggtitle("Actual ~ Centered Moving Average (6) and (12)") 
+  geom_line() +
+  ggtitle("Actual ~ Centered Moving Average (6) and (12)") +
+        geom_line() + 
+        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35))  
 
 ggdraw(switch_axis_position(chart_66 + theme_tufte() +
             theme(legend.position = "bottom"), axis = 'y'))
@@ -478,34 +502,78 @@ A weighted moving average may be generalized to any number of historical periods
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## creating table 67
-library(TTR)
-smooth_67 <- round(WMA(table_62_series[,2], n = 3), digits = 1)
+smooth_67 <- filter(table_62_series[,2], c(0.6,0.3,0.1), method = "convolution", sides = 2)
 table_67_series <- data.frame(table_62_series, "CWMA(3)" = smooth_67)
 colnames(table_67_series) <- c("Period", "Actual", "CWMA(3)")
 table_67 <- data.frame(table_67_series[1:15,], table_67_series[16:30,])
-colnames(table_63) <- c("Period", "Actual", "CWMA(3)", "Period", "Actual", "CWMA(3)")
+colnames(table_67) <- c("Period", "Actual", "CWMA(3)", "Period", "Actual", "CWMA(3)")
+
 ```
 
 ```{r, fig.margin = TRUE, fig.cap = "Centered Weighted Moving Average(3)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-table_67_chart <- table_67_series
-colnames(table_67_chart) <- c("Period", "Actual", "CWMA(3)")
-table_63_chart <- gather(table_67_chart, Period)
+
+table_67_chart <- gather(table_67_series, Period)
 colnames(table_67_chart) <- c("Period", "Series", "Value")
 
 chart_67 <- ggplot(data = table_67_chart, aes(y = Value, x = Period, col = Series)) +
-            geom_line(position = "jitter") 
-        
+  geom_line() +
+  geom_line() + 
+  ylim(320,400) + 
+  scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+
 ggdraw(switch_axis_position(chart_67 + theme_tufte() +
-            theme(legend.position = "top"), axis = 'y'))
+                              theme(legend.position = "top"), axis = 'y'))
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighted Moving Average")
 ```
 
+\newpage
 
+#The Underlying Structure of Time Serie Data^[Stage 1 continued]
 
+##Classical Time Series Decomposition
 
+Given an economic time series as shown above in Figure 6-2 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components:
+trend, cyclical, seasonal, and irregular components.
+
+##The Trend Component
+
+The trend component of a time series at time $t$, denoted $T_t$, is the upward or
+downward progression of the data over time. Figure 6-10 below has a trend line
+superimposed over the actual data. In Chapter 7 we shall discuss how the OLS regression
+line of $Y_t$ is determined.
+
+##The Cyclical Fluctuations Component
+
+The cyclical component of a time series at time $t$, denoted $C_t$, and illustrated below
+in Figure 6-11, are the wide, long term up-and-down swings of the series around the trend
+line. These cycles of high and low usually last more than year, having different lengths and
+amplitudes. The cyclical component of a time series is usually attributable to some larger
+aspect of the whole business economy by which this particular data have been affected.
+
+##The Seasonal Fluctuations Component
+
+The seasonal component of a time series at time $t$, denoted $S_t$, illustrated below in
+Figure 6-12 are the reoccurring fluctuations within a year around the trend/cyclical
+components. Most business data reveal seasonal fluctuations, or “seasonality," so it is
+important for business to know and plan for changes in sales or economic activity that will
+be more or less normal due to the seasonal nature of their product.
+
+Notice in Figure 6-12 that the periods of 11 and 12, 23 and 24, 35 and 36, 47 and
+48 are reoccurring local peaks in Sales Volume. This is the seasonality of Sales.
+
+##The Irregular Variations Component
+
+The irregular component of a time series at time $t$, denoted $I_t$ , illustrated in Figure
+6-13 are the random, unexpected deviations from the trend/cyclical/seasonal components.
+Irregular changes or “shocks" to a time series are considered nonrecurring chance events,
+such as strikes, or unusually good (The movie E.T. and Reese's Pieces Candy) or unusually
+bad (Tylenol poisoning) publicity about a product.
+
+In Figure 6-13 below, an irregular variation occurs around period 30 as the series
+drops abruptly and then returns to its upward trend.
 
 
 

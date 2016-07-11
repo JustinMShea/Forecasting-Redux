@@ -145,7 +145,22 @@ ggplot(data = table_63_series, aes(y = `Actual`, x = Period)) +
   ggtitle(`3-Period Centered Moving Average`) +
   geom_line(aes(y = `Centered Moving Average (3)`))
 
-library(TTR)
-smooth_67 <- round(WMA(table_62_series[,2], n = 3, wts = c(0.6,0.3,0.1),centre = TRUE), digits = 1)
+## Center Weighted Moving Average 3-Period
+smooth_67 <- filter(table_62_series[,2], c(0.6,0.3,0.1), method = "convolution", sides = 2)
+table_67_series <- data.frame(table_62_series, "CWMA(3)" = smooth_67)
+colnames(table_67_series) <- c("Period", "Actual", "CWMA(3)")
+table_67 <- data.frame(table_67_series[1:15,], table_67_series[16:30,])
+colnames(table_67) <- c("Period", "Actual", "CWMA(3)", "Period", "Actual", "CWMA(3)")
 
-WMA(table_62_series[,2], n = 3)
+
+table_67_chart <- gather(table_67_series, Period)
+colnames(table_67_chart) <- c("Period", "Series", "Value")
+
+chart_67 <- ggplot(data = table_67_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line() +
+  geom_line() + 
+  ylim(320,400) + 
+  scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+
+ggdraw(switch_axis_position(chart_67 + theme_tufte() +
+                              theme(legend.position = "top"), axis = 'y'))
