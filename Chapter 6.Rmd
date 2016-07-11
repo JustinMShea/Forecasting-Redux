@@ -193,11 +193,9 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
  #Creat chart
 #Creat chart
 library(ggplot2)
-figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
-        ylim(0,400) + 
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) 
 
-ggdraw(switch_axis_position(figure_621 + theme_tufte(), axis = 'y'))
+ggdraw(switch_axis_position(figure_621 + theme_tufte() , axis = 'y'))
 ```
 
 
@@ -206,9 +204,7 @@ Becuase the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$
 
 
 ```{r, fig.width = 5, fig.height = 2.15, fig.fullwidth = TRUE, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
-        ylim(0,400) + 
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) +
+figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period))  +
         geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed")
 
 ggdraw(switch_axis_position(figure_622 + theme_tufte(), axis = 'y'))
@@ -420,10 +416,6 @@ Centered Smoothing Average (4)")
 
 \newpage
 
-The 4-period Centered Moving Average Smoothing is especially suited for
-quarterly time series. However, the Centered Moving Average Smoothing formula may be
-generalized to any even number of periods.
-
 ## 6-Period Centered Moving Average Smoothing
 
 $$CMA_{t}(6) = \frac{Y_{T+2}+2Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+2Y_{T-2}+Y_{T-3}}{12}$$
@@ -473,7 +465,47 @@ calculations. There may be situations, however, in which it is better to assign 
 to the most recent observation and less to observations in the past.
 
 ## 3-period Centered Weighted Moving Average
-For example, a 3-period Centered Weighted Moving Average, denoted CWMA 3).
+
+A 3-period Centered Weighted Moving Average is denoted as $CWMA(3)$ and can be found in the margin.^[3-period Centered Weighted Moving Average: $$CWMA_{t}(3) = \frac{\omega_1 Y_{T+1}+\omega_2 Y_{T}+\omega_3 Y_{T-1}}{3}$$]
+
+As an example, consider the following notation:
+
+$$CWMA_{t}(3) = \frac{0.6 Y_{T+1}+0.3 Y_{T}+0.1 Y_{T-1}}{3}$$
+
+In general terms, we denote the weights by $\omega_1$, $\omega_2$, and $\omega_3$ (omega sub 1, omega sub 2, and omega sub 3)
+
+A weighted moving average may be generalized to any number of historical periods and set of weights. The choice of the number of historical periods and the weights used are determined, in part, by the Forecast Analyst who has collected the data and has some appreciation of the data structure.
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+## creating table 67
+library(TTR)
+smooth_67 <- round(WMA(table_62_series[,2], n = 3), digits = 1)
+table_67_series <- data.frame(table_62_series, "CWMA(3)" = smooth_67)
+colnames(table_67_series) <- c("Period", "Actual", "CWMA(3)")
+table_67 <- data.frame(table_67_series[1:15,], table_67_series[16:30,])
+colnames(table_63) <- c("Period", "Actual", "CWMA(3)", "Period", "Actual", "CWMA(3)")
+```
+
+```{r, fig.margin = TRUE, fig.cap = "Centered Weighted Moving Average(3)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_67_chart <- table_67_series
+colnames(table_67_chart) <- c("Period", "Actual", "CWMA(3)")
+table_63_chart <- gather(table_67_chart, Period)
+colnames(table_67_chart) <- c("Period", "Series", "Value")
+
+chart_67 <- ggplot(data = table_67_chart, aes(y = Value, x = Period, col = Series)) +
+            geom_line(position = "jitter") 
+        
+ggdraw(switch_axis_position(chart_67 + theme_tufte() +
+            theme(legend.position = "top"), axis = 'y'))
+```
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighted Moving Average")
+```
+
+
+
+
 
 
 

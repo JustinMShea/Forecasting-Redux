@@ -47,8 +47,6 @@ table_62_series$key<- as.numeric(rownames(table_62_series))
 colnames(table_62_series) <- c("Period", "Horizontal Data")
 str(table_62_series)
 
-
-
 #Creat chart
 library(ggplot2)
 plot_62 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
@@ -142,12 +140,12 @@ theme_tufte() +
 
 ggdraw(switch_axis_position(chart_642 + theme_grey(), axis = 'y'))
 
-
 ggplot(data = table_63_series, aes(y = `Actual`, x = Period)) +
-  geom_line(color="blue,size = 1) +
-  ggtitle("3-Period Centered Moving Average") +
+  geom_line(color="blue", size = 1) +
+  ggtitle(`3-Period Centered Moving Average`) +
   geom_line(aes(y = `Centered Moving Average (3)`))
 
-geom_rangeframe() + theme_tufte() +
-xlab("Car weight (lb/1000)") + ylab("Miles per gallon of fuel") + 
-            theme(axis.title.x = element_text(vjust=-0.5), axis.title.y = element_text(vjust=1.5))
+library(TTR)
+smooth_67 <- round(WMA(table_62_series[,2], n = 3, wts = c(0.6,0.3,0.1),centre = TRUE), digits = 1)
+
+WMA(table_62_series[,2], n = 3)
