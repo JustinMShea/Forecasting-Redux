@@ -63,14 +63,14 @@ library(tidyr)
 table_61_series <- gather(table_61, Period)
 table_61_series <- table_61_series[,-(2:5)]
 table_61_series$Period <- as.numeric(rownames(table_61_series))
-colnames(table_61_series) <- c("Period", "Sales Volume")
+colnames(table_61_series) <- c("Period", "Sales")
 
  #Creat chjart
 library(ggplot2)
 library(ggthemes)
 library(cowplot)
 
-figure_61 <- ggplot(data = table_61_series, aes(y = `Sales Volume`, x = Period)) +
+figure_61 <- ggplot(data = table_61_series, aes(y = Sales, x = Period)) +
         geom_line() + 
         ylim(0,800) + 
         scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54)) +
@@ -146,7 +146,6 @@ and unkown at time $T$.
 
 $\hat{Y_T}{\ell}$ is the forecast of the future observation, 
 $\ell$ periods ahead, made at time $T$.
-
 
 ## Stage 1 Continued: The Theory of Collecting & Analyzing Data
 
@@ -535,23 +534,66 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 
 ##Classical Time Series Decomposition
 
-Given an economic time series as shown above in Figure 6-2 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components:
+Given an economic time series as shown in Figure 6-1 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components:
 trend, cyclical, seasonal, and irregular components.
 
 ##The Trend Component
 
-The trend component of a time series at time $t$, denoted $T_t$, is the upward or
-downward progression of the data over time. Figure 6-10 below has a trend line
-superimposed over the actual data. In Chapter 7 we shall discuss how the OLS regression
-line of $Y_t$ is determined.
+The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. Figure 6-10 below has a trend line superimposed over the actual data, indicating a downward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$].
 
+For our example, the _deterministic trend_ of the Sales Volume series is a simple OLS regression against time period.
+
+$$Sales_t = \beta_{0} + \beta_{1}Period_t$$
+
+
+```{r, fig.width = 10, fig.height = 6, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Plotted OLS Trend line.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+trend <- lm(Sales ~ Period, table_61_series)
+table_610 <- data.frame(table_61_series, Trend = trend$fitted.values)
+table_610_series <- gather(table_610, Period)
+colnames(table_610_series) <- c("Period", "Series", "Value")
+
+figure_610 <- ggplot(data = table_610_series, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + 
+  ylim(0,800) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+ggdraw(switch_axis_position(figure_610 + theme_tufte(), axis = 'y'))
+
+```
+
+\newpage
 ##The Cyclical Fluctuations Component
 
 The cyclical component of a time series at time $t$, denoted $C_t$, and illustrated below
-in Figure 6-11, are the wide, long term up-and-down swings of the series around the trend
+in Figure 6-12 and 6-13, are the long term up-and-down swings of the series around it's trend
 line. These cycles of high and low usually last more than year, having different lengths and
 amplitudes. The cyclical component of a time series is usually attributable to some larger
-aspect of the whole business economy by which this particular data have been affected.
+aspect of the whole economy or business cycle by which this particular data have been affected.
+
+```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Trend line and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_611 <- data.frame(table_61_series, Trend = trend$fitted.values, tCycle = trend$residuals)
+table_611_series <- gather(table_611, Period)
+colnames(table_611_series) <- c("Period", "Series", "Value")
+
+figure_611 <- ggplot(data = table_611_series, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + 
+  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+ggdraw(switch_axis_position(figure_611 + theme_tufte(), axis = 'y'))
+```
+
+```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data, Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+figure_612 <- ggplot(data = table_611, aes(y = tCycle, x = Period, col = tCycle)) +
+  geom_line() + 
+  geom_hline(yintercept = 0, linetype="dashed") +
+  ylim(-175,125) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+ggdraw(switch_axis_position(figure_612 + theme_tufte(), axis = 'y'))
+```
+
+\newpage
 
 ##The Seasonal Fluctuations Component
 
@@ -572,8 +614,9 @@ Irregular changes or “shocks" to a time series are considered nonrecurring cha
 such as strikes, or unusually good (The movie E.T. and Reese's Pieces Candy) or unusually
 bad (Tylenol poisoning) publicity about a product.
 
-In Figure 6-13 below, an irregular variation occurs around period 30 as the series
-drops abruptly and then returns to its upward trend.
+In Figure 6-13 below, an irregular variation occurs around period 30 as the series drops abruptly and then returns to its upward trend.
+
+
 
 
 

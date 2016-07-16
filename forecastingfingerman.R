@@ -164,3 +164,30 @@ chart_67 <- ggplot(data = table_67_chart, aes(y = Value, x = Period, col = Serie
 
 ggdraw(switch_axis_position(chart_67 + theme_tufte() +
                               theme(legend.position = "top"), axis = 'y'))
+
+
+# trend/cylical components
+# Create trend line, by regressing Sales volume against time steps.
+trend <- lm(`Sales Volume` ~ Period, table_61_series)
+table_610 <- data.frame(table_61_series, Trend = trend$fitted.values)
+table_610_series <- gather(table_610, Period)
+colnames(table_610_series) <- c("Period", "Series", "Value")
+
+figure_610 <- ggplot(data = table_610_series, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + 
+  ylim(0,800) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+ggdraw(switch_axis_position(figure_610 + theme_tufte(), axis = 'y'))
+
+## Trend chart, with cycle component
+table_611 <- data.frame(table_61_series, Trend = trend$fitted.values, Cycle = trend$residuals)
+table_611_series <- gather(table_611, Period)
+colnames(table_611_series) <- c("Period", "Series", "Value")
+
+figure_611 <- ggplot(data = table_611_series, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + 
+  ylim(-200,800) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+ggdraw(switch_axis_position(figure_611 + theme_tufte(), axis = 'y'))
