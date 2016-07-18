@@ -598,13 +598,21 @@ ggdraw(switch_axis_position(figure_612 + theme_tufte(), axis = 'y'))
 ##The Seasonal Fluctuations Component
 
 The seasonal component of a time series at time $t$, denoted $S_t$, illustrated below in
-Figure 6-12 are the reoccurring fluctuations within a year around the trend/cyclical
+Figure 6-14 are the reoccurring fluctuations within a year around the trend/cyclical
 components. Most business data reveal seasonal fluctuations, or “seasonality," so it is
 important for business to know and plan for changes in sales or economic activity that will
 be more or less normal due to the seasonal nature of their product.
 
-Notice in Figure 6-12 that the periods of 11 and 12, 23 and 24, 35 and 36, 47 and
+Notice in Figure 6-14 that the periods of 11 and 12, 23 and 24, 35 and 36, 47 and
 48 are reoccurring local peaks in Sales Volume. This is the seasonality of Sales.
+
+
+
+
+
+
+
+\newpage
 
 ##The Irregular Variations Component
 

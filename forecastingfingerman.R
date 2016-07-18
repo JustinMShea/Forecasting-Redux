@@ -49,6 +49,7 @@ str(table_62_series)
 
 #Creat chart
 library(ggplot2)
+library(cowplot)
 plot_62 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
         geom_line() 
 
@@ -145,6 +146,25 @@ ggplot(data = table_63_series, aes(y = `Actual`, x = Period)) +
   ggtitle(`3-Period Centered Moving Average`) +
   geom_line(aes(y = `Centered Moving Average (3)`))
 
+library(forecast)
+smooth_6 <- round(ma(table_62_series[,2], order = 6, centre = TRUE), digits = 1)
+smooth_12 <- round(ma(table_62_series[,2], order = 12, centre = TRUE), digits = 1)
+
+table_66_series <- data.frame(table_62_series, "CMA(6)" = smooth_6, "CMA(12)" = smooth_12)
+colnames(table_66_series) <- c("Period", "Actual", "CMA(6)", "CMA(12)")
+
+# chart 2
+table_66_chart <- gather(table_66_series, Period)
+colnames(table_66_chart) <- c("Period", "Series", "Value")
+
+chart_66 <- ggplot(data = table_66_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line() +
+  ggtitle("Actual ~ Centered Moving Average (6) and (12)") +
+  geom_line() + 
+  ylim(320,400) + 
+  scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+
+
 ## Center Weighted Moving Average 3-Period
 smooth_67 <- filter(table_62_series[,2], c(0.6,0.3,0.1), method = "convolution", sides = 2)
 table_67_series <- data.frame(table_62_series, "CWMA(3)" = smooth_67)
@@ -191,3 +211,16 @@ figure_611 <- ggplot(data = table_611_series, aes(y = Value, x = Period, col = S
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 ggdraw(switch_axis_position(figure_611 + theme_tufte(), axis = 'y'))
+
+
+# Seasonal Component
+
+library(forecast)
+# Create centered 12 period Moving Average
+smooth_12_2 <- round(ma(table_61_series[,2], order = 12, centre = TRUE), digits = 2)
+# Create new data frame with CMA(12) and monthly number
+table_68_series <- data.frame("Period"=table_61_series[,1], "Month"=seq(1,12), "Sales"=table_61_series[,2], "CMA12"=smooth_12_2)
+table_68_series <- data.frame(table_68_series, "Ratio" = round(table_68_series$Sales/table_68_series$CMA12, digits = 2))
+
+table_69 <- data.frame("Month"=table_68_series$Month, "Ratio"=table_68_series$Ratio)
+table_69_horizontale
