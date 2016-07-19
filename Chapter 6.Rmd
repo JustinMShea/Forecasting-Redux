@@ -530,7 +530,7 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 
 \newpage
 
-#The Underlying Structure of Time Serie Data^[Stage 1 continued]
+#The Underlying Structure of Time Series Data^[Stage 1 continued]
 
 ##Classical Time Series Decomposition
 
@@ -614,6 +614,9 @@ This was first developed in 1922 by Frederick Macaulay at the National Bureau of
 
 **Step 2:** Calculate the Ratio of the Actual to the Moving Average (hence, the name of the method).
 
+**Step 3:** We collect the Ratios in a table by Month and determine the Median value of the ratios. These Median values are often termed the _Unadjusted Seasonal Indices_.
+
+\newpage
 
 ```{r, fig.cap = "Ratio to Moving Average Method", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Seasonal Component
@@ -632,7 +635,7 @@ colnames(table_68_wide) <- c(names_68, names_68)
 kable(table_68_wide,  caption = "Ratio to Moving Average Method")
 ```
 
-**Step 3:** We collect the Ratios in a table by Month and determine the Median value of the ratios. These Median values are often termed the _Unadjusted Seasonal Indices_.
+
 
 ```{r, fig.cap = "Ratios of Actual Sales to CWMA(12) Smothing",  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Create wide table, columns by month
@@ -715,11 +718,25 @@ bad (Tylenol poisoning) publicity about a product.
 
 In Figure 6-13 below, an irregular variation occurs around period 30 as the series drops abruptly and then returns to its upward trend.
 
+\newpage
+
+##Time Series Decomposition Summary
+
+Considering the four components collectively is the method of the _classical time series decomposition_. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product >
+of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$.
 
 
+**Multiplicative Time Series Decomposition**
+$$Y_t = T_t \times C_t \times S_t \times I_t$$.
 
+Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. 
 
+**Additive Time Series Decomposition**
+$$Y_t = T_t + C_t + S_t + I_t$$.
 
-
-
+Trend, seasonal fluctuations, and irregular variations are usually easily identifiable
+components of a time series. Calculations of trend and seasonality are quite straightforward,
+and adjustments for irregular variations can be simply handled. Determining the long term
+cyclical component of a time series is not so direct. Long term business cycles are beyond
+the scope of this textbook, so we refer the interested reader to the bibliography.
  
