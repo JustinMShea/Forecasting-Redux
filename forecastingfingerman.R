@@ -217,10 +217,43 @@ ggdraw(switch_axis_position(figure_611 + theme_tufte(), axis = 'y'))
 
 library(forecast)
 # Create centered 12 period Moving Average
-smooth_12_2 <- round(ma(table_61_series[,2], order = 12, centre = TRUE), digits = 2)
+smooth_12_2 <- ma(table_61_series[,2], order = 12, centre = TRUE)
 # Create new data frame with CMA(12) and monthly number
-table_68_series <- data.frame("Period"=table_61_series[,1], "Month"=seq(1,12), "Sales"=table_61_series[,2], "CMA12"=smooth_12_2)
-table_68_series <- data.frame(table_68_series, "Ratio" = round(table_68_series$Sales/table_68_series$CMA12, digits = 2))
+table_68_series <- data.frame("Period"=table_61_series[,1], "Month"=rep(month.abb), "Sales"=table_61_series[,2], "CMA12"=round(smooth_12_2, digits=2))
+table_68_series <- data.frame(table_68_series, "Ratio" = round(table_68_series$Sales/smooth_12_2, digits = 2))
 
-table_69 <- data.frame("Month"=table_68_series$Month, "Ratio"=table_68_series$Ratio)
-table_69_horizontale
+table_68_wide <- data.frame(table_68_series[1:24,],table_68_series[25:48,])
+names_68 <- colnames(table_68_series)
+colnames(table_68_wide) <- c(names_68, names_68)
+
+# Create wide table, columns by month
+table_69 <- matrix(table_68_series$Ratio, ncol=12, byrow=TRUE)
+colnames(table_69) <- rep(month.abb)
+table_69_ratio <- data.frame(table_69)
+
+# Create Unadjusted Seasonal Index - Median values of ratio by month
+table_69_med <- matrix(table_68_series$Sales/smooth_12_2 , ncol=12, byrow=TRUE)
+colnames(table_69_med) <- rep(month.abb)
+table_69_med <- data.frame(table_69_med)
+
+table_69_median <- apply(table_69_med, MARGIN = 2, FUN = median, na.rm=TRUE)
+
+table_69_median_tbl <- matrix(table_69_median, ncol=12, byrow=TRUE)
+colnames(table_69_median_tbl) <- rep(month.abb)
+table_69_median_tbl <- data.frame(table_69_median)
+
+# Create Adjusted Seasonal Index
+table_69_adjusted <- (12/sum(table_69_median))*table_69_median
+
+table_69_adjusted_tbl <- matrix(table_69_adjusted, ncol=12, byrow=TRUE)
+colnames(table_69_adjusted) <- rep(month.abb)
+table_69_adjusted <- data.frame(table_69_adjusted)
+sum(table_69_adjusted)
+
+# Add to table_68 series and calculate seasonally adjusted values
+table_68_seasonal <- data.frame(table_68_series, "Seasonal" = table_69_adjusted)
+table_68_seasonal <- data.frame(table_68_seasonal, "DeSeasonalized"=round(table_68_seasonal$Sales/table_69_adjusted, digits =2))
+
+## Chart, figure 6-14
+
+table_614_series <- gather(table_68_seasonal[,c(1,3,7)], Period, Series)
