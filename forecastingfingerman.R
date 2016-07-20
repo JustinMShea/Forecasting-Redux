@@ -261,10 +261,31 @@ figure_69 <- ggplot(data = table_69_series, aes(y = Index, x = Period, col = Ind
 
 ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
 
-# Add to table_68 series and calculate seasonally adjusted values
-table_68_seasonal <- data.frame(table_68_series, "Seasonal" = table_69_adjusted)
-table_68_seasonal <- data.frame(table_68_seasonal, "DeSeasonalized"=round(table_68_seasonal$Sales/table_69_adjusted, digits =2))
 
-## Chart, figure 6-14
+# Chart Sales volum, deseasonlized data, and deseasonalized cycle.
+table_614_seasonal <- data.frame(table_68_series, "Seasonal" = table_69_adjusted, "DeSeasonalized"= table_68_series$Sales/table_69_adjusted)
 
-table_614_series <- gather(table_68_seasonal[,c(1,3,7)], Period, Series)
+# Create Series for chart
+table_614_series <- data.frame(table_614_seasonal, "ds.Cycle" = table_614_seasonal$Sales - table_614_seasonal$DeSeasonalized)
+
+table_614_series2 <- gather(table_614_series[,c(1,3,7,8)], Period)
+colnames(table_614_series2) <- c("Period", "Series", "Value")
+
+# Create chart object
+figure_614 <- ggplot(data = table_614_series2, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + 
+  geom_hline(yintercept = 1, linetype="dashed") +
+  scale_y_continuous(breaks=seq(-50,800,200), limits = c(-50,800)) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+# Call graphics Device to illustrate chart
+ggdraw(switch_axis_position(figure_614 + theme_tufte(), axis = 'y'))
+
+
+figure_615 <- ggplot(data = table_614_series, aes(y = ds.Cycle, x = Period, col = ds.Cycle)) +
+  geom_line() + 
+  geom_hline(yintercept = 0, linetype="dashed") +
+  ylim(-50,150) + 
+  scale_x_continuous(breaks=c(11,12,23,24,35,36,47,48), limits = c(0,54))
+
+ggdraw(switch_axis_position(figure_615 + theme_tufte(), axis = 'y'))
