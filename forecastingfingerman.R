@@ -250,6 +250,17 @@ colnames(table_69_adjusted) <- rep(month.abb)
 table_69_adjusted <- data.frame(table_69_adjusted)
 sum(table_69_adjusted)
 
+#Chart seasonal index 
+table_69_series <- data.frame("Period"=seq(1,12,1),"Month"=rep(month.abb),"Index"=table_69_adjusted[1:12])
+
+figure_69 <- ggplot(data = table_69_series, aes(y = Index, x = Period, col = Index)) +
+  geom_line() + 
+  geom_hline(yintercept = 1, linetype="dashed") +
+  scale_y_continuous(breaks=seq(.9,1.3,.05), limit = c(.9,1.3)) +
+  scale_x_continuous(breaks=seq(1,12,1), limits = c(0,12), labels = rep(month.abb))
+
+ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
+
 # Add to table_68 series and calculate seasonally adjusted values
 table_68_seasonal <- data.frame(table_68_series, "Seasonal" = table_69_adjusted)
 table_68_seasonal <- data.frame(table_68_seasonal, "DeSeasonalized"=round(table_68_seasonal$Sales/table_69_adjusted, digits =2))

@@ -607,8 +607,12 @@ be more or less normal due to the seasonal nature of their product.
 
 There are many occasions in the analysis of time series when we wish to isolate the seasonality in the data. This is known as determining the _seasonal indices_ and then _deseasonalizing the data_. An established, widely used method is the __*Ratio-to-Moving-Average*__ method. 
 
-This was first developed in 1922 by Frederick Macaulay at the National Bureau of Economic Research and then adopted and promoted by Julius Shiskin of the U.S. Bureau of the Census. Often referred to as the Census II decomposition, this method has evolved and now in its most recent version, it is the Census X-11 decomposition. We shall use the time series from Table 6.2 and Figure 6-1 for this example. Because they are monthly data, we first determine the 12-period Centered Moving Average Smoothing of the data starting with period 7.
+This was first developed in 1922 by Frederick Macaulay at the National Bureau of Economic Research and then adopted and promoted by Julius Shiskin of the U.S. Bureau of the Census. Often referred to as the Census II decomposition, this method has evolved and now in its most recent version, it is the Census X-11 decomposition. 
 
+
+##Seasonal Index Example
+
+We shall use the time series from Table 6.2 and Figure 6-1 for this example. Because they are monthly data, we first determine the 12-period Centered Moving Average Smoothing of the data starting with period 7.
 
 **Step 1:** Determine the 12-period Center Moving Average Smoothing of the Data. We use the formula on page 12.
 
@@ -671,6 +675,21 @@ colnames(table_69_adjusted_tbl) <- rep(month.abb)
 table_69_adjusted_tbl <- data.frame(table_69_adjusted_tbl)
 ```
 
+```{r, fig.cap = "Sales Volum Data, Seasonal Index.",fig.width = 10, fig.height = 4, fig.fullwidth = TRUE,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+#Chart seasonal index 
+# dataframe for chart
+table_69_series <- data.frame("Period"=seq(1,12,1),"Month"=rep(month.abb),"Index"=table_69_adjusted[1:12])
+
+# chart object
+figure_69 <- ggplot(data = table_69_series, aes(y = Index, x = Period, col = Index)) +
+  geom_line() + 
+  geom_hline(yintercept = 1, linetype="dashed") +
+  scale_y_continuous(breaks=seq(.9,1.3,.05), limit = c(.9,1.3)) +
+  scale_x_continuous(breaks=seq(1,12,1), limits = c(0,12), labels = rep(month.abb))
+# draw
+ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
+```
+
 **Step 4:** We expect the average of the seasonal indices to be 1, so with 12 periods in the season, the sum of the seasonal indices must equal 12. Because their sum is `r round(sum(table_69_median), digits = 2)`, we multiply each Unadjusted Seasonal Index by $\frac{12}{`r round(sum(table_69_median), digits = 2)`}$. 
 For example, for Month 1 (January): 
 $$\frac{12}{`r round(sum(table_69_median), digits = 2)`} \times `r round(table_69_median[[1]], digits = 2)` = `r round(table_69_adjusted[[1]], digits =2)`$$ 
@@ -681,6 +700,9 @@ The sum of the Adjusted Seasonal Indices equals 12, so their average equals 1. A
 # Create Adjusted Seasonal Index
 kable(table_69_adjusted_tbl, caption = "Adjusted Seasonal Index" )
 ```
+
+
+\newpage
 
 **Step 5:** The original, Actual, values are divided by the Seasonal Indices, creating a De-Seasonalized Series.
 
