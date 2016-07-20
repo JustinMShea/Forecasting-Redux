@@ -610,6 +610,11 @@ There are many occasions in the analysis of time series when we wish to isolate 
 This was first developed in 1922 by Frederick Macaulay at the National Bureau of Economic Research and then adopted and promoted by Julius Shiskin of the U.S. Bureau of the Census. Often referred to as the Census II decomposition, this method has evolved and now in its most recent version, it is the Census X-11 decomposition. 
 
 
+
+
+
+
+\newpage
 ##Seasonal Index Example
 
 We shall use the time series from Table 6.2 and Figure 6-1 for this example. Because they are monthly data, we first determine the 12-period Centered Moving Average Smoothing of the data starting with period 7.
@@ -617,10 +622,6 @@ We shall use the time series from Table 6.2 and Figure 6-1 for this example. Bec
 **Step 1:** Determine the 12-period Center Moving Average Smoothing of the Data. We use the formula on page 12.
 
 **Step 2:** Calculate the Ratio of the Actual to the Moving Average (hence, the name of the method).
-
-**Step 3:** We collect the Ratios in a table by Month and determine the Median value of the ratios. These Median values are often termed the _Unadjusted Seasonal Indices_.
-
-\newpage
 
 ```{r, fig.cap = "Ratio to Moving Average Method", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Seasonal Component
@@ -639,7 +640,9 @@ colnames(table_68_wide) <- c(names_68, names_68)
 kable(table_68_wide,  caption = "Ratio to Moving Average Method")
 ```
 
+\newpage
 
+**Step 3:** We collect the Ratios in a table by Month and determine the Median value of the ratios. These Median values are often termed the _Unadjusted Seasonal Indices_.
 
 ```{r, fig.cap = "Ratios of Actual Sales to CWMA(12) Smothing",  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Create wide table, columns by month
@@ -649,6 +652,8 @@ table_69_ratio <- data.frame(table_69)
 
 kable(table_69_ratio, caption = "Ratios of Actual Sales to CWMA(12) Smoothing")
 ```
+
+
 ```{r, fig.cap = "Unadjusted Seasonal Index - Median Value", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Create Unadjusted Seasonal Index - Median values of ratio by month
 table_69_med <- matrix(table_68_series$Sales/smooth_12_2 , ncol=12, byrow=TRUE)
@@ -675,6 +680,17 @@ colnames(table_69_adjusted_tbl) <- rep(month.abb)
 table_69_adjusted_tbl <- data.frame(table_69_adjusted_tbl)
 ```
 
+**Step 4:** We expect the average of the seasonal indices to be 1, so with 12 periods in the season, the sum of the seasonal indices must equal 12. Because their sum is `r round(sum(table_69_median), digits = 2)`, we multiply each Unadjusted Seasonal Index by $\frac{12}{`r round(sum(table_69_median), digits = 2)`}$. 
+For example, for Month 1 (January): 
+$$\frac{12}{`r round(sum(table_69_median), digits = 2)`} \times `r round(table_69_median[[1]], digits = 2)` = `r round(table_69_adjusted[[1]], digits =2)`$$ 
+
+The sum of the Adjusted Seasonal Indices equals 12, so their average equals 1. As expected, the 12th month, December, has the largest seasonal index, and the 7th month, July, has the smallest seasonal index.
+
+```{r, fig.cap = "Adjusted Seasonal Index", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+# Create Adjusted Seasonal Index
+kable(table_69_adjusted_tbl, caption = "Adjusted Seasonal Index" )
+```
+
 ```{r, fig.cap = "Sales Volum Data, Seasonal Index.",fig.width = 10, fig.height = 4, fig.fullwidth = TRUE,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 #Chart seasonal index 
 # dataframe for chart
@@ -688,17 +704,6 @@ figure_69 <- ggplot(data = table_69_series, aes(y = Index, x = Period, col = Ind
   scale_x_continuous(breaks=seq(1,12,1), limits = c(0,12), labels = rep(month.abb))
 # draw
 ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
-```
-
-**Step 4:** We expect the average of the seasonal indices to be 1, so with 12 periods in the season, the sum of the seasonal indices must equal 12. Because their sum is `r round(sum(table_69_median), digits = 2)`, we multiply each Unadjusted Seasonal Index by $\frac{12}{`r round(sum(table_69_median), digits = 2)`}$. 
-For example, for Month 1 (January): 
-$$\frac{12}{`r round(sum(table_69_median), digits = 2)`} \times `r round(table_69_median[[1]], digits = 2)` = `r round(table_69_adjusted[[1]], digits =2)`$$ 
-
-The sum of the Adjusted Seasonal Indices equals 12, so their average equals 1. As expected, the 12th month, December, has the largest seasonal index, and the 7th month, July, has the smallest seasonal index.
-
-```{r, fig.cap = "Adjusted Seasonal Index", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-# Create Adjusted Seasonal Index
-kable(table_69_adjusted_tbl, caption = "Adjusted Seasonal Index" )
 ```
 
 
