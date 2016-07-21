@@ -289,3 +289,10 @@ figure_615 <- ggplot(data = table_614_series, aes(y = ds.Cycle, x = Period, col 
   scale_x_continuous(breaks=c(11,12,23,24,35,36,47,48), limits = c(0,54))
 
 ggdraw(switch_axis_position(figure_615 + theme_tufte(), axis = 'y'))
+
+# Decomposition
+
+table_61_time_series <- ts(data = table_61_series$`Sales Volume`, frequency = 12)
+table_61_decompose <- decompose(table_61_time_series)
+plot(stl(table_61_time_series, s.window = 12, t.window = 12))
+

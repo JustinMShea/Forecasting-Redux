@@ -534,8 +534,27 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 
 ##Classical Time Series Decomposition
 
-Given an economic time series as shown in Figure 6-1 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components:
-trend, cyclical, seasonal, and irregular components.
+Given an economic time series as shown in Figure 6-1 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components.  
+
+
+Considering the four components collectively is the method of the _classical time series decomposition_. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product
+of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$.
+
+
+**Multiplicative Time Series Decomposition**
+$$Y_t = T_t \times C_t \times S_t \times I_t$$.
+
+Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. 
+
+**Additive Time Series Decomposition**
+$$Y_t = T_t + C_t + S_t + I_t$$.
+
+Trend, seasonal fluctuations, and irregular variations are usually easily identifiable
+components of a time series. Calculations of trend and seasonality are quite straightforward,
+and adjustments for irregular variations can be simply handled. Determining the long term
+cyclical component of a time series is not so direct. Long term business cycles are beyond
+the scope of this chapter.
+
 
 ##The Trend Component
 
@@ -752,7 +771,6 @@ kable(table_614_seasonal, digits = 2, caption = "Actual Sales, CWMA(12) Smoothin
 
 
 
-\newpage
 
 ##The Irregular Variations Component
 
@@ -764,25 +782,7 @@ bad (Tylenol poisoning) publicity about a product.
 
 In Figure 6-13 below, an irregular variation occurs around period 30 as the series drops abruptly and then returns to its upward trend.
 
-\newpage
-
-##Time Series Decomposition Summary
-
-Considering the four components collectively is the method of the _classical time series decomposition_. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product >
-of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$.
 
 
-**Multiplicative Time Series Decomposition**
-$$Y_t = T_t \times C_t \times S_t \times I_t$$.
 
-Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. 
-
-**Additive Time Series Decomposition**
-$$Y_t = T_t + C_t + S_t + I_t$$.
-
-Trend, seasonal fluctuations, and irregular variations are usually easily identifiable
-components of a time series. Calculations of trend and seasonality are quite straightforward,
-and adjustments for irregular variations can be simply handled. Determining the long term
-cyclical component of a time series is not so direct. Long term business cycles are beyond
-the scope of this textbook, so we refer the interested reader to the bibliography.
  
