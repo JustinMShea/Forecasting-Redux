@@ -533,27 +533,29 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 #The Underlying Structure of Time Series Data^[Stage 1 continued]
 
 ##Classical Time Series Decomposition
+Given an economic time series as shown in Figure 6-1 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. \textcolor{red}{The components can be either added together or multiplied by each other to define a time series}.   
 
-Given an economic time series as shown in Figure 6-1 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components.  
 
+**Additive Time Series Decomposition**
 
-Considering the four components collectively is the method of the _classical time series decomposition_. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product
-of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$.
+$$Y_t = T_t + C_t + S_t + I_t$$.
 
 
 **Multiplicative Time Series Decomposition**
 $$Y_t = T_t \times C_t \times S_t \times I_t$$.
 
-Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. 
 
-**Additive Time Series Decomposition**
-$$Y_t = T_t + C_t + S_t + I_t$$.
+Considering the four components collectively is the method of the _classical time series decomposition_. Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$. 
+
 
 Trend, seasonal fluctuations, and irregular variations are usually easily identifiable
 components of a time series. Calculations of trend and seasonality are quite straightforward,
 and adjustments for irregular variations can be simply handled. Determining the long term
 cyclical component of a time series is not so direct. Long term business cycles are beyond
 the scope of this chapter.
+
+
+\newpage
 
 
 ##The Trend Component
@@ -625,11 +627,16 @@ components. Most business data reveal seasonal fluctuations, or _seasonality_, s
 important for businesses to know and plan for changes in sales or economic activity that will
 be more or less normal due to the seasonal nature of their product.
 
+
+
+\newpage
+
 ##Seasonal Indices: The Ratio-to-Moving Average Method
 
 There are many occasions in the analysis of time series when we wish to isolate the seasonality in the data. This is known as determining the _seasonal indices_ and then _deseasonalizing the data_. An established, widely used method is the __*Ratio-to-Moving-Average*__ method. 
 
-This was first developed in 1922 by Frederick Macaulay at the National Bureau of Economic Research and then adopted and promoted by Julius Shiskin of the U.S. Bureau of the Census. Often referred to as the Census II decomposition, this method has evolved and now in its most recent version, it is the Census X-11 decomposition. 
+This was first developed in 1922 by Frederick Macaulay at the National Bureau of Economic Research and then adopted and promoted by Julius Shiskin of the U.S. Bureau of the Census. Often referred to as the Census II decomposition, this method has evolved and now in its most recent version, it is the Census [\textcolor{blue}{X-13 decomposition}](http://www.census.gov/srd/www/x13as/).
+
 
 ##Seasonal Index Example
 
