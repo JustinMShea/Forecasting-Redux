@@ -189,6 +189,7 @@ ggdraw(switch_axis_position(chart_67 + theme_tufte() +
 # trend/cylical components
 # Create trend line, by regressing Sales volume against time steps.
 trend <- lm(`Sales Volume` ~ Period, table_61_series)
+smooth_12 <- round(ma(table_61_series[,2], order = 12, centre = TRUE), digits = 1)
 table_610 <- data.frame(table_61_series, Trend = trend$fitted.values)
 table_610_series <- gather(table_610, Period)
 colnames(table_610_series) <- c("Period", "Series", "Value")
@@ -227,7 +228,7 @@ names_68 <- colnames(table_68_series)
 colnames(table_68_wide) <- c(names_68, names_68)
 
 # Create wide table, columns by month
-table_69 <- matrix(table_68_series$Ratio, ncol=12, byrow=TRUE)
+table_69 <- matrix(table_68_series$Ratio, ncol=12, byrow = TRUE)
 colnames(table_69) <- rep(month.abb)
 table_69_ratio <- data.frame(table_69)
 
