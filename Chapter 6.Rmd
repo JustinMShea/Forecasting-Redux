@@ -138,10 +138,10 @@ $Y_{T+\ell}$: A future observation of $\ell$ periods ahead.
 $Y_{T-\ell}$: A historical observation of $\ell$ periods back.
 
 
-As we distinguish between $Y_i$ and $\hat{Y_i}$ in regression models, we shall destinguish between $Y_{T+\ell}$ and $\hat{Y_T}{\ell}$ in time series models.
+As we distinguish between $Y_i$ and $\hat{Y_i}$ in regression models, we shall distinguish between $Y_{T+\ell}$ and $\hat{Y_T}{\ell}$ in time series models.
 
 $Y_{T+\ell}$ is the future observation of $Y$, $\ell$ period ahead,
-and unkown at time $T$.
+and unknown at time $T$.
 
 
 $\hat{Y_T}{\ell}$ is the forecast of the future observation, 
@@ -201,7 +201,7 @@ ggdraw(switch_axis_position(figure_621 + theme_tufte() , axis = 'y'))
 ```
 
 
-Becuase the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$.^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$.
+Because the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$.^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$.
 
 
 
@@ -615,7 +615,7 @@ ggdraw(switch_axis_position(figure_612 + theme_tufte(), axis = 'y'))
 
 \newpage
 
-The 12-Period Centered Moving Average discussed on page 12 offers a more dynamic, tighter fit for measuring the montly Sales trend data. Unfortunatly, the first and last six periods of the trend line are missing due to the nature of the calculation.
+The 12-Period Centered Moving Average discussed on page 12 offers a more dynamic, tighter fit for measuring the monthly Sales trend data. Unfortunately, this method results in omitting the first and last six periods of the trend line, a topic we will cover in future chapters.
 
 ```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with CWMA(12) Trend line.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 trend_smooth <- ma(table_61_series[,2], order = 12, centre = TRUE)
@@ -673,14 +673,21 @@ There are many occasions in the analysis of time series when we wish to isolate 
 This was first developed in 1922 by Frederick Macaulay at the National Bureau of Economic Research and then adopted and promoted by Julius Shiskin of the U.S. Bureau of the Census. Often referred to as the Census II decomposition, this method has evolved and now in its most recent version, it is the Census [\textcolor{blue}{X-13 decomposition}](http://www.census.gov/srd/www/x13as/).
 
 
-##Seasonal Index Example
+##Seasonal Index, Basic Example
 
-We shall use the time series from Table 6.2 and Figure 6-1 for this example. Because they are monthly data, we first determine the 12-period Centered Moving Average Smoothing of the data starting with period 7.
+We shall continue to use the Sales Volume time series from Table 6.2 and Figure 6-1 for this example. Because they are monthly data and there are 12 months in a year, we first determine the 12-period Centered Moving Average Smoothing of the data. As there are 48 observations, or 4 years of data, we start with period 7 and end at period 42. Although the Centered Moving Average method does not allow one to calculate the cyclical component at the beginning and end of a time series, this example shall illustrate why this is not an issue when creating Seasonal indices.
 
 **Step 1:** Determine the 12-period Center Moving Average Smoothing of the Data. We use the formula on page 12.
 
+
+$CMA_{t}(12) = \frac{Y_{T+6}+2Y_{T+5}+2Y_{T+4}+2Y_{T+3}+2Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+2Y_{T-2}+Y_{T-3}+2Y_{T-4}+2Y_{T-5}+Y_{T-6}}{24}$
+
+
 **Step 2:** Calculate the Ratio of the Actual to the Moving Average (hence, the name of the method).
 
+$$Ratio_t = \frac{Sales_t}{CMA_t(12)}$$
+
+\newpage
 ```{r, fig.cap = "Ratio to Moving Average Method", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Seasonal Component
 
