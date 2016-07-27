@@ -264,7 +264,8 @@ ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
 
 
 # Add to table_68 series and calculate seasonally adjusted values
-table_614_seasonal <- data.frame(table_68_series, "Seasonal" = table_69_adjusted, "DeSeasonalized"= table_68_series$Sales/table_69_adjusted)
+table_614_seasonal <- data.frame(table_68_series, table_69_adjusted, table_68_series$Sales/table_69_adjusted)
+colnames(table_614_seasonal) <- c(colnames(table_68_series), "Seasonal", "DeSeasonalized")
 
 # Create Series for chart
 table_614_series <- data.frame(table_614_seasonal, "ds.Cycle" = table_614_seasonal$Sales - table_614_seasonal$DeSeasonalized)
@@ -296,18 +297,18 @@ table_61_time_series <- ts(data = table_61_series$`Sales Volume`, frequency = 12
 table_61_decompose <- decompose(table_61_time_series)
 plot(stl(table_61_time_series, s.window = 12, t.window = 12))
 
-# Add to table_614_series series and calculate irregular values.
-table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = table_614_seasonal$Sales/table_614_seasonal$DeSeasonalized)
+# Irregular values
+#Add to table_614_series series and calculate irregular values.
+table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = table_614_seasonal$Sales/(table_614_seasonal$CMA12*table_614_seasonal$Seasonal))
 
 # Create Series for chart
 table_Irregular_series <- gather(table_615_Irregular[,c(1,3,7,8)], Period)
-colnames(table_614_series2) <- c("Period", "Series", "Value")
+colnames(table_Irregular_series) <- c("Period", "Series", "Value")
 
 # Create chart object
-figure_Irregular_series <- ggplot(data = table_Irregular_series, aes(y = Value, x = Period, col = Series)) +
+figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular, x = Period, col = Irregular)) +
   geom_line() + 
-  geom_hline(yintercept = 1, linetype="dashed") +
-  scale_y_continuous(breaks=seq(-50,800,200), limits = c(-50,800)) + 
+  geom_hline(yintercept = 0, linetype="dashed") +
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
