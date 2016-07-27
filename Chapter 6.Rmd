@@ -790,9 +790,9 @@ colnames(table_614_seasonal) <- c(colnames(table_68_series), "Seasonal", "DeSeas
 
 
 # Create Series for chart
-table_614_series <- data.frame(table_614_seasonal, "ds.Cycle" = table_614_seasonal$Sales - table_614_seasonal$DeSeasonalized)
+table_614_series <- data.frame(table_614_seasonal)
 
-table_614_series2 <- gather(table_614_series[,c(1,3,7,8)], Period)
+table_614_series2 <- gather(table_614_series[,c(1,3,7)], Period)
 colnames(table_614_series2) <- c("Period", "Series", "Value")
 
 # Create chart object
@@ -806,21 +806,13 @@ figure_614 <- ggplot(data = table_614_series2, aes(y = Value, x = Period, col = 
 ggdraw(switch_axis_position(figure_614 + theme_tufte(), axis = 'y'))
 ```
 
-```{r, fig.width = 10, fig.height = 3, fig.fullwidth = TRUE, fig.cap = "DeSeasonalized Sales Volume Data, Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-figure_615 <- ggplot(data = table_614_series, aes(y = ds.Cycle, x = Period, col = ds.Cycle)) +
-  geom_line() + 
-  geom_hline(yintercept = 0, linetype="dashed") +
-  ylim(-50,150) + 
-  scale_x_continuous(breaks=c(11,12,23,24,35,36,47,48), limits = c(0,54))
-
-ggdraw(switch_axis_position(figure_615 + theme_tufte(), axis = 'y'))
-```
-
 
 ```{r, fig.cap = "Adjusted Seasonal Index", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 kable(table_614_seasonal, digits = 2, caption = "Actual Sales, CWMA(12) Smoothing, Ratio, Seasonal Index, and DeSeasonaled Sales" )
 ```
 
+
+\newpage
 
 ##The Irregular Variations Component
 
@@ -843,7 +835,7 @@ table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = table_614_se
 figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular, x = Period, col = Irregular)) +
   geom_line() + 
   geom_hline(yintercept = 1, linetype="dashed") +
-  ylim(-0.5,150) + 
+  ylim(-0.5,0.25) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
