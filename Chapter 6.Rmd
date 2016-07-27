@@ -832,22 +832,22 @@ In Figure 6-13 below, an irregular variation occurs around period 30 as the seri
 
 
 ```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-# Add to table_68 series and calculate seasonally adjusted values
+# Add to table_614_series series and calculate irregular values.
 table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = table_614_seasonal$Sales/table_614_seasonal$DeSeasonalized)
 
 # Create Series for chart
-table_Irregular_series <- gather(table_614_series[,c(1,3,7,8)], Period)
+table_Irregular_series <- gather(table_615_Irregular[,c(1,3,7,8)], Period)
 colnames(table_614_series2) <- c("Period", "Series", "Value")
 
 # Create chart object
-figure_614 <- ggplot(data = table_614_series2, aes(y = Value, x = Period, col = Series)) +
+figure_Irregular_series <- ggplot(data = table_Irregular_series, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
   geom_hline(yintercept = 1, linetype="dashed") +
   scale_y_continuous(breaks=seq(-50,800,200), limits = c(-50,800)) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
-ggdraw(switch_axis_position(figure_614 + theme_tufte(), axis = 'y'))
+ggdraw(switch_axis_position(figure_Irregular_series + theme_tufte(), axis = 'y'))
 ```
 
 

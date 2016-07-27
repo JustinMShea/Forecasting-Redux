@@ -263,7 +263,7 @@ figure_69 <- ggplot(data = table_69_series, aes(y = Index, x = Period, col = Ind
 ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
 
 
-# Chart Sales volum, deseasonlized data, and deseasonalized cycle.
+# Add to table_68 series and calculate seasonally adjusted values
 table_614_seasonal <- data.frame(table_68_series, "Seasonal" = table_69_adjusted, "DeSeasonalized"= table_68_series$Sales/table_69_adjusted)
 
 # Create Series for chart
@@ -292,8 +292,25 @@ figure_615 <- ggplot(data = table_614_series, aes(y = ds.Cycle, x = Period, col 
 ggdraw(switch_axis_position(figure_615 + theme_tufte(), axis = 'y'))
 
 # Decomposition
-
 table_61_time_series <- ts(data = table_61_series$`Sales Volume`, frequency = 12)
 table_61_decompose <- decompose(table_61_time_series)
 plot(stl(table_61_time_series, s.window = 12, t.window = 12))
+
+# Add to table_614_series series and calculate irregular values.
+table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = table_614_seasonal$Sales/table_614_seasonal$DeSeasonalized)
+
+# Create Series for chart
+table_Irregular_series <- gather(table_615_Irregular[,c(1,3,7,8)], Period)
+colnames(table_614_series2) <- c("Period", "Series", "Value")
+
+# Create chart object
+figure_Irregular_series <- ggplot(data = table_Irregular_series, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + 
+  geom_hline(yintercept = 1, linetype="dashed") +
+  scale_y_continuous(breaks=seq(-50,800,200), limits = c(-50,800)) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+# Call graphics Device to illustrate chart
+ggdraw(switch_axis_position(figure_Irregular_series + theme_tufte(), axis = 'y'))
+
 
