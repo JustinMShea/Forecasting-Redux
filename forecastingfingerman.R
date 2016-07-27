@@ -251,6 +251,10 @@ colnames(table_69_adjusted) <- rep(month.abb)
 table_69_adjusted <- data.frame(table_69_adjusted)
 sum(table_69_adjusted)
 
+display_table_69 <- rbind(table_69_med, table_69_median)
+row.names(c("Year 1, Year 2, Year 3, Year 4, Median"))
+
+
 #Chart seasonal index 
 table_69_series <- data.frame("Period"=seq(1,12,1),"Month"=rep(month.abb),"Index"=table_69_adjusted[1:12])
 

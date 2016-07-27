@@ -684,9 +684,6 @@ We shall continue to use the Sales Volume time series from Table 6.2 and Figure 
 **Step 1:** Determine the 12-period Center Moving Average Smoothing of the Data. We use the formula on page 12.
 
 
-$CMA_{t}(12) = \frac{Y_{T+6}+2Y_{T+5}+2Y_{T+4}+2Y_{T+3}+2Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+2Y_{T-2}+Y_{T-3}+2Y_{T-4}+2Y_{T-5}+Y_{T-6}}{24}$
-
-
 **Step 2:** Calculate the Ratio of the Actual to the Moving Average (hence, the name of the method).
 
 
@@ -730,14 +727,11 @@ table_69_median_tbl <- round(matrix(table_69_median, ncol=12, byrow=TRUE), digit
 colnames(table_69_median_tbl) <- rep(month.abb)
 table_69_median_tbl <- data.frame(table_69_median_tbl)
 
-display_table_69 <- rbind(table_69_med, table_69_median_tbl)
-row.names(c("Year 1, Year 2, Year 3, Year 4, Median"))
+display_table_69 <- round(rbind(table_69_med, table_69_median), digits = 2)
+row.names(display_table_69) <- c("Year 1", "Year 2", "Year 3", "Year 4", "Median")
 
-kable(display_table_69, caption = "Ratios of Actual Sales to CWMA(12) Smoothing, Unadjusted Seasonal Index - Median Value", now.names = TRUE)
+kable(display_table_69, caption = "Ratios of Actual Sales to CWMA(12) Smoothing, with Median Monthly values (Unadjusted Seasonal Index)", row.names = TRUE)
 
-```
-
-```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Create Adjusted Seasonal Index
 table_69_adjusted <- (12/sum(table_69_median))*table_69_median
 
@@ -745,23 +739,24 @@ table_69_adjusted_tbl <- round(matrix(table_69_adjusted, ncol=12, byrow=TRUE), d
 colnames(table_69_adjusted_tbl) <- rep(month.abb)
 table_69_adjusted_tbl <- data.frame(table_69_adjusted_tbl)
 
-
-
-
 ```
+
+\newpage
 
 **Step 4:** We expect the average of the seasonal indices to be 1, so with 12 periods in the season, the sum of the seasonal indices must equal 12. Because their sum is `r round(sum(table_69_median), digits = 2)`, we multiply each Unadjusted Seasonal Index by $\frac{12}{`r round(sum(table_69_median), digits = 2)`}$. 
 For example, for Month 1 (January): 
 $$\frac{12}{`r round(sum(table_69_median), digits = 2)`} \times `r round(table_69_median[[1]], digits = 2)` = `r round(table_69_adjusted[[1]], digits =2)`$$ 
 
-The sum of the Adjusted Seasonal Indices equals 12, so their average equals 1. As expected, the 12th month, December, has the largest seasonal index, and the 7th month, July, has the smallest seasonal index.
+The sum of the Adjusted Seasonal Indices equals 12, so their average equals 1. As one might have expected, Sales are seasonally strongest in December, the 12th month, and weakest in July, the 7th month. The Adjusted Seasonal index values reflect this.
+
+
 
 ```{r, fig.cap = "Adjusted Seasonal Index", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Create Adjusted Seasonal Index
 kable(table_69_adjusted_tbl, caption = "Adjusted Seasonal Index" )
 ```
 
-```{r, fig.cap = "Sales Volum Data, Seasonal Index.",fig.width = 10, fig.height = 4, fig.fullwidth = TRUE,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.cap = "Sales Volum Data, Seasonal Index.",fig.width = 10, fig.height = 5, fig.fullwidth = TRUE,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 #Chart seasonal index 
 # dataframe for chart
 
@@ -784,9 +779,8 @@ ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
 \newpage
 
 **Step 5:** The original, Actual, values are divided by the Seasonal Indices, creating a De-Seasonalized Series.
-
-Notice in Figure 6-15 that the periods of 11 and 12, 23 and 24, 35 and 36, 47 and
-48 are reoccurring local peaks in Sales Volume. This is the seasonality of Sales.
+$$DeSeasonalized_t = \frac{Sales_t}{Seasonal Index_t}$$
+Notice in the Figure below that the periods of (11,12), (23,24), (35,36), and (47,48) are reoccurring local peaks in Sales Volume. This is the seasonality of Sales.
 
 
 ```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -804,8 +798,8 @@ colnames(table_614_series2) <- c("Period", "Series", "Value")
 # Create chart object
 figure_614 <- ggplot(data = table_614_series2, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
-  geom_hline(yintercept = 1, linetype="dashed") +
-  scale_y_continuous(breaks=seq(-50,800,200), limits = c(-50,800)) + 
+  geom_vline(xintercept = c(11.5,23.5,35.5,47.5), alpha = 1/3, linetype="dashed") +
+  scale_y_continuous(breaks=seq(0,800,200), limits = c(0,800)) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
