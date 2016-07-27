@@ -730,9 +730,11 @@ table_69_median_tbl <- round(matrix(table_69_median, ncol=12, byrow=TRUE), digit
 colnames(table_69_median_tbl) <- rep(month.abb)
 table_69_median_tbl <- data.frame(table_69_median_tbl)
 
+display_table_69 <- rbind(table_69_med, table_69_median_tbl)
+row.names(c("Year 1, Year 2, Year 3, Year 4, Median"))
 
+kable(display_table_69, caption = "Ratios of Actual Sales to CWMA(12) Smoothing, Unadjusted Seasonal Index - Median Value", now.names = TRUE)
 
-kable(table_69_median_tbl, caption = "Unadjusted Seasonal Index - Median Value" )
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -742,6 +744,10 @@ table_69_adjusted <- (12/sum(table_69_median))*table_69_median
 table_69_adjusted_tbl <- round(matrix(table_69_adjusted, ncol=12, byrow=TRUE), digits = 2)
 colnames(table_69_adjusted_tbl) <- rep(month.abb)
 table_69_adjusted_tbl <- data.frame(table_69_adjusted_tbl)
+
+
+
+
 ```
 
 **Step 4:** We expect the average of the seasonal indices to be 1, so with 12 periods in the season, the sum of the seasonal indices must equal 12. Because their sum is `r round(sum(table_69_median), digits = 2)`, we multiply each Unadjusted Seasonal Index by $\frac{12}{`r round(sum(table_69_median), digits = 2)`}$. 
