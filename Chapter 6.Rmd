@@ -282,7 +282,7 @@ Centered Smoothing Average (3)")
 ```
 
 ```{r, fig.cap = "CMA(3), expanded.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE}
-ggdraw(switch_axis_position(chart_63 + ggtitle("Centered Moving Average(3)") + theme_tufte() +  theme(legend.position = "bottom"), axis = 'y'))
+#ggdraw(switch_axis_position(chart_63 + ggtitle("Centered Moving Average(3)") + theme_tufte() +  theme(legend.position = "bottom"), axis = 'y'))
 ```
 
 
@@ -353,7 +353,7 @@ Centered Smoothing Average (3) & (5)")
    
 \newpage
 
-Below is a graph of actual values along with 5-period smoothing.
+Below is a graph of actual values along with 5-period smoothing. This following graph has both 3 and 5 period smoothings superimposed.
 ```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(5)", fig.width = 10, fig.height = 4,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(ggplot2)
 table_641_chart <- table_64_series[,c(1,2,4)]
@@ -370,7 +370,10 @@ chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Ser
 ggdraw(switch_axis_position(chart_641 + theme_tufte() +
             theme(legend.position = "bottom"), axis = 'y'))
 ```
-This next graph has both 3 and 5 period smoothings superimposed.
+
+
+
+
 ```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(3,5)", fig.width = 10, fig.height = 4, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # chart 2
 table_642_chart <- table_64_series
@@ -455,7 +458,7 @@ series data use 13-period and 39-period smoothing of weekly data.
 
 
 
-```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(6,12)", fig.width = 10, fig.height = 4, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(6,12)", fig.width = 10, fig.height = 6, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
 smooth_6 <- round(ma(table_62_series[,2], order = 6, centre = TRUE), digits = 1)
 smooth_12 <- round(ma(table_62_series[,2], order = 12, centre = TRUE), digits = 1)
@@ -598,7 +601,7 @@ colnames(table_611_series) <- c("Period", "Series", "Value")
 
 figure_611 <- ggplot(data = table_611_series, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
-   geom_hline(yintercept = 1, linetype="dashed") +
+   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
   scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
@@ -610,7 +613,7 @@ ggdraw(switch_axis_position(figure_611 + theme_tufte(), axis = 'y'))
 ```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data, Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_612 <- ggplot(data = table_611, aes(y = t.Cycle, x = Period, col = t.Cycle)) +
   geom_line() + 
-  geom_hline(yintercept = 0, linetype="dashed") +
+  geom_hline(yintercept = 0, linetype="dashed", alpha = 1/2) +
   ylim(-175,125) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
@@ -642,7 +645,7 @@ colnames(table_smooth_c_series) <- c("Period", "Series", "Value")
 
 figure_smooth_c <- ggplot(data = table_smooth_c_series, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
-   geom_hline(yintercept = 1, linetype="dashed") +
+   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
   scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
@@ -652,7 +655,7 @@ ggdraw(switch_axis_position(figure_smooth_c + theme_tufte(), axis = 'y'))
 ```{r, fig.width = 10, fig.height = 3, fig.fullwidth = TRUE, fig.cap = "Sales Data, CWMA(12) Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_smooth_c2 <- ggplot(data = table_smooth_c, aes(y = t.Cycle, x = Period, col = t.Cycle)) +
   geom_line() + 
-  geom_hline(yintercept = 0, linetype="dashed") +
+  geom_hline(yintercept = 0, linetype="dashed", alpha = 1/2) +
   ylim(-175,125) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
@@ -768,7 +771,7 @@ colnames(table_69_series) <- c("Period", "Series", "Value")
 # chart object
 figure_69 <- ggplot(data = table_69_series, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
-  geom_hline(yintercept = 1, linetype="dashed") +
+  geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
   scale_y_continuous(breaks=seq(.9,1.3,.05), limit = c(.9,1.3)) +
   scale_x_continuous(breaks=seq(1,12,1), limits = c(0,12), labels = rep(month.abb))
 # draw
@@ -824,7 +827,7 @@ bad (Tylenol poisoning) publicity about a product.
 
 In Figure 6-18 below, an irregular variation occurs around period 30 as the series drops abruptly and then returns to its upward trend.
 
-$$Irregular_t = \frac{Sales_t}{Trend_t \times Seasonal_t}$$
+$$Irregular_t = \frac{Sales_t}{Trend_t \times SeasonalIndex_t}$$
 
 
 ```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -836,7 +839,7 @@ table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = table_614_se
 # Create chart object
 figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular, x = Period, col = Irregular)) +
   geom_line() + 
-  geom_hline(yintercept = 1, linetype="dashed") +
+  geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
