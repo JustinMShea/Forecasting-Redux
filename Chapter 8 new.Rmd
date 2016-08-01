@@ -1,0 +1,40 @@
+---
+title: "Chapter 8"
+subtitle: "Smoothing Methods on Time Series"
+author: ""
+date: ""
+output:
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+# invalidate cache when the tufte version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
+options(htmltools.dir.version = FALSE)
+```
+
+
+We now examine another areas of time series forecasting similar to weighted moving
+averages, often called _exponential smoothing methods_. One of the major distinctions
+between regressions methods on time series data and smoothing methods is that regressions give equal weight to all of the sample data whereas smoothing methods give decreasing weight to older, more distant data.
+
+> "An economist is an expert who will know tomorrow why the things he predicted yesterday
+didn't happen today."
+>
+> `r tufte::quote_footer('--- Evan Esar')`
+
+\newpage
+
+##Single Exponential Smoothing
+
+A popular, widely used time series smoothing and forecasting method is single exponential smoothing (also called one-parameter exponential smoothing). Exponential smoothing is a form of weighted moving average in that recent observations carry more weight than older observations.
+Exponential smoothing is based on the concept that a new, one step-ahead, forecast can be determined from the previous forecast and the error of the previous forecast. We illustrate this concept below. 
+
+Suppose we have the following series.
+
+
+

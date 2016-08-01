@@ -20,7 +20,6 @@ options(htmltools.dir.version = FALSE)
 The preceding three chapters of this book dealt with regression methods applied to cross sectional data. When we have cross sectional data our approach to forecasting is to use the
 explanatory variables to forecast the value of the dependent variable. This approach to forecasting is often termed _interpolation_.
 
-
 The other broad method of quantitative business forecasting is to use the history of the data we wish to forecast. We examine the historical pattern of the data we wish to forecast and try to find a discernible pattern. Using this pattern, we forecast forward the future pattern of the data. This method of forecasting is often termed _extrapolation_. The use of the historical pattern of the data to be forecast is known as _time series methods_.
 
 \newpage
