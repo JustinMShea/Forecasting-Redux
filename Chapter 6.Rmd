@@ -36,8 +36,6 @@ The other broad method of quantitative business forecasting is to use the histor
 
    To create a time series of data from our example of Sales Volume data we now collect a series of Sales Volume data from _just one location over consecutive monthly periods_. We collected a data set of four years, or 48 consecutive months (48 periods), of Sales Volume.
 
-
-
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from table 6.1 text file
 Table_61_path <- path.expand("~/R/forecasting/Table 6.1.txt")
@@ -53,9 +51,7 @@ kable(table_61, caption = "Four Years of Time Series Data")
 
 ## Graphically displaying Time Series Data: Time Series Plot
 
-The corresponding _time series plot_ or _time series graph_ of the Sales Volume is in Figure 6-1 below.
-
-```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.cap = "The corresponding time series plot or time series graph of Monthly Sales Volume.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Page 3, create plot
  # First, gather the time series data table into one column.
 library(tidyr)
@@ -71,24 +67,20 @@ library(cowplot)
 
 figure_61 <- ggplot(data = table_61_series, aes(y = Sales, x = Period)) +
         geom_line() + 
-        ylim(0,800) + 
-        scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54)) +
-        ggtitle("Figure 6.1: Sales Volume") 
+        scale_y_continuous(breaks=seq(0,800,100), limits = c(0,800)) + 
+        scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 ggdraw(switch_axis_position(figure_61 + theme_tufte(), axis = 'y'))
-
 ```
-
-
 
 ## Tips on Graphing Times Series Data: The Practice
 
-   Good graphical presentations of time series data and forecasts is useful and powerful in the presentation of ideas. A good layout for a time series graph is always helpful in the data analysis, model fitting, and forecasting.
+   Good graphical presentations of time series data and forecasts are both useful and powerful in the presentation of ideas. A good layout for a time series graph is always helpful in data analysis, model fitting, and forecasting.
 
    Notice in our graph, that we allowed for additional space to the right of the last observation of our data series. We have 48 observations but allowed for 54 observations. Notice too that because the time series graph reveals an upward direction of the data series
 we also allowed for additional space above the last observation. The value of the last observation is 677.4 but allowed for values up to 800. In other words we have provided for plenty of "white space" for our graph.
 
-   Along the horizontal or time period axis we created horizontal reference lines at every six periods. It would be too dense to create horizontal reference lines at every of 54 periods. And it would be too sparse to form lines at every 12th period. These are monthly data so every 6 periods denotes a half year. Period 6 is a June, Period 12 is a December, Period 18 is June again, and so on.
+   Along the horizontal or time period axis we created horizontal reference lines at every six periods. It would be too dense to create horizontal reference lines at every of 54 periods. And it would be too sparse to form lines at every 12th period. These are monthly data so every 6 periods denotes a half year. Period 6 is June, Period 12 is December, Period 18 is June again, and so on.
 
    Along the vertical or Sales Volume axis we set vertical reference lines at every 100 units. Units of 100 allow for sufficient spacing so the graph does not become crowded, and yet detailed enough so that we can estimate values with reasonable accuracy.
 
@@ -100,25 +92,11 @@ without sacrificing accuracy or information.
 ## Time Series Data: Time Series Notation
 
 
-When discussing observations in our data set we think of the data in the form
-```{marginfigure}
-Past or historical observations
+When discussing observations in our data set we think of the data in the following form:
 
-$\dotso$, $Y_{T-1}$, $Y_{T-2}$, $Y_{T-3}$
-```
-```{marginfigure}
-Most recent observation
+$$Y_1, Y_2, Y_3, \dots, Y_T$$
 
-$Y_T$
-```
-```{marginfigure}
-Future observation
-
-$Y_{T+1}$, $Y_{T+2}$, $Y_{T+3}$, $\dotso$
-```
-$$Y_1, Y_2, Y_3, ..., Y_T$$
-
-$Y_1$ is the first observation, $Y_2$ is the second observation, and so on. is the oldest observation down through $Y_T$ which is the most recent observation. In our example data series:
+$Y_1$ is the first observation, $Y_2$ is the second observation, and so on. $Y_1$ is the oldest observation down through $Y_T$ which is the most recent observation. In our example data series:
 
 $$Y_1 = 95.5$$
 $$Y_2 = 127.0$$
@@ -126,9 +104,7 @@ $$Y_3 = 118.0$$
 $$\vdots$$
 $$Y_{48} = 677.4$$
 
-
-The uppercase letter $T$ of $Y_T$ will always mean the most recent observation in our time series. $Y_{T+1}$ means then an observation one period into the future. Thus, $Y_{T+1}$, $Y_{T+2}$, $Y_{T+3}$, denote future observations one, two, and three periods beyond the present time $Y_T$. Similarly, $Y_{T-1}$ denotes an observation one period in the past, so that $Y_{T-1}$, $Y_{T-2}$, $Y_{T-3}$, denote observations one, two, and three periods in the past.
-
+The uppercase letter $T$ of $Y_T$ will always mean the most recent observation in our time series. $Y_{T+1}$ means then an observation one period into the future. Thus, $Y_{T+1}, Y_{T+2}, Y_{T+3}, \dots$ denote future observations $one, two, three, \dots$ periods beyond the present time $Y_T$. Similarly, $Y_{T-1}$ denotes an observation one period in the past, so that $Y_{T-1}, Y_{T-2}, Y_{T-3}, \dots$, denote observations $one, two, three, \dots$ periods in the past.
 
 We can generalize this notation to:  
 
