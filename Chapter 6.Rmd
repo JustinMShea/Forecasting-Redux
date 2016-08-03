@@ -4,9 +4,9 @@ subtitle: "Introduction to Time Series"
 author: ""
 date: ""
 output:
-  tufte::tufte_handout:
+  tufte::tufte_handout:  
     citation_package: natbib
-    latex_engine: xelatex
+    latex_engine: xelatex 
 link-citations: yes
 ---
 
@@ -106,25 +106,33 @@ $$Y_{48} = 677.4$$
 
 The uppercase letter $T$ of $Y_T$ will always mean the most recent observation in our time series. $Y_{T+1}$ means then an observation one period into the future. Thus, $Y_{T+1}, Y_{T+2}, Y_{T+3}, \dots$ denote future observations $one, two, three, \dots$ periods beyond the present time $Y_T$. Similarly, $Y_{T-1}$ denotes an observation one period in the past, so that $Y_{T-1}, Y_{T-2}, Y_{T-3}, \dots$, denote observations $one, two, three, \dots$ periods in the past.
 
+\bigskip
+
 We can generalize this notation to:  
+
+\bigskip
 
 $Y_{T+\ell}$: A future observation of $\ell$ periods ahead.  
 
 $Y_{T-\ell}$: A historical observation of $\ell$ periods back.
 
+\bigskip
 
 As we distinguish between $Y_i$ and $\hat{Y_i}$ in regression models, we shall distinguish between $Y_{T+\ell}$ and $\hat{Y_T}{\ell}$ in time series models.
 
-$Y_{T+\ell}$ is the future observation of $Y$, $\ell$ period ahead,
+\bigskip
+
+$Y_{T+\ell}$ is the future observation of $Y$, $\ell$ period ahead, 
+\smallskip
 and unknown at time $T$.
 
-
-$\hat{Y_T}{\ell}$ is the forecast of the future observation, 
-$\ell$ periods ahead, made at time $T$.
+$\hat{Y_T}{\ell}$ is the forecast of the future observation, $\ell$ periods ahead, 
+\smallskip
+made at time $T$.
 
 ## Stage 1 Continued: The Theory of Collecting & Analyzing Data
 
-We devote most of this chapter to Stage 1 of the Forecasting Process. With time series we recommend considerable investigation and analysis, to really understand the time series data, to really understand what the data are “telling us" before attempting to develop forecasting models. Consequently we shall begin this time series analysis with some easy, straightforward methods of analysis.
+We devote most of this chapter to Stage 1 of the Forecasting Process. With time series analysis, we recommend considerable investigation to really understand the time series data and what it is “telling us", before attempting to develop forecasting models. Consequently, we shall begin this time series analysis with some easy, straightforward methods of analysis.
 
 ## Smoothing Out Time Series Data
 
@@ -142,7 +150,7 @@ the underlying pattern in the series.
 
 We begin with a time series of 30 observations, $T = 30$, which has a constant
 mean, or a slowly changing mean, over time, we call this "horizontal data". 
-As in Table 6.2 and Figure 6.3.
+As in Table 2 and Figure 2.
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  # Import data from table 6.2 text file
@@ -151,7 +159,7 @@ table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
  # add column names
 colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
 library(knitr)
-kable(table_62, caption = "Horizontal Data: Table 6.2")
+kable(table_62, caption = "Horizontal Data")
 ```
 
 \newpage
@@ -176,7 +184,7 @@ ggdraw(switch_axis_position(figure_621 + theme_tufte() , axis = 'y'))
 ```
 
 
-Because the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$.^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$.
+Because the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$. In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$.^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] 
 
 
 
@@ -197,7 +205,7 @@ ggdraw(switch_axis_position(figure_622 + theme_tufte(), axis = 'y'))
 
 # Moving Average Smoothings
 
-   The simple average discussed above is a smoothing method over all observations.
+The simple average discussed above is a smoothing method over all observations.
 A _moving average_ is the technique of creating successive new averages by dropping the
 "oldest" observation and adding the most recent observation to calculate the new average.
 
@@ -211,11 +219,10 @@ colnames(period_3_example) <- c("Period", "Actual", "Smoothing")
 
 ## 3-period Centered Moving Average Smoothing for period $t$
 
-To begin with an example, examine the notation in the margin^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$]. Next, we shall use the data from Table 6.2 to illustrate this method. For example, a 3-period Centered Moving Average (at period 7) is:
+To begin with an example, examine the notation in the margin^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$]. Next, we shall use the data from Table 2 to illustrate this method. For example, a 3-period Centered Moving Average (at period 7) is:
 
-$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$
-
-$CMA_{7}(3) = \frac{364+367+375}{3} = `r smooth`$
+\bigskip
+$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$, and $CMA_{7}(3) = \frac{364+367+375}{3} = `r smooth`$
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## creating table 63
@@ -245,14 +252,14 @@ ggdraw(switch_axis_position(chart_63 + theme_tufte() +
 
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-kable(period_3_example, align = "r", row.names=FALSE, caption="Horizontal Data Table 6.2: CMA(3)")
+kable(period_3_example, align = "r", row.names=FALSE, caption="Horizontal Data subset & $CMA_{7}(3)$")
 ```
 
    This smoothing method is called a 3-period centered moving average because the computed value is placed at the center, or middle, of the 3 periods being used in the calculations.
    
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-kable(table_63, align = "l", row.names=FALSE, caption="Table 6.3: 
+kable(table_63, align = "l", row.names=FALSE, caption="Horizontal Data with
 Centered Smoothing Average (3)")
 ```
 
@@ -275,7 +282,7 @@ colnames(period_5_example) <- c("Period", "Actual", "Smoothing")
 
 
 A 5 period moving average smoothing is “smoother" than a 3 period because it uses
-a larger set of observations.^[5-period Centered Moving Average: $$CMA_{t}(5) = \frac{Y_{T+2}+Y_{T+1}+Y_{T}+Y_{T-1}+Y_{T-2}}{5}$$]. As an example we smooth period 7 of the data in Table 6.3.
+a larger set of observations.^[5-period Centered Moving Average: $$CMA_{t}(5) = \frac{Y_{T+2}+Y_{T+1}+Y_{T}+Y_{T-1}+Y_{T-2}}{5}$$]. As an example we smooth period 7 of the data in Table 4.
 
 $$CMA_{7}(5) = \frac{Y_{9}+Y_{8}+Y_{7}+Y_{6}+Y_{5}}{5}$$
 
@@ -306,7 +313,7 @@ ggdraw(switch_axis_position(margin_chart_64 + theme_tufte() +
             theme(legend.position = "top"), axis = 'y'))
 ```
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-kable(period_5_example, align = "l", row.names=FALSE, caption="6.3 subset: Centered Smoothing Average (5)")
+kable(period_5_example, align = "l", row.names=FALSE, caption="Horizontal data subset with $CMA_{t}(5)$")
 ```
 
 We list below both the 3 and 5 period moving average smoothing.
@@ -322,8 +329,7 @@ colnames(table_64_series) <- c("Period", "Actual", "CMA(3)", "CMA(5)")
 table_64 <- data.frame(table_64_series[1:15,], table_64_series[16:30,])
 colnames(table_64) <- c("Period", "Actual", "CMA(3)","CMA(5)","Period", "Actual", "CMA(3)", "CMA(5)")
 
-kable(table_64, align = "l", row.names=FALSE, caption="Table 6.4: 
-Centered Smoothing Average (3) & (5)")
+kable(table_64, align = "l", row.names=FALSE, caption="Horizontal data with $CMA_{t}(3) and CMA_{t}(5)$")
 ```
    
 \newpage
@@ -369,7 +375,7 @@ ggdraw(switch_axis_position(chart_642 + theme_tufte() +
 \newpage
 ## 4-Period Centered Moving Average Smoothing
 
-A 4-period Centered Moving Average is possible, but the issue of the placing of the results remains.^[4-period Centered Moving Average: $$CMA_{t}(4) = \frac{Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+Y_{T-2}}{8}$$] 
+A 4-period Centered Moving Average is possible, but the issue of placing the results remains.^[4-period Centered Moving Average: $$CMA_{t}(4) = \frac{Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+Y_{T-2}}{8}$$] 
 
 ```{r, fig.margin = TRUE, fig.cap = "Centered Moving Average(4)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
@@ -393,23 +399,26 @@ chart_65 <- ggplot(data = table_65_chart, aes(y = Value, x = Period, col = Serie
 ggdraw(switch_axis_position(chart_65 + theme_tufte() +
             theme(legend.position = "top"), axis = 'y'))
 ```
+\medskip
+Technically, if the first 4 periods are used, then the placement of $CMA_{t}(4)$ is between periods 2 and 3 at "period 2.5."
+$$CMA_{t}(4) = \frac{Y_{4}+Y_{3}+Y_{2}+Y_{1}}{4}$$   
+$$CMA_{2.5}(4) = \frac{389+329+368+354}{4} = 360$$   
+\medskip
 
-Technically, if (say) the first 4 periods are used, 
-$$CMA_{t}(4) = \frac{Y_{4}+Y_{3}+Y_{2}+Y_{1}}{4}$$
-then the placement of $CMA_{t}(4)$ is between periods 2 and 3 at "period 2.5."
-$$CMA_{t}(4) = \frac{389+329+368+354}{4} = 360$$
-The next 4-period centered smoothing is placed at "period 3.5"
-$$CMA_{t}(4) = \frac{Y_{5}+Y_{4}+Y_{3}+Y_{2}}{4}$$
-$$CMA_{t}(4) = \frac{375+389+329+368}{4} = 365.25$$
+The following 4-period centered smoothing is placed at "period 3.5".
+$$CMA_{t}(4) = \frac{Y_{5}+Y_{4}+Y_{3}+Y_{2}}{4}$$   
+$$CMA_{3.5}(4) = \frac{375+389+329+368}{4} = 365.25$$
+\medskip
 
-Then the "adjusted centered smoothing" for period 3 is the average of period 2.5 and period 3.5 smoothing. Algebraically, it can be shown that the adjusted moving average of 4 periods, starting with period $t = 3$ is shown.
-$$CMA_{t}(4) = \frac{360+365.25}{2} = 362.63$$
+
+The "adjusted centered smoothing" for period 3 is the average of period 2.5 and 3.5 smoothings.
+Algebraically, it can be shown that the adjusted moving average of 4 periods, starting with period $t = 3$ is:
+$$CMA_{3}(4) = \frac{360+365.25}{2} = 362.63$$
 The 4-period Centered Moving Average Smoothing is especially suited for quarterly time series. However, the Centered Moving Average Smoothing formula may be generalized to any even number of periods.
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.margin = TRUE}
 ## creating table 6.5
-kable(table_65_table, align = "l", row.names=FALSE, caption="Table 6.5: 
-Centered Smoothing Average (4)")
+kable(table_65_table, align = "l", row.names=FALSE, caption="Horizontal data with $CMA_{t}(4)$")
 ```
 
 \newpage
@@ -422,14 +431,14 @@ $$CMA_{t}(6) = \frac{Y_{T+2}+2Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+2Y_{T-2}+Y_{T-3}}
 
 $CMA_{t}(12) = \frac{Y_{T+6}+2Y_{T+5}+2Y_{T+4}+2Y_{T+3}+2Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+2Y_{T-2}+Y_{T-3}+2Y_{T-4}+2Y_{T-5}+Y_{T-6}}{24}$
 
+\bigskip
 
-Not all smoothings must be placed in the “center" of the data, we have done so
-because a moving average falls in the “middle" of the data. However, for example, some 4-
-period weekly smoothings are placed at the last period of the four periods smoothed.
+Not all smoothings must be placed in the “center" of the data. We have done so only
+because an even numbered moving average falls in the “middle" of the data. However, for example, one may choose to place a 4 period weekly smoothing at the last period of the four periods smoothed, representing the end of a month.
 
 The length of periods of smoothing is usually dependent on the type of time series
 data being analyzed. For example, some analyses of stock market and bond market time
-series data use 13-period and 39-period smoothing of weekly data.
+series data use 13-period and 39-period smoothing of weekly data instead of an even numbered smoothing.
 
 
 
@@ -461,19 +470,26 @@ ggdraw(switch_axis_position(chart_66 + theme_tufte() +
 
 # Weighted Moving Average Smoothings
 
-Simple moving averages assume equal weight to the observations being used in the
-calculations. There may be situations, however, in which it is better to assign greater weight
-to the most recent observation and less to observations in the past.
+Simple moving averages assume an equal weight given to each observation in the
+calculations. However, There may be situations in which it is better to assign _greater_ weight
+to the most recent observation and _less_ weight to observations in the past.
 
 ## 3-period Centered Weighted Moving Average
 
-A 3-period Centered Weighted Moving Average is denoted as $CWMA(3)$ and can be found in the margin.^[3-period Centered Weighted Moving Average: $$CWMA_{t}(3) = \frac{\omega_1 Y_{T+1}+\omega_2 Y_{T}+\omega_3 Y_{T-1}}{3}$$]
+A 3-period Centered Weighted Moving Average is denoted as $CWMA_t(3)$ and can be found in the margin.^[3-period Centered Weighted Moving Average. In general terms, we denote the weights by $\omega_1$, $\omega_2$, and $\omega_3$ (omega sub 1, omega sub 2, and omega sub 3). $$CWMA_{t}(3) = \frac{\omega_1 Y_{T+1}+\omega_2 Y_{T}+\omega_3 Y_{T-1}}{3}$$]   
+\medskip
 
-As an example, consider the following notation:
+
+As an example, consider the following $CWMA_t(3)$ notation:
 
 $$CWMA_{t}(3) = \frac{0.6 Y_{T+1}+0.3 Y_{T}+0.1 Y_{T-1}}{3}$$
 
-In general terms, we denote the weights by $\omega_1$, $\omega_2$, and $\omega_3$ (omega sub 1, omega sub 2, and omega sub 3)
+\bigskip
+
+All that is required is that the sum of the weights equal 1, as in:
+
+$$0.6 + 0.3 + 0.1 = 1$$
+
 
 A weighted moving average may be generalized to any number of historical periods and set of weights. The choice of the number of historical periods and the weights used are determined, in part, by the Forecast Analyst who has collected the data and has some appreciation of the data structure.
 
@@ -511,23 +527,18 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 #The Underlying Structure of Time Series Data^[Stage 1 continued]
 
 ##Classical Time Series Decomposition
-Given an economic time series as shown in Figure 6-1 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. 
+Given an economic time series as shown in Figure 6-1 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. The components can be either added together or multiplied by each other to define a time series.   
+\medskip
+Considering the four components collectively is the method of the _classical time series decomposition_. Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$.    
 
-
-\textcolor{red}{The components can be either added together or multiplied by each other to define a time series}.  
-
-
-
+\bigskip   
 
 
 **Additive Time Series Decomposition**
 $$Y_t = T_t + C_t + S_t + I_t$$.  
 
 **Multiplicative Time Series Decomposition**
-$$Y_t = T_t \times C_t \times S_t \times I_t$$.
-
-
-Considering the four components collectively is the method of the _classical time series decomposition_. Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$. 
+$$Y_t = T_t \times C_t \times S_t \times I_t$$.    
 
 
 Trend, seasonal fluctuations, and irregular variations are usually easily identifiable
@@ -542,7 +553,9 @@ the scope of this chapter.
 
 ##The Trend Component
 
-The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. Figure 6-11 below has a trend line superimposed over the actual data, indicating a downward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$]. For our example, the Sales Volume series is a simple OLS regression against time period.^[$$Sales_t = \beta_{0} + \beta_{1}Period_t$$]
+The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. Figure 6-11 below has a trend line superimposed over the actual data, indicating a downward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$]. For our example, the Sales Volume series is a simple OLS regression against time period.
+
+$$Sales_t = \beta_{0} + \beta_{1}Period_t$$
 
 
 ```{r, fig.width = 10, fig.height = 6, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Plotted OLS Trend line.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
