@@ -527,7 +527,7 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 #The Underlying Structure of Time Series Data^[Stage 1 continued]
 
 ##Classical Time Series Decomposition
-Given an economic time series as shown in Figure 6-1 one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. The components can be either added together or multiplied by each other to define a time series.   
+Given an economic time series as shown in Figure 1, one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. The components can be either added together or multiplied by each other to define a time series.   
 \medskip
 Considering the four components collectively is the method of the _classical time series decomposition_. Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$.    
 
@@ -553,7 +553,7 @@ the scope of this chapter.
 
 ##The Trend Component
 
-The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. Figure 6-11 below has a trend line superimposed over the actual data, indicating a downward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$]. For our example, the Sales Volume series is a simple OLS regression against time period.
+The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. Figure 11 below has a trend line superimposed over the actual data, indicating a downward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$]. For our example, the Sales Volume series is a simple OLS regression against time period.
 
 $$Sales_t = \beta_{0} + \beta_{1}Period_t$$
 
@@ -577,10 +577,10 @@ ggdraw(switch_axis_position(figure_610 + theme_tufte(), axis = 'y'))
 ##The Cyclical Fluctuations Component
 
 The cyclical component of a time series at time $t$, denoted $C_t$, and illustrated below
-in Figure 6-12 and 6-13, are the long term up-and-down swings of the series around it's trend
-line. These cycles of high and low usually last more than year, having different lengths and
+in Figure 12 and 13, are the broad up-and-down swings of the series around it's trend
+line. These cycles of high and low can last more than a year, having different lengths and
 amplitudes. The cyclical component of a time series is usually attributable to some larger
-aspect of the whole economy or business cycle by which this particular data have been affected.
+aspect of the economy or business cycle by which this particular data have been affected.
 
 ```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Trend line and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_611 <- data.frame(table_61_series, Trend = trend$fitted.values, t.Cycle = trend$residuals)
