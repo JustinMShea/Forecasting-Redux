@@ -542,8 +542,7 @@ $$Y_t = T_t \times C_t \times S_t \times I_t$$.
 Trend, seasonal fluctuations, and irregular variations are usually easily identifiable
 components of a time series. Calculations of trend and seasonality are quite straightforward,
 and adjustments for irregular variations can be simply handled. Determining the long term
-cyclical component of a time series is not so direct. Long term business cycles are beyond
-the scope of this chapter.
+cyclical component of a time series is not so direct, and is a known limitation of this method. Long term business cycles are beyond the scope of this topic, and will be discussed in other chapters.
 
 \newpage
 
@@ -605,9 +604,7 @@ ggdraw(switch_axis_position(figure_612 + theme_tufte(), axis = 'y'))
 
 \newpage
 
-The 12-Period Centered Moving Average discussed on page 12 offers a more dynamic, tighter fit for measuring the monthly Sales trend data. Unfortunately, this method results in omitting the first and last six periods of the trend line, a topic we will cover in future chapters.
-
-```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with CWMA(12) Trend line.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 trend_smooth <- ma(table_61_series[,2], order = 12, centre = TRUE)
 table_smooth <- data.frame(table_61_series, Trend = trend_smooth)
 table_smooth_series <- gather(table_smooth, Period)
@@ -621,50 +618,26 @@ figure_smooth <- ggplot(data = table_smooth_series, aes(y = Value, x = Period, c
 #ggdraw(switch_axis_position(figure_smooth + theme_tufte(), axis = 'y'))
 ```
 
-```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Data with CWMA(12) Trend and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_smooth_c <- data.frame(table_61_series, Trend = trend_smooth, t.Cycle = table_61_series[,2]-trend_smooth)
 table_smooth_c_series <- gather(table_smooth_c, Period)
 colnames(table_smooth_c_series) <- c("Period", "Series", "Value")
-
-figure_smooth_c <- ggplot(data = table_smooth_c_series, aes(y = Value, x = Period, col = Series)) +
-  geom_line() + 
-   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
-  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
-  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
-
-ggdraw(switch_axis_position(figure_smooth_c + theme_tufte(), axis = 'y'))
 ```
-
-```{r, fig.width = 10, fig.height = 3, fig.fullwidth = TRUE, fig.cap = "Sales Data, CWMA(12) Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-figure_smooth_c2 <- ggplot(data = table_smooth_c, aes(y = t.Cycle, x = Period, col = t.Cycle)) +
-  geom_line() + 
-  geom_hline(yintercept = 0, linetype="dashed", alpha = 1/2) +
-  ylim(-175,125) + 
-  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
-
-ggdraw(switch_axis_position(figure_smooth_c2 + theme_tufte(), axis = 'y'))
-```
-
-\newpage
 
 ##The Seasonal Fluctuations Component
 
-The seasonal component of a time series at time $t$, denoted $S_t$, illustrated below in
-Figure 6-14 are the reoccurring fluctuations within a year around the trend/cyclical
-components. Most business data reveal seasonal fluctuations, or _seasonality_, so it is
-important for businesses to know and plan for changes in sales or economic activity that will
-be more or less normal due to the seasonal nature of their product.
+The seasonal component of a time series at time $t$, denoted $S_t$, illustrated in the following example, are the reoccurring fluctuations within a year around the trend/cyclical components. Most business data reveal seasonal fluctuations, or _seasonality_, so it is important for businesses to know and plan for changes in sales or economic activity that will be more or less normal due to the seasonal nature of their product. For example, if sales are low or high due to seasonality, as oppose to trend, business may better adjust their expectations accordingly.
 
 
-##Seasonal Indices: The Ratio-to-Moving Average Method
+##Seasonal Indices: The Ratio-to-Moving-Average Method
 
-There are many occasions in the analysis of time series when we wish to isolate the seasonality in the data. This is known as determining the _seasonal indices_ and then _deseasonalizing the data_. An established, widely used method is the __*Ratio-to-Moving-Average*__ method. 
+There are many occasions in the analysis of time series when we wish to isolate the seasonality in the data. This is known as determining the _seasonal indices_ and then _deseasonalizing the data_. One method is the __*Ratio-to-Moving-Average*__ method.
 
-This was first developed in 1922 by Frederick Macaulay at the National Bureau of Economic Research and then adopted and promoted by Julius Shiskin of the U.S. Bureau of the Census. Often referred to as the Census II decomposition, this method has evolved and now in its most recent version, it is the Census **[\textcolor{blue}{X-13 ARIMA-SEATS decomposition}](http://www.census.gov/srd/www/x13as/)**.
+This was first developed in 1922 by Frederick Macaulay at the National Bureau of Economic Research and then adopted and promoted by Julius Shiskin of the U.S. Bureau of the Census. Often referred to as the Census II decomposition, this method has evolved and now in its most recent version, it is the Census **[\textcolor{blue}{X-13 ARIMA-SEATS decomposition}](http://www.census.gov/srd/www/x13as/)**. As the name suggests, the topic has become considerably more computationally sophisticated. The following basic example using the ratio-to-moving-average method offers a solution, and it is the initial step for some of the more advanced methods in use today.
 
 ##Seasonal Index, Basic Example
 
-We shall continue to use the Sales Volume time series from Table 6.2 and Figure 6-1 for this example. Because they are monthly data and there are 12 months in a year, we first determine the 12-period Centered Moving Average Smoothing of the data. As there are 48 observations, or 4 years of data, we start with period 7 and end at period 42. Although the Centered Moving Average method does not allow one to calculate the cyclical component at the beginning and end of a time series, this example shall illustrate why this is not an issue when creating Seasonal indices.
+We shall use the Sales Volume time series from Table 2 and Figure 1 for this example. Because they are monthly data and there are 12 months in a year, we first determine the 12-period Centered Moving Average Smoothing of the data. As there are 48 observations, or 4 years of data, we start with period 7 and end at period 42. Although the Centered Moving Average method does not allow one to calculate the cyclical component at the beginning and end of a time series, this is not an issue when creating Seasonal indices provided at least 2 years of data exist.
 
 
 **Step 1:** Determine the 12-period Center Moving Average Smoothing of the Data. We use the formula on page 12.
@@ -802,13 +775,13 @@ kable(table_614_seasonal, digits = 2, caption = "Actual Sales, CWMA(12) Smoothin
 
 ##The Irregular Variations Component
 
-The irregular component of a time series at time $t$, denoted $I_t$ , illustrated in Figure
-6-18 are the random, unexpected deviations from the trend/cyclical/seasonal components.
-Irregular changes or “shocks" to a time series are considered nonrecurring chance events,
-such as strikes, or unusually good (The movie E.T. and Reese's Pieces Candy) or unusually
+The irregular component of a time series at time $t$, denoted $I_t$, is illustrated in Figure
+16 below. They are the random, unexpected deviations from the trend/cyclical/seasonal components.
+Irregular changes or “shocks" to a time series are considered nonrecurring chance events
+such as strikes. They can be the result of unusually good (The movie E.T. and Reese's Pieces Candy) or unusually
 bad (Tylenol poisoning) publicity about a product.
 
-In Figure 6-18 below, an irregular variation occurs around period 30 as the series drops abruptly and then returns to its upward trend.
+In Figure 16 below, an irregular variation occurs around period 30 as the series drops abruptly and then returns to its upward trend.
 
 $$Irregular_t = \frac{Sales_t}{Trend_t \times SeasonalIndex_t}$$
 
@@ -829,5 +802,112 @@ figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular,
 ggdraw(switch_axis_position(figure_Irregular_series + theme_tufte(), axis = 'y'))
 ```
 
+\newpage
 
+The astute reader may have noticed that we used the 12-Period Centered Moving Average to assist in calculating the seasonal component, not the OLS linear trend used in our initial example. The 12-Period Centered Moving Average discussed on page 12 offers a dynamic, tighter fit for measuring the monthly Sales trend that includes both a trend and cyclical component. This a topic we will cover in future chapters as we ascend the learning curve. For now, the reader is left to consider combining trend & cylical components into one variable, captured through smoothing the actual time series.
+
+
+```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Data with CWMA(12) Trend and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+
+figure_smooth_c <- ggplot(data = table_smooth_c_series, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + 
+   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
+  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+ggdraw(switch_axis_position(figure_smooth_c + theme_tufte(), axis = 'y'))
+```
+```{r, fig.width = 10, fig.height = 3, fig.fullwidth = TRUE, fig.cap = "Sales Data, CWMA(12) Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+figure_smooth_c2 <- ggplot(data = table_smooth_c, aes(y = t.Cycle, x = Period, col = t.Cycle)) +
+  geom_line() + 
+  geom_hline(yintercept = 0, linetype="dashed", alpha = 1/2) +
+  ylim(-175,125) + 
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+
+ggdraw(switch_axis_position(figure_smooth_c2 + theme_tufte(), axis = 'y'))
+```
+
+
+\newpage
+
+#PROBLEMS AND QUESTIONS
+
+__Constant Mean Data __
+
+1. Listed below is a time series of 24 observations. Plot the data and determine the mean and variance of the the data set.
+
+Period Observation  Period Observation
+1 95  13 118 2 100  14 86 3 87  15 86 4 123  16 112 5 90  17 85 6 96  18 101 7 75  19 135 8 78  20 120 9 106  21 76 10 104  22 115 11 89  23 90 12 83  24 92
+
+__Smoothing of Data__
+
+2. Overlay on the time series graph of the data 
+a. The simple average of the data, as a smoothing. 
+b. A three period centered moving average. 
+c. A five period centered moving average.
+
+3. Overlay on the time series graph of the data. 
+a.  A four period centered moving average. 
+b.  A three period weighted centered moving average with weights of .6 for the most recent, .3 for one period back, and .1 for two periods back. 
+
+4. De-seasonalizing Data   
+The following 24 observations of quarterly data contain trend and seasonality. 
+ Period  Quarter Actual Period  Quarter Actual  t Q Y   t  Q Y > > > >
+  1 1 409   13  1 349  2 2 415   14  2 350  3 3 468   15  3 443  4 4 261   16  4 315  5 1 308   17  1 362  6 2 326   18  2 411  7 3 431   19  3 447  8 4 254   20  4 295  9 1 346   21  1 310  10 2 370   22  2 368  11 3 430   23  3 442  12 4 290   24  4 302
+a. Plot the data.  
+b. Determine a four period centered moving average of the data and overlay it on the original data.  
+c. Determine the ratio-to moving average seasonal indices for the four quarters.  
+d. Re-plot the original data and create an overlay plot of the de-seasonalized data.
+
+__One-step ahead forecasts__
+5. Determine a set of one-step ahead forecasts of the data, using...
+a. Three period moving average forecasts. 
+b. Five period moving average forecasts. 
+c. Four period moving average forecasts. 
+d. Three period weighted moving average forecasts; weights .6, .3 and .1
+
+6. Determine a set of one-step ahead forecasts of the data, using...
+a. Single exponential smoothing forecasts with $\alpha = .1$.
+b. Single exponential smoothing forecasts with $\alpha = .2$.
+c. Single exponential smoothing forecasts with $\alpha = .7$.
+
+7. Using the one-step ahead forecasts of Problem 6, determine the forecasts for period 25 in...
+a., b., and c. above.
+
+8. Determine the mean squared error (MSE) of each of the one-step ahead forecasts in Problem 6. Which is the better forecast?  Explain.
+
+__Data with Trend__
+
+9. Listed below is a time series of 24 observations. Plot the data and determine the mean and variance of the the data set.
+Period Observation  Period Observation
+1 60  13 89 2 70  14 120 3 85  15 134 4 60  16 121 5 88  17 93 6 68  18 113 7 106  19 125 8 75  20 136 9 86  21 142 10 124  22 117 11 122  23 132 12 87  24 141
+
+10. Determine the one-step ahead forecasts using...
+a. Three period moving average 
+b. Weighted moving average with weights .5, .3, .2. 
+What are the forecasts for period 25 in each case above? What is the MSE in each case above?
+
+11.  Determine the one-step ahead forecasts using..
+a. Single exponential smoothing with $\alpha = 0.3$ 
+b. What is the forecast for period 25? 
+c. What is the MSE of this forecasting model?
+
+12. Determine the one-step ahead forecasts using...
+a. Double exponential smoothing with $\alpha = 0.3$  
+b. What is the forecast for period 25?
+c. What is the forecast for periods 26 to 30? 
+d. Determine the 95% confidence intervals of forecast for periods 25 to 30. e. What is the MSE of the forecasting model?
+
+__Linear Regression of a Time Series__
+
+13. Determine a linear regression model...
+a. For forecasting periods 25 to 30. 
+b. Determine the 95% confidence intervals of forecast for periods 25 to 30. 
+c. What is the MSE of this forecasting model?
+
+14. How does your “line of sight" forecast compare with the double exponential smoothing model?  
+With the linear regression model?
+
+15. Which is the better model, double exponential smoothing or linear regression? 
+Explain.
  
