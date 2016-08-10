@@ -334,7 +334,7 @@ kable(table_64, align = "l", row.names=FALSE, caption="Horizontal data with $CMA
    
 \newpage
 
-Below is a graph of actual values along with 5-period smoothing. This following graph has both 3 and 5 period smoothings superimposed.
+Below is a graph of actual values with a 5-period smoothing superimposed. The following graph adds an additiona 3-period smoothing for comparison.
 ```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(5)", fig.width = 10, fig.height = 4,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(ggplot2)
 table_641_chart <- table_64_series[,c(1,2,4)]
@@ -527,12 +527,11 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 #The Underlying Structure of Time Series Data^[Stage 1 continued]
 
 ##Classical Time Series Decomposition
-Given an economic time series as shown in Figure 1, one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. The components can be either added together or multiplied by each other to define a time series.   
+Given an economic time series as shown in Figure 1, one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. 
 \medskip
-Considering the four components collectively is the method of the _classical time series decomposition_. Time series decomposition may be additive, where all components are expressed in the physical units of $Y_t$. In its multiplicative form, at time $t$, the actual value $Y_t$ is the product of the trend component $T_t$, in physical units, the cyclical component $C_t$, as a percentage of $T_t$, the seasonal component $S_t$, as a percentage of $T_t \times C_t$ , and the irregular component, expressed as a percentage of $T_t \times C_t \times S_t$.    
+Considering the four components collectively is the method of the _classical time series decomposition_. The components can be either added together, or multiplied by each other, to define a time series. If a time series decomposition is additive, all components are expressed in the physical units of $Y_t$ and simply added together. If a times series decomposition is expressed in multiplicative form, component values are expressed in a combination of physical units and percentage of trend $T_t$, and multiplied together. The actual value $Y_t$ is the _product_ of the trend component $T_t$ expressed in physical units, the cyclical component $C_t$ expressed as a percentage of $T_t$, the seasonal component $S_t$ as a percentage of $T_t \times C_t$ , and the irregular component expressed as a percentage of $T_t \times C_t \times S_t$.
 
 \bigskip   
-
 
 **Additive Time Series Decomposition**
 $$Y_t = T_t + C_t + S_t + I_t$$.  
@@ -540,16 +539,13 @@ $$Y_t = T_t + C_t + S_t + I_t$$.
 **Multiplicative Time Series Decomposition**
 $$Y_t = T_t \times C_t \times S_t \times I_t$$.    
 
-
 Trend, seasonal fluctuations, and irregular variations are usually easily identifiable
 components of a time series. Calculations of trend and seasonality are quite straightforward,
 and adjustments for irregular variations can be simply handled. Determining the long term
 cyclical component of a time series is not so direct. Long term business cycles are beyond
 the scope of this chapter.
 
-
 \newpage
-
 
 ##The Trend Component
 
@@ -576,8 +572,7 @@ ggdraw(switch_axis_position(figure_610 + theme_tufte(), axis = 'y'))
 \newpage
 ##The Cyclical Fluctuations Component
 
-The cyclical component of a time series at time $t$, denoted $C_t$, and illustrated below
-in Figure 12 and 13, are the broad up-and-down swings of the series around it's trend
+The cyclical component of a time series at each time step $t$, denoted $C_t$, and illustrated below in Figure 12 and 13, are the broad up-and-down swings of the series around it's trend
 line. These cycles of high and low can last more than a year, having different lengths and
 amplitudes. The cyclical component of a time series is usually attributable to some larger
 aspect of the economy or business cycle by which this particular data have been affected.
