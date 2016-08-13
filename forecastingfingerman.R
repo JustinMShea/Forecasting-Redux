@@ -318,4 +318,22 @@ figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular,
 # Call graphics Device to illustrate chart
 ggdraw(switch_axis_position(figure_Irregular_series + theme_tufte(), axis = 'y'))
 
+#####################################################################
+##### Problems and Questions Section ################################
+#####################################################################
 
+## Import data from problem 1 text file
+problem_1_path <- path.expand("~/R/forecasting/problem table 1.txt")
+problem_1 <- read.delim(problem_1_path, skip = 1, sep = " ")
+# add column names
+colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
+
+problem_1
+
+## Import data from problem 4 text file
+problem_4_path <- path.expand("~/R/forecasting/problem 4 table.txt")
+problem_4 <- read.delim(problem_4_path, sep = " ", header = TRUE)
+# add column names
+colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
+
+problem_4

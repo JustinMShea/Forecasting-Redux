@@ -836,8 +836,16 @@ __Constant Mean Data __
 
 1. Listed below is a time series of 24 observations. Plot the data and determine the mean and variance of the the data set.
 
-Period Observation  Period Observation
-1 95  13 118 2 100  14 86 3 87  15 86 4 123  16 112 5 90  17 85 6 96  18 101 7 75  19 135 8 78  20 120 9 106  21 76 10 104  22 115 11 89  23 90 12 83  24 92
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+## Import data from problem text file
+problem_1_path <- path.expand("~/R/forecasting/problem table 1.txt")
+problem_1 <- read.delim(problem_1_path, skip = 1, sep = " ")
+# add column names
+colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
+# display table
+kable(problem_1, align = 'l')
+```
+
 
 __Smoothing of Data__
 
@@ -850,10 +858,28 @@ c. A five period centered moving average.
 a.  A four period centered moving average. 
 b.  A three period weighted centered moving average with weights of .6 for the most recent, .3 for one period back, and .1 for two periods back. 
 
-4. De-seasonalizing Data   
-The following 24 observations of quarterly data contain trend and seasonality. 
- Period  Quarter Actual Period  Quarter Actual  t Q Y   t  Q Y > > > >
-  1 1 409   13  1 349  2 2 415   14  2 350  3 3 468   15  3 443  4 4 261   16  4 315  5 1 308   17  1 362  6 2 326   18  2 411  7 3 431   19  3 447  8 4 254   20  4 295  9 1 346   21  1 310  10 2 370   22  2 368  11 3 430   23  3 442  12 4 290   24  4 302
+\newpage
+
+__De-seasonalizing Data__
+
+4. The following 24 observations of quarterly data contain trend and seasonality. 
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE} 
+ ## Import data from problem 4 text file
+problem_4_path <- path.expand("~/R/forecasting/problem 4 table.txt")
+problem_4 <- read.delim(problem_4_path, sep = " ")
+# add column names and load xtable to read LaTeX notation in column names
+colnames(problem_4) <-c("Period($t$)","Quarter($Q_t$)","Actual($Y_t$)","Period($t$)","Quarter($Q_t$)","Actua($Y_t$)")
+library(xtable)
+problem_4 <- xtable(problem_4)
+print(problem_4, sanitize.text.function = function(x) {x}, print.results = FALSE)
+
+
+#colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
+
+kable(problem_4)
+``` 
+ 
 a. Plot the data.  
 b. Determine a four period centered moving average of the data and overlay it on the original data.  
 c. Determine the ratio-to moving average seasonal indices for the four quarters.  
@@ -879,8 +905,16 @@ a., b., and c. above.
 __Data with Trend__
 
 9. Listed below is a time series of 24 observations. Plot the data and determine the mean and variance of the the data set.
-Period Observation  Period Observation
-1 60  13 89 2 70  14 120 3 85  15 134 4 60  16 121 5 88  17 93 6 68  18 113 7 106  19 125 8 75  20 136 9 86  21 142 10 124  22 117 11 122  23 132 12 87  24 141
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+## Import data from problem text file
+problem_8_path <- path.expand("~/R/forecasting/problem 8 table.txt")
+problem_8 <- read.delim(problem_8_path, skip = 1, sep = " ")
+# add column names
+colnames(problem_8) <- c("Period", "Observation", "Period", "Observation")
+# display table
+kable(problem_8, align = 'l')
+```
 
 10. Determine the one-step ahead forecasts using...
 a. Three period moving average 
