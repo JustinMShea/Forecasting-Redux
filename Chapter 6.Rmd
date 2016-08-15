@@ -804,7 +804,8 @@ ggdraw(switch_axis_position(figure_Irregular_series + theme_tufte(), axis = 'y')
 
 \newpage
 
-The astute reader may have noticed that we used the 12-Period Centered Moving Average to assist in calculating the seasonal component, not the OLS linear trend used in our initial example. The 12-Period Centered Moving Average discussed on page 12 offers a dynamic, tighter fit for measuring the monthly Sales trend that includes both a trend and cyclical component. This a topic we will cover in future chapters as we ascend the learning curve. For now, the reader is left to consider combining trend & cylical components into one variable, captured through smoothing the actual time series.
+## Closing remarks
+The astute reader may have noticed that we used the 12-Period Centered Moving Average to assist in calculating the seasonal component, not the OLS linear trend used in our initial example. The 12-Period Centered Moving Average discussed on pg. 12 offers a more dynamic fit for measuring the monthly Sales trend than the rigid OLS line. This is a topic we will cover in future chapters. For now, the reader is left to consider the benefits of using a smoothing function to measure the trend of a time series. 
 
 
 ```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Data with CWMA(12) Trend and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -827,10 +828,9 @@ figure_smooth_c2 <- ggplot(data = table_smooth_c, aes(y = t.Cycle, x = Period, c
 ggdraw(switch_axis_position(figure_smooth_c2 + theme_tufte(), axis = 'y'))
 ```
 
-
 \newpage
 
-#PROBLEMS AND QUESTIONS
+#QUESTIONS AND PROBLEMS
 
 __Constant Mean Data __
 
@@ -886,6 +886,7 @@ c. Determine the ratio-to moving average seasonal indices for the four quarters.
 d. Re-plot the original data and create an overlay plot of the de-seasonalized data.
 
 __One-step ahead forecasts__
+
 5. Determine a set of one-step ahead forecasts of the data, using...
 a. Three period moving average forecasts. 
 b. Five period moving average forecasts. 
