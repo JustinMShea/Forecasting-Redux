@@ -931,7 +931,10 @@ c. What is the MSE of this forecasting model?
 a. Double exponential smoothing with $\alpha = 0.3$  
 b. What is the forecast for period 25?
 c. What is the forecast for periods 26 to 30? 
-d. Determine the 95% confidence intervals of forecast for periods 25 to 30. e. What is the MSE of the forecasting model?
+d. Determine the 95% confidence intervals for periods 25 to 30. 
+e. What is the MSE of the forecasting model?
+
+\newpage
 
 __Linear Regression of a Time Series__
 
