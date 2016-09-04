@@ -12,15 +12,15 @@ link-citations: yes
 
 ```{r setup, include=FALSE}
 library(tufte)
+library(knitr)
 # invalidate cache when the tufte version changes
 knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
 options(htmltools.dir.version = FALSE)
 ```
 
 
-We now examine another areas of time series forecasting similar to weighted moving
-averages, often called _exponential smoothing methods_. One of the major distinctions
-between regressions methods on time series data and smoothing methods is that regressions give equal weight to all of the sample data whereas smoothing methods give decreasing weight to older, more distant data.
+We now examine another area of time series forecasting similar to weighted moving
+averages, called _exponential smoothing methods_. One of the major distinctions between regressions methods on time series data and smoothing methods is that regressions give equal weight to all of the sample data whereas smoothing methods give decreasing weight to older, more distant data.
 
 > "An economist is an expert who will know tomorrow why the things he predicted yesterday
 didn't happen today."
@@ -31,10 +31,82 @@ didn't happen today."
 
 ##Single Exponential Smoothing
 
-A popular, widely used time series smoothing and forecasting method is single exponential smoothing (also called one-parameter exponential smoothing). Exponential smoothing is a form of weighted moving average in that recent observations carry more weight than older observations.
-Exponential smoothing is based on the concept that a new, one step-ahead, forecast can be determined from the previous forecast and the error of the previous forecast. We illustrate this concept below. 
+A popular, widely used time series smoothing and forecasting method is _single exponential smoothing_ (also called _one-parameter exponential smoothing_). Exponential smoothing is a form of weighted moving average in that recent observations carry more weight than older observations.
 
-Suppose we have the following series.
+Exponential smoothing is based on the concept that a new, one step-ahead forecast can be determined from the _previous forecast_ and the _error of the previous forecast_. We illustrate this concept below. 
+
+Suppose we have the following series:
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+ # Import data from table 6.2 text file
+Table_62_path <- path.expand("~/R/forecasting/Table 6.2.txt")
+table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
+ # add column names
+colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
+
+# First, gather the time series data table into one column.
+library(tidyr)
+table_62_series <- gather(table_62[,c(2,4)])
+table_62_series$key<- as.numeric(rownames(table_62_series))
+table_62_series$forecast <- ""
+colnames(table_62_series) <- c("Period", "Actual", "Forecast")
+
+kable(table_62_series[1:3,], align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast"))
+```
+
+And, suppose a one-step ahead forecast for period 4, made at period 3, is 352.5^[$$\hat{Y_3}(1) = 352.5$$].
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_2 <- table_62_series[1:4,]
+table_2[4,2:3] <- c("NA", 352.5)
+kable(table_2, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast"))
+```
+
+Then suppose period 4's actual value is 389.
+
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_3 <- table_2
+table_3[4,2] <- 389
+kable(table_3, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast"))
+```
+
+
+So, the forecast error is 36.5.
+
+$$\varepsilon_{3}(1) = Y_4 + \hat{Y}_3(1)$$
+$$36.5 = 389 - 352.5$$
+
+\newpage
+
+In otherwords, we _underforecast_ by 36.5.
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_4 <- table_3
+table_4$Error <- ""
+table_4[4,4] <- 36.5
+kable(table_4, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
+```
+
+Since we underforecasted, we will adjust upward our next forecast, based on the error of our previous forecast.  We adjust our next forecast upward by 20% of the forecast error.
+
+$$0.20 \times 36.5 = 7.3$$
+
+Hence, the forecast for period 5 is the old forecast, 352.5, adjusted upwarded by
+7.3. 
+Forecast for period 5:      
+$$352.5 \plus 7.3 = 359.8$$
+$$\hat{Y}_4(1) = 359.8$$
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_5 <- table_4
+table_5[5,3] <- 359.8
+kable(table_5, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
+```
+
+
+ 
+
 
 
 

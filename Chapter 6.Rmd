@@ -869,7 +869,7 @@ __De-seasonalizing Data__
 problem_4_path <- path.expand("~/R/forecasting/problem 4 table.txt")
 problem_4 <- read.delim(problem_4_path, sep = " ")
 # add column names and load xtable to read LaTeX notation in column names
-colnames(problem_4) <-c("Period($t$)","Quarter($Q_t$)","Actual($Y_t$)","Period($t$)","Quarter($Q_t$)","Actua($Y_t$)")
+colnames(problem_4) <-c("Period($t$)","Quarter($Q_t$)","Actual($Y_t$)","Period($t$)","Quarter($Q_t$)","Actual($Y_t$)")
 library(xtable)
 problem_4 <- xtable(problem_4)
 print(problem_4, sanitize.text.function = function(x) {x}, print.results = FALSE)
