@@ -74,7 +74,7 @@ kable(table_3, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast"))
 
 So, the forecast error is 36.5.
 
-$$\varepsilon_{3}(1) = Y_4 + \hat{Y}_3(1)$$
+$$\varepsilon_{3}(1) = Y_4 - \hat{Y}_3(1)$$
 $$36.5 = 389 - 352.5$$
 
 \newpage
@@ -88,25 +88,58 @@ table_4[4,4] <- 36.5
 kable(table_4, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
 ```
 
-Since we underforecasted, we will adjust upward our next forecast, based on the error of our previous forecast.  We adjust our next forecast upward by 20% of the forecast error.
+Since we underforecasted, we will adjust upward our next forecast, based on the error of our previous forecast.  We adjust our next forecast upward by 20% of the forecast error. $20\%$ of $36.5$ is $7.3$.
 
-$$0.20 \times 36.5 = 7.3$$
-
-Hence, the forecast for period 5 is the old forecast, 352.5, adjusted upwarded by
+Hence, the forecast for period 5 is the old forecast of 352.5 adjusted upwarded by
 7.3. 
-Forecast for period 5:      
-$$352.5 \plus 7.3 = 359.8$$
+$$352.5 + 7.3 = 359.8$$
 $$\hat{Y}_4(1) = 359.8$$
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_5 <- table_4
-table_5[5,3] <- 359.8
+table_5[5,] <- c(5,"NA", 359.8, "NA")
 kable(table_5, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
 ```
 
-
+The actual value for period 5 is 350, so the one-step ahead period 5 forecast error
+is
  
+$$\varepsilon_{4}(1) = Y_5 - \hat{Y}_4(1)$$
+$$-9.8 = 350 - 359.8$$
 
+In otherwords, we _overforecast_ by 9.8.
 
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_6 <- table_4
+table_6[5,] <- c(5,360, 359.8, 9.8)
+kable(table_5, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
+```
 
+The forecast for period 5 then is adjusted by 20% of the forecast error, $20\%$ of $-9.8$ is $-1.96$.
 
+The Forecast for period 6 is:
+$$359.8 + (-1.96) = 357.8$$
+$$\hat{Y}_5(1) = 357.8$$
+
+Each new forecast, $\hat{Y}_t(1)$, is based on the preceding forecast, $\hat{Y}_{t-1}(1)$, plus an adjustment for forecast error.
+
+If we denote the adjustment factor by $\alpha$, we have:
+
+ $$\hat{Y}_t(1) = \hat{Y}_{t-1}(1)+\alpha\varepsilon_{t-1}(1)$$
+
+Algebraically, we re-arrange the last equation to become:
+
+**Single Exponential Smoothing, one-step exponential smoothing**
+
+ $$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \hat{Y}_{t-1}(1)$$
+ 
+ In the case of $\alpha$ = 0.2, we have 
+ 
+$$\hat{Y}_t(1) = 0.2 Y_t + 0.8  \hat{Y}_{t-1}(1)$$
+
+The new forecast is the weighted average of the current observation $Y_t$ and the previous forecast $\hat{Y}_{t-1}$.
+  
+  
+  
+  
+ 
