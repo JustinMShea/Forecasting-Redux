@@ -111,8 +111,8 @@ In otherwords, we _overforecast_ by 9.8.
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_6 <- table_4
-table_6[5,] <- c(5,360, 359.8, 9.8)
-kable(table_5, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
+table_6[5,] <- c(5,350, 359.8, 9.8)
+kable(table_6, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
 ```
 
 The forecast for period 5 then is adjusted by 20% of the forecast error, $20\%$ of $-9.8$ is $-1.96$.
@@ -127,19 +127,33 @@ If we denote the adjustment factor by $\alpha$, we have:
 
  $$\hat{Y}_t(1) = \hat{Y}_{t-1}(1)+\alpha\varepsilon_{t-1}(1)$$
 
-Algebraically, we re-arrange the last equation to become:
+Algebraically, we re-arrange the last equation as the formal representation of _exponential smoothing_.
 
-**Single Exponential Smoothing, one-step exponential smoothing**
 
- $$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \hat{Y}_{t-1}(1)$$
- 
+##Single Exponential Smoothing, one-step exponential smoothing^[Formal Notation, equation 8.1]
+
+```{marginfigure}
+**$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \hat{Y}_{t-1}(1)$$**
+```
+
  In the case of $\alpha$ = 0.2, we have 
  
 $$\hat{Y}_t(1) = 0.2 Y_t + 0.8  \hat{Y}_{t-1}(1)$$
 
 The new forecast is the weighted average of the current observation $Y_t$ and the previous forecast $\hat{Y}_{t-1}$.
   
-  
-  
+Returning to equation 8.1 displayed in the right margin, we illustrate why this approach is called _exponential smoothing_. Since
+
+$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \hat{Y}_{t-1}(1)$$,
+
+we shift back by one period^[Equation 8.2]
+
+$$\hat{Y}_{t-1}(1) = \alpha Y_{t-1} + (1-\alpha) \hat{Y}_{t-2}(1)$$
+
+by substituting equation 8.2 in for $\hat{Y}_t(1)$ in equation 8.1 we have
+
+$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \left(\alpha Y_{t-1} + (1-\alpha) \hat{Y}_{t-2}(1)\right)$$,
+
+
   
  
