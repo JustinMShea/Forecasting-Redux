@@ -150,10 +150,15 @@ we shift back by one period^[Equation 8.2]
 
 $$\hat{Y}_{t-1}(1) = \alpha Y_{t-1} + (1-\alpha) \hat{Y}_{t-2}(1)$$
 
-by substituting equation 8.2 in for $\hat{Y}_t(1)$ in equation 8.1 we have
+by substituting equation 8.2 in for $\hat{Y}_t(1)$ in equation 8.1 we have:
 
-$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \left(\alpha Y_{t-1} + (1-\alpha) \hat{Y}_{t-2}(1)\right)$$,
+$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \left(\alpha Y_{t-1} + (1-\alpha) \hat{Y}_{t-2}(1)\right)$$
 
+We can than rearrange:
 
+$$\hat{Y}_t(1) = \alpha Y_t + \alpha(1-\alpha) Y_{t-1} + (1-\alpha)^2 \hat{Y}_{t-2}(1)$$
   
- 
+Using equation 8.1 again as a format, $\hat{Y}_{t-2}(1)$ is written as
+
+$$\hat{Y}_{t-2}(1) = \alpha Y_{t-2} + (1-\alpha) \hat{Y}_{t-3}(1)$$,
+
