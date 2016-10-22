@@ -548,7 +548,7 @@ cyclical component of a time series is not so direct, and is a known limitation 
 
 ##The Trend Component
 
-The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. Figure 11 below has a trend line superimposed over the actual data, indicating a downward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$]. For our example, the Sales Volume series is a simple OLS regression against time period.
+The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. Figure 11 below has a trend line superimposed over the actual data, indicating a upward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$]. For our example, the trend of the Sales Volume series is calculated by regressing Sales Volume against time period.
 
 $$Sales_t = \beta_{0} + \beta_{1}Period_t$$
 
@@ -571,9 +571,7 @@ ggdraw(switch_axis_position(figure_610 + theme_tufte(), axis = 'y'))
 \newpage
 ##The Cyclical Fluctuations Component
 
-The cyclical component of a time series at each time step $t$, denoted $C_t$, and illustrated below in Figure 12 and 13, are the broad up-and-down swings of the series around it's trend
-line. These cycles of high and low can last more than a year, having different lengths and
-amplitudes. The cyclical component of a time series is usually attributable to some larger
+The cyclical component of a time series at each time step $t$, denoted $C_t$, and illustrated below in Figure 12 and 13, are the broad up-and-down swings of the series around it's trend line. These cycles of high and low can last more than a year, having different lengths and amplitudes. The cyclical component of a time series is usually attributable to some larger
 aspect of the economy or business cycle by which this particular data have been affected.
 
 ```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Trend line and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -777,11 +775,9 @@ kable(table_614_seasonal, digits = 2, caption = "Actual Sales, CWMA(12) Smoothin
 
 The irregular component of a time series at time $t$, denoted $I_t$, is illustrated in Figure
 16 below. They are the random, unexpected deviations from the trend/cyclical/seasonal components.
-Irregular changes or “shocks" to a time series are considered nonrecurring chance events
-such as strikes. They can be the result of unusually good (The movie E.T. and Reese's Pieces Candy) or unusually
-bad (Tylenol poisoning) publicity about a product.
+Irregular changes or “shocks" to a time series are considered nonrecurring chance events. They can be the result of unusually good (The movie E.T. and Reese's Pieces Candy) or unusually bad (Tylenol poisoning) publicity about a product.
 
-In Figure 16 below, an irregular variation occurs around period 30 as the series drops abruptly and then returns to its upward trend.
+In Figure 16 below, an irregular variation of the Sales Volume series occurs around period 30 as Sales drop abruptly and then returns to the usual upward trend.
 
 $$Irregular_t = \frac{Sales_t}{Trend_t \times SeasonalIndex_t}$$
 
