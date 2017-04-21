@@ -130,7 +130,7 @@ If we denote the adjustment factor by $\alpha$, we have:
 Algebraically, we re-arrange the last equation as the formal representation of _exponential smoothing_.
 
 
-##**Single Exponential Smoothing, one-step exponential smoothing**^[Formal Notation, equation 8.1]
+##**Single Exponential Smoothing, one-step ahead forecast**^[Formal Notation, equation 8.1]
 
 ```{marginfigure}
 $$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \hat{Y}_{t-1}(1)$$
