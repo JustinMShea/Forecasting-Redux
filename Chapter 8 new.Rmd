@@ -180,3 +180,8 @@ With Singe Exponential Smoothing, represented by equation 8.1, all that is neede
 ##**Starting Value for Exponential Smoothing**
 
 Exponential Smoothing just needs a starting value for forecast and a choice of $\alpha$. For our choice of  $\alpha$, we shall use $\alpha = 0.20$
+
+For a starting value, $Y_1(1)$, we shall use the average of the 30 observations of data, 
+Y = 356.53. Thus, an exponential smoothing forecast for Period 2:
+
+
