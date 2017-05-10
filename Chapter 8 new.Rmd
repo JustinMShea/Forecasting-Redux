@@ -20,7 +20,10 @@ options(htmltools.dir.version = FALSE)
 
 
 We now examine another area of time series forecasting similar to weighted moving
-averages, called _exponential smoothing methods_. One of the major distinctions between regressions methods on time series data and smoothing methods is that regressions give equal weight to all of the sample data whereas smoothing methods give decreasing weight to older, more distant data.
+averages, called _exponential smoothing methods_. One of the major distinctions 
+between regressions methods on time series data and smoothing methods is that 
+regressions give equal weight to all of the sample data whereas smoothing methods 
+give decreasing weight to older, more distant data.
 
 > "An economist is an expert who will know tomorrow why the things he predicted yesterday
 didn't happen today."
