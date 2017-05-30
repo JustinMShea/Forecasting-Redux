@@ -38,7 +38,7 @@ The other broad method of quantitative business forecasting is to use the histor
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from table 6.1 text file
-Table_61_path <- path.expand("~/R/forecasting/Table 6.1.txt")
+Table_61_path <- paste0(getwd(),"/data/Table 6.1.txt")
 table_61 <- read.delim(Table_61_path, header = FALSE, sep = " ", skip = 1)
  # add column names
 colnames(table_61) <- c("Period", "Year 1", "Period", "Year 2", "Period", "Year 3", "Period", "Year 4")
@@ -154,7 +154,7 @@ As in Table 2 and Figure 2.
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  # Import data from table 6.2 text file
-Table_62_path <- path.expand("~/R/forecasting/Table 6.2.txt")
+Table_62_path <- paste0(getwd(),"/data/Table 6.2.txt")
 table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
  # add column names
 colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
@@ -834,7 +834,7 @@ __Constant Mean Data __
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from problem text file
-problem_1_path <- path.expand("~/R/forecasting/problem table 1.txt")
+problem_1_path <- paste0(getwd(),"/data/problem table 1.txt")
 problem_1 <- read.delim(problem_1_path, skip = 1, sep = " ")
 # add column names
 colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
@@ -862,7 +862,7 @@ __De-seasonalizing Data__
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE} 
  ## Import data from problem 4 text file
-problem_4_path <- path.expand("~/R/forecasting/problem 4 table.txt")
+problem_4_path <- paste0(getwd(),"/data/problem 4 table.txt")
 problem_4 <- read.delim(problem_4_path, sep = " ")
 # add column names and load xtable to read LaTeX notation in column names
 colnames(problem_4) <-c("Period($t$)","Quarter($Q_t$)","Actual($Y_t$)","Period($t$)","Quarter($Q_t$)","Actual($Y_t$)")
@@ -905,7 +905,7 @@ __Data with Trend__
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from problem text file
-problem_8_path <- path.expand("~/R/forecasting/problem 8 table.txt")
+problem_8_path <- paste0(getwd(),"/data/problem 8 table.txt")
 problem_8 <- read.delim(problem_8_path, skip = 1, sep = " ")
 # add column names
 colnames(problem_8) <- c("Period", "Observation", "Period", "Observation")
