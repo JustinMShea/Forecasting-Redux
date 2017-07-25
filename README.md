@@ -1,4 +1,4 @@
-# Forecasting Textbook
+# Forecasting Manuscript
 
-Updates an old forecasting and time series textbook, using R.
+Update professor Joel Fingerman's the old forecasting and time series textbook manuscript, using R.
 

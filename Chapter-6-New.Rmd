@@ -2,7 +2,7 @@
 title: "Chapter 6"
 subtitle: "Introduction to Time Series"
 author: ""
-date: ""
+date: " "
 output:
   tufte::tufte_handout:  
     citation_package: natbib
@@ -40,6 +40,7 @@ The other broad method of quantitative business forecasting is to use the histor
 ## Import data from table 6.1 text file
 Table_61_path <- paste0(getwd(),"/data/Table 6.1.txt")
 table_61 <- read.delim(Table_61_path, header = FALSE, sep = " ", skip = 1)
+
  # add column names
 colnames(table_61) <- c("Period", "Year 1", "Period", "Year 2", "Period", "Year 3", "Period", "Year 4")
 
@@ -67,10 +68,10 @@ library(cowplot)
 
 figure_61 <- ggplot(data = table_61_series, aes(y = Sales, x = Period)) +
         geom_line() + 
-        scale_y_continuous(breaks=seq(0,800,100), limits = c(0,800)) + 
+        scale_y_continuous(breaks=seq(0,800,100), limits = c(0,800), sec.axis = dup_axis()) + 
         scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_61 + theme_tufte(), axis = 'y'))
+ggdraw(figure_61 + theme_tufte())
 ```
 
 ## Tips on Graphing Times Series Data: The Practice
@@ -177,10 +178,10 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
 library(ggplot2)
 figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
         geom_line() + 
-        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(figure_621 + theme_tufte() , axis = 'y'))
+ggdraw(figure_621 + theme_tufte())
 ```
 
 
@@ -192,10 +193,10 @@ Because the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$
 figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period))  +
         geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed") +
         geom_line() + 
-        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(figure_622 + theme_tufte(), axis = 'y'))
+ggdraw(figure_622 + theme_tufte())
 ```
 
 
@@ -243,11 +244,10 @@ colnames(table_63_chart) <- c("Period", "Series", "Value")
 chart_63 <- ggplot(data = table_63_chart, aes(y = Value, x = Period, col = Series)) +
             geom_line() +
         geom_line() + 
-        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
         
-ggdraw(switch_axis_position(chart_63 + theme_tufte() +
-            theme(legend.position = "top"), axis = 'y'))
+ggdraw(chart_63 + theme_tufte() + theme(legend.position = "top"))
 ```
 
 
@@ -306,11 +306,10 @@ colnames(table_641_chart) <- c("Period", "Series", "Value")
 margin_chart_64 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
   geom_line() +
         geom_line() + 
-        ylim(320,400) + 
+        scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(margin_chart_64 + theme_tufte() +
-            theme(legend.position = "top"), axis = 'y'))
+ggdraw(margin_chart_64 + theme_tufte() + theme(legend.position = "top"))
 ```
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 kable(period_5_example, align = "l", row.names=FALSE, caption="Horizontal data subset with $CMA_{t}(5)$")
@@ -342,14 +341,12 @@ table_641_chart <- gather(table_641_chart, Period)
 colnames(table_641_chart) <- c("Period", "Series", "Value")
 
 chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
   ggtitle("Actual ~ Centered Moving Average(5)") +
-        geom_line() + 
-        ylim(320,400) + 
+  geom_line() + 
+  scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(chart_641 + theme_tufte() +
-            theme(legend.position = "bottom"), axis = 'y'))
+ggdraw(chart_641 + theme_tufte() + theme(legend.position = "bottom"))
 ```
 
 
@@ -362,14 +359,12 @@ table_642_chart <- gather(table_642_chart, Period)
 colnames(table_642_chart) <- c("Period", "Series", "Value")
 
 chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
   ggtitle("Actual ~ Centered Moving Average (3) and (5)") +
-        geom_line() + 
-        ylim(320,400) + 
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+  geom_line() +          
+  scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+  scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(chart_642 + theme_tufte() +
-            theme(legend.position = "bottom"), axis = 'y'))
+ggdraw(chart_642 + theme_tufte() + theme(legend.position = "bottom"))
 ```
 
 \newpage
@@ -391,13 +386,11 @@ table_65_chart <- gather(table_65, Period)
 colnames(table_65_chart) <- c("Period", "Series", "Value")
 
 chart_65 <- ggplot(data = table_65_chart, aes(y = Value, x = Period, col = Series)) +
-            geom_line() +
         geom_line() + 
-        ylim(320,400) + 
+ scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(chart_65 + theme_tufte() +
-            theme(legend.position = "top"), axis = 'y'))
+ggdraw(chart_65 + theme_tufte() + theme(legend.position = "top"))
 ```
 \medskip
 Technically, if the first 4 periods are used, then the placement of $CMA_{t}(4)$ is between periods 2 and 3 at "period 2.5."
@@ -457,12 +450,10 @@ colnames(table_66_chart) <- c("Period", "Series", "Value")
 chart_66 <- ggplot(data = table_66_chart, aes(y = Value, x = Period, col = Series)) +
   geom_line() +
   ggtitle("Actual ~ Centered Moving Average (6) and (12)") +
-        geom_line() + 
-        ylim(320,400) + 
+   scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35))  
 
-ggdraw(switch_axis_position(chart_66 + theme_tufte() +
-            theme(legend.position = "bottom"), axis = 'y'))
+ggdraw(chart_66 + theme_tufte() + theme(legend.position = "bottom"))
 ```
 
 \newpage
@@ -510,12 +501,10 @@ colnames(table_67_chart) <- c("Period", "Series", "Value")
 
 chart_67 <- ggplot(data = table_67_chart, aes(y = Value, x = Period, col = Series)) +
   geom_line() +
-  geom_line() + 
-  ylim(320,400) + 
+ scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(chart_67 + theme_tufte() +
-                              theme(legend.position = "top"), axis = 'y'))
+ggdraw( chart_67 + theme_tufte() + theme(legend.position = "top") )
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -561,10 +550,10 @@ colnames(table_610_series) <- c("Period", "Series", "Value")
 
 figure_610 <- ggplot(data = table_610_series, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
-  ylim(0,800) + 
+ scale_y_continuous(breaks=seq(0,800,100), limits = c(0,800), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_610 + theme_tufte(), axis = 'y'))
+ggdraw( figure_610 + theme_tufte() )
 ```
 
 
@@ -582,10 +571,10 @@ colnames(table_611_series) <- c("Period", "Series", "Value")
 figure_611 <- ggplot(data = table_611_series, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
    geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
-  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
+  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800), sec.axis = dup_axis()) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_611 + theme_tufte(), axis = 'y'))
+ggdraw( figure_611 + theme_tufte() )
 ```
 
 
@@ -597,7 +586,7 @@ figure_612 <- ggplot(data = table_611, aes(y = t.Cycle, x = Period, col = t.Cycl
   ylim(-175,125) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_612 + theme_tufte(), axis = 'y'))
+ggdraw( figure_612 + theme_tufte() )
 ```
 
 \newpage
@@ -726,10 +715,10 @@ colnames(table_69_series) <- c("Period", "Series", "Value")
 figure_69 <- ggplot(data = table_69_series, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
-  scale_y_continuous(breaks=seq(.9,1.3,.05), limit = c(.9,1.3)) +
+  scale_y_continuous(breaks=seq(.9,1.3,.05), limit = c(.9,1.3), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(1,12,1), limits = c(0,12), labels = rep(month.abb))
 # draw
-ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
+ggdraw( figure_69 + theme_tufte() )
 ```
 
 
@@ -756,11 +745,11 @@ colnames(table_614_series2) <- c("Period", "Series", "Value")
 figure_614 <- ggplot(data = table_614_series2, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
   geom_vline(xintercept = c(11.5,23.5,35.5,47.5), alpha = 1/3, linetype="dashed") +
-  scale_y_continuous(breaks=seq(0,800,200), limits = c(0,800)) + 
+  scale_y_continuous(breaks=seq(0,800,200), limits = c(0,800), sec.axis = dup_axis()) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
-ggdraw(switch_axis_position(figure_614 + theme_tufte(), axis = 'y'))
+ggdraw( figure_614 + theme_tufte())
 ```
 
 
@@ -789,13 +778,14 @@ table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = table_614_se
 
 
 # Create chart object
-figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular, x = Period, col = Irregular)) +
+figure_Irregular_series <- ggplot(data = table_615_Irregular, 
+                                  aes(y = Irregular, x = Period, col = Irregular)) +
   geom_line() + 
   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
-ggdraw(switch_axis_position(figure_Irregular_series + theme_tufte(), axis = 'y'))
+ggdraw(figure_Irregular_series + theme_tufte())
 ```
 
 \newpage
@@ -809,19 +799,19 @@ The astute reader may have noticed that we used the 12-Period Centered Moving Av
 figure_smooth_c <- ggplot(data = table_smooth_c_series, aes(y = Value, x = Period, col = Series)) +
   geom_line() + 
    geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
-  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
+  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800), sec.axis = dup_axis()) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_smooth_c + theme_tufte(), axis = 'y'))
+ggdraw( figure_smooth_c + theme_tufte() )
 ```
 ```{r, fig.width = 10, fig.height = 3, fig.fullwidth = TRUE, fig.cap = "Sales Data, CWMA(12) Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_smooth_c2 <- ggplot(data = table_smooth_c, aes(y = t.Cycle, x = Period, col = t.Cycle)) +
   geom_line() + 
   geom_hline(yintercept = 0, linetype="dashed", alpha = 1/2) +
-  ylim(-175,125) + 
+  scale_y_continuous(breaks=seq(-175,125,50), limits = c(-175,125), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_smooth_c2 + theme_tufte(), axis = 'y'))
+ggdraw(figure_smooth_c2 + theme_tufte())
 ```
 
 \newpage
