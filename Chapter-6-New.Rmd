@@ -1,8 +1,8 @@
 ---
 title: "Chapter 6"
 subtitle: "Introduction to Time Series"
-author: ""
-date: " "
+author: "Author: Joel Fingerman"
+date: "Markdown complined by Justin M. Shea"
 output:
   tufte::tufte_handout:  
     citation_package: natbib
@@ -17,8 +17,7 @@ knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
 options(htmltools.dir.version = FALSE)
 ```
 
-The preceding three chapters of this book dealt with regression methods applied to cross sectional data. When we have cross sectional data our approach to forecasting is to use the
-explanatory variables to forecast the value of the dependent variable. This approach to forecasting is often termed _interpolation_.
+The preceding three chapters of this book dealt with regression methods applied to cross sectional data. When we have cross sectional data our approach to forecasting is to use the explanatory variables to forecast the value of the dependent variable. This approach to forecasting is often termed _interpolation_.
 
 The other broad method of quantitative business forecasting is to use the history of the data we wish to forecast. We examine the historical pattern of the data we wish to forecast and try to find a discernible pattern. Using this pattern, we forecast forward the future pattern of the data. This method of forecasting is often termed _extrapolation_. The use of the historical pattern of the data to be forecast is known as _time series methods_.
 
@@ -36,7 +35,7 @@ The other broad method of quantitative business forecasting is to use the histor
 
    To create a time series of data from our example of Sales Volume data we now collect a series of Sales Volume data from _just one location over consecutive monthly periods_. We collected a data set of four years, or 48 consecutive months (48 periods), of Sales Volume.
 
-```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, tidy=TRUE,message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from table 6.1 text file
 Table_61_path <- paste0(getwd(),"/data/Table 6.1.txt")
 table_61 <- read.delim(Table_61_path, header = FALSE, sep = " ", skip = 1)
@@ -159,13 +158,14 @@ Table_62_path <- paste0(getwd(),"/data/Table 6.2.txt")
 table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
  # add column names
 colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
+
 library(knitr)
 kable(table_62, caption = "Horizontal Data")
 ```
 
 \newpage
 
-```{r, fig.width = 5, fig.height = 2.15, fig.fullwidth = TRUE, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Page 3, create plot
 # First, gather the time series data table into one column.
 library(tidyr)
@@ -185,13 +185,12 @@ ggdraw(figure_621 + theme_tufte())
 ```
 
 
-Because the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$. In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$.^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] 
+Because the $Y_t$^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$. In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$. 
 
 
-
-```{r, fig.width = 5, fig.height = 2.15, fig.fullwidth = TRUE, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period))  +
-        geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed") +
+        geom_hline(aes(yintercept = 356.5), color = "red", linetype = "dashed") +
         geom_line() + 
         scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
@@ -218,12 +217,13 @@ period_3_example$Smoothing <- c("...",smooth,"...")
 colnames(period_3_example) <- c("Period", "Actual", "Smoothing")
 ```
 
-## 3-period Centered Moving Average Smoothing for period $t$
+## 3-period Centered Moving Average Smoothing for period $t$ ^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$ $$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$$ $$CMA_{7}(3) = \frac{364+367+375}{3}=368.66$$]
 
-To begin with an example, examine the notation in the margin^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$]. Next, we shall use the data from Table 2 to illustrate this method. For example, a 3-period Centered Moving Average (at period 7) is:
+
+To begin with an example, examine the notation in the margin. Next, we shall use the data from Table 2 to illustrate this method. For example, a 3-period Centered Moving Average (at period 7) is:
 
 \bigskip
-$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$, and $CMA_{7}(3) = \frac{364+367+375}{3} = `r smooth`$
+
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## creating table 63
@@ -231,11 +231,12 @@ library(forecast)
 smooth_63 <- round(ma(table_62_series[,2], order = 3, centre = TRUE), digits = 1)
 table_63_series <- data.frame(table_62_series, "CMA(3)" = smooth_63)
 colnames(table_63_series) <- c("Period", "Actual", "Centered Moving Average (3)")
+
 table_63 <- data.frame(table_63_series[1:15,], table_63_series[16:30,])
 colnames(table_63) <- c("Period", "Actual", "CMA(3)", "Period", "Actual", "CMA(3)")
 ```
 
-```{r, fig.margin = TRUE, fig.cap = "Centered Moving Average(3)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.cap = "Centered Moving Average(3)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_63_chart <- table_63_series
 colnames(table_63_chart) <- c("Period", "Actual", "CMA(3)")
 table_63_chart <- gather(table_63_chart, Period)
