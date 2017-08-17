@@ -178,7 +178,7 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
 library(ggplot2)
 figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
         geom_line() + 
-        scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(figure_621 + theme_tufte())
@@ -192,7 +192,7 @@ Because the $Y_t$^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] are varying around a cons
 figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period))  +
         geom_hline(aes(yintercept = 356.5), color = "red", linetype = "dashed") +
         geom_line() + 
-        scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(figure_622 + theme_tufte())
@@ -245,7 +245,7 @@ colnames(table_63_chart) <- c("Period", "Series", "Value")
 chart_63 <- ggplot(data = table_63_chart, aes(y = Value, x = Period, col = Series)) +
             geom_line() +
         geom_line() + 
-        scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
         
 ggdraw(chart_63 + theme_tufte() + theme(legend.position = "top"))
@@ -307,7 +307,7 @@ colnames(table_641_chart) <- c("Period", "Series", "Value")
 margin_chart_64 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
   geom_line() +
         geom_line() + 
-        scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(margin_chart_64 + theme_tufte() + theme(legend.position = "top"))
@@ -344,7 +344,7 @@ colnames(table_641_chart) <- c("Period", "Series", "Value")
 chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
   ggtitle("Actual ~ Centered Moving Average(5)") +
   geom_line() + 
-  scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+  scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(chart_641 + theme_tufte() + theme(legend.position = "bottom"))
@@ -362,7 +362,7 @@ colnames(table_642_chart) <- c("Period", "Series", "Value")
 chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
   ggtitle("Actual ~ Centered Moving Average (3) and (5)") +
   geom_line() +          
-  scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+  scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(chart_642 + theme_tufte() + theme(legend.position = "bottom"))
@@ -388,7 +388,7 @@ colnames(table_65_chart) <- c("Period", "Series", "Value")
 
 chart_65 <- ggplot(data = table_65_chart, aes(y = Value, x = Period, col = Series)) +
         geom_line() + 
- scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+ scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
 ggdraw(chart_65 + theme_tufte() + theme(legend.position = "top"))
@@ -451,7 +451,7 @@ colnames(table_66_chart) <- c("Period", "Series", "Value")
 chart_66 <- ggplot(data = table_66_chart, aes(y = Value, x = Period, col = Series)) +
   geom_line() +
   ggtitle("Actual ~ Centered Moving Average (6) and (12)") +
-   scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+   scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35))  
 
 ggdraw(chart_66 + theme_tufte() + theme(legend.position = "bottom"))
@@ -502,10 +502,10 @@ colnames(table_67_chart) <- c("Period", "Series", "Value")
 
 chart_67 <- ggplot(data = table_67_chart, aes(y = Value, x = Period, col = Series)) +
   geom_line() +
- scale_x_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+ scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw( chart_67 + theme_tufte() + theme(legend.position = "top") )
+ggdraw(chart_67 + theme_tufte() + theme(legend.position = "top") )
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -518,7 +518,9 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 
 ##Classical Time Series Decomposition
 Given an economic time series as shown in Figure 1, one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. 
+
 \medskip
+
 Considering the four components collectively is the method of the _classical time series decomposition_. The components can be either added together, or multiplied by each other, to define a time series. If a time series decomposition is additive, all components are expressed in the physical units of $Y_t$ and simply added together. If a times series decomposition is expressed in multiplicative form, component values are expressed in a combination of physical units and percentage of trend $T_t$, and multiplied together. The actual value $Y_t$ is the _product_ of the trend component $T_t$ expressed in physical units, the cyclical component $C_t$ expressed as a percentage of $T_t$, the seasonal component $S_t$ as a percentage of $T_t \times C_t$ , and the irregular component expressed as a percentage of $T_t \times C_t \times S_t$.
 
 \bigskip   
