@@ -2,7 +2,7 @@
 title: "Chapter 6"
 subtitle: "Introduction to Time Series"
 author: "Author: Joel Fingerman"
-date: "Markdown complined by Justin M. Shea"
+date: "Markdown document by Justin M. Shea"
 output:
   tufte::tufte_handout:  
     citation_package: natbib
