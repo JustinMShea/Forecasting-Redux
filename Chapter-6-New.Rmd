@@ -1,8 +1,8 @@
 ---
 title: "Chapter 6"
 subtitle: "Introduction to Time Series"
-author: "Author: Joel Fingerman"
-date: "Markdown document by Justin M. Shea"
+author: "Original Author: Dr. Joel Fingerman"
+date: "Compiled and edited by Justin M. Shea"
 output:
   tufte::tufte_handout:  
     citation_package: natbib
