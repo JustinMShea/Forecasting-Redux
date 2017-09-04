@@ -64,11 +64,18 @@ colnames(table_61_series) <- c("Period", "Sales")
 library(ggplot2)
 library(ggthemes)
 library(cowplot)
+library(RColorLisa)
+
+Picasso <- color.lisa.pal(5, "The Dream by Pablo Picasso")
+Basquiat <- color.lisa.pal(4, "DUSTHEADS by Jean-Michel Basquiat")
+vanGogh <- color.lisa.pal(4, "The Starry Night by Vincent van Gogh")
+chagall <- color.lisa.pal(4, "La MariÃ©e sous le Baldaquin by Marc Chagall")
 
 figure_61 <- ggplot(data = table_61_series, aes(y = Sales, x = Period)) +
         geom_line() + 
         scale_y_continuous(breaks=seq(0,800,100), limits = c(0,800), sec.axis = dup_axis()) + 
-        scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+        scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54)) +
+        scale_fill_manual(values = Picasso)
 
 ggdraw(figure_61 + theme_tufte())
 ```
@@ -177,9 +184,9 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
 #Creat chart
 library(ggplot2)
 figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
-        geom_line() + 
+        geom_line(color = Picasso[1]) +
         scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35))  
 
 ggdraw(figure_621 + theme_tufte())
 ```
@@ -190,8 +197,8 @@ Because the $Y_t$^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] are varying around a cons
 
 ```{r, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period))  +
-        geom_hline(aes(yintercept = 356.5), color = "red", linetype = "dashed") +
-        geom_line() + 
+        geom_hline(aes(yintercept = 356.5), color = Picasso[2], linetype = "dashed") +
+        geom_line(color = Picasso[1]) +
         scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
@@ -217,10 +224,10 @@ period_3_example$Smoothing <- c("...",smooth,"...")
 colnames(period_3_example) <- c("Period", "Actual", "Smoothing")
 ```
 
-## 3-period Centered Moving Average Smoothing for period $t$ ^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$ $$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$$ $$CMA_{7}(3) = \frac{364+367+375}{3}=368.66$$]
+## 3-period Centered Moving Average Smoothing for period $t$
 
 
-To begin with an example, examine the notation in the margin. Next, we shall use the data from Table 2 to illustrate this method. For example, a 3-period Centered Moving Average (at period 7) is:
+To begin with an example, we shall use the data from Table 2 to illustrate this method. 
 
 \bigskip
 
@@ -236,20 +243,24 @@ table_63 <- data.frame(table_63_series[1:15,], table_63_series[16:30,])
 colnames(table_63) <- c("Period", "Actual", "CMA(3)", "Period", "Actual", "CMA(3)")
 ```
 
-```{r, fig.cap = "Centered Moving Average(3)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.width = 6,fig.height = 3, fig.cap = "Centered Moving Average(3)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_63_chart <- table_63_series
 colnames(table_63_chart) <- c("Period", "Actual", "CMA(3)")
 table_63_chart <- gather(table_63_chart, Period)
-colnames(table_63_chart) <- c("Period", "Series", "Value")
+colnames(table_63_chart) <- c("Period", "Series", "Horizontal Data")
 
-chart_63 <- ggplot(data = table_63_chart, aes(y = Value, x = Period, col = Series)) +
-            geom_line() +
-        geom_line() + 
-        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+chart_63 <- ggplot(data = table_63_chart, aes(y = `Horizontal Data`, x = Period, color = Series)) +
+            geom_line() + scale_color_manual(values = Picasso) +
+            scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+            scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
         
-ggdraw(chart_63 + theme_tufte() + theme(legend.position = "top"))
+ggdraw(chart_63 + theme_tufte() + theme(legend.position = "right"))
 ```
+
+
+
+Examine the notation in the margin of a 3-period Centered Moving Average (at period 7).
+^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$ $$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$$ $$CMA_{7}(3) = \frac{364+367+375}{3}=368.66$$]
 
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -269,8 +280,6 @@ Centered Smoothing Average (3)")
 ```
 
 
-\newpage
-
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Smoothing moving average, pg 8.
 period_5_example <- table_62_series[4:10,]
@@ -279,18 +288,13 @@ period_5_example$Smoothing <- c("...","...","...",smooth5,"...","...","...")
 colnames(period_5_example) <- c("Period", "Actual", "Smoothing")
 ```
 
-## 5-period Centered Moving Average Smoothing for period $t$
+## 5-period Centered Moving Average Smoothing for period t
 
 
-A 5 period moving average smoothing is “smoother" than a 3 period because it uses
-a larger set of observations.^[5-period Centered Moving Average: $$CMA_{t}(5) = \frac{Y_{T+2}+Y_{T+1}+Y_{T}+Y_{T-1}+Y_{T-2}}{5}$$]. As an example we smooth period 7 of the data in Table 4.
+A 5 period moving average smoothing is "smoother" than a 3 period because it uses
+a larger set of observations. 
 
-$$CMA_{7}(5) = \frac{Y_{9}+Y_{8}+Y_{7}+Y_{6}+Y_{5}}{5}$$
-
-$$CMA_{7}(5) = \frac{379+364+367+375+375}{5} = `r smooth5`$$
-
-
-```{r, fig.margin = TRUE, fig.cap = "Centered Moving Average(5)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.width = 6,fig.height = 2.75, fig.cap = "Centered Moving Average (3) and (5)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
 smooth_64 <- round(ma(table_62_series[,2], order = 5, centre = TRUE), digits = 1)
 table_64_series <- data.frame(table_62_series, "CMA(3)" = smooth_63, "CMA(5)" = smooth_64)
@@ -303,18 +307,30 @@ library(ggplot2)
 table_641_chart <- table_64_series[,c(1,2,4)]
 table_641_chart <- gather(table_641_chart, Period)
 colnames(table_641_chart) <- c("Period", "Series", "Value")
-
 margin_chart_64 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
-        geom_line() + 
-        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+                   geom_line() + scale_color_manual(values = Picasso) +
+                   scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+                   scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+#ggdraw(margin_chart_64 + theme_tufte() + theme(legend.position = "top"))
+# chart 2
+table_642_chart <- table_64_series
+table_642_chart <- gather(table_642_chart, Period)
+colnames(table_642_chart) <- c("Period", "Series", "Value")
 
-ggdraw(margin_chart_64 + theme_tufte() + theme(legend.position = "top"))
+chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + scale_color_manual(values = Picasso) +        
+  scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+  scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+
+ggdraw(chart_642 + theme_tufte() + theme(legend.position = "right"))
 ```
+
+As an example we smooth period 7 of the data in table below.^[5-period Centered Moving Average: $$CMA_{t}(5) = \frac{Y_{T+2}+Y_{T+1}+Y_{T}+Y_{T-1}+Y_{T-2}}{5}$$$$CMA_{7}(5) = \frac{Y_{9}+Y_{8}+Y_{7}+Y_{6}+Y_{5}}{5}$$ $$CMA_{7}(5) = \frac{379+364+367+375+375}{5} = 372$$]
+
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-kable(period_5_example, align = "l", row.names=FALSE, caption="Horizontal data subset with $CMA_{t}(5)$")
+kable(period_5_example, align = "l", row.names=FALSE, caption="Horizontal data subset with $CMA_{7}(5)$")
 ```
+
 
 We list below both the 3 and 5 period moving average smoothing.
 
@@ -332,48 +348,14 @@ colnames(table_64) <- c("Period", "Actual", "CMA(3)","CMA(5)","Period", "Actual"
 kable(table_64, align = "l", row.names=FALSE, caption="Horizontal data with $CMA_{t}(3) and CMA_{t}(5)$")
 ```
    
-\newpage
-
-Below is a graph of actual values with a 5-period smoothing superimposed. The following graph adds an additiona 3-period smoothing for comparison.
-```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(5)", fig.width = 10, fig.height = 4,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-library(ggplot2)
-table_641_chart <- table_64_series[,c(1,2,4)]
-table_641_chart <- gather(table_641_chart, Period)
-colnames(table_641_chart) <- c("Period", "Series", "Value")
-
-chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
-  ggtitle("Actual ~ Centered Moving Average(5)") +
-  geom_line() + 
-  scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
-
-ggdraw(chart_641 + theme_tufte() + theme(legend.position = "bottom"))
-```
-
-
-
-
-```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(3,5)", fig.width = 10, fig.height = 4, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-# chart 2
-table_642_chart <- table_64_series
-table_642_chart <- gather(table_642_chart, Period)
-colnames(table_642_chart) <- c("Period", "Series", "Value")
-
-chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
-  ggtitle("Actual ~ Centered Moving Average (3) and (5)") +
-  geom_line() +          
-  scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
-  scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
-
-ggdraw(chart_642 + theme_tufte() + theme(legend.position = "bottom"))
-```
 
 \newpage
-## 4-Period Centered Moving Average Smoothing
 
-A 4-period Centered Moving Average is possible, but the issue of placing the results remains.^[4-period Centered Moving Average: $$CMA_{t}(4) = \frac{Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+Y_{T-2}}{8}$$] 
+## 4-Period Centered Moving Average Smoothing^[4-period Centered Moving Average: $$CMA_{t}(4) = \frac{Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+Y_{T-2}}{8}$$] 
 
-```{r, fig.margin = TRUE, fig.cap = "Centered Moving Average(4)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+A 4-period Centered Moving Average is possible, but the issue of placing the results remains.
+
+```{r, fig.fullwidth = TRUE, fig.width = 6, fig.height = 3, fig.cap = "Centered Moving Average(4)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
 smooth_65 <- round(ma(table_62_series[,2], order = 4, centre = TRUE), digits = 2)
 table_65 <- data.frame(table_62_series, "CMA(4)" = smooth_65)
@@ -387,13 +369,14 @@ table_65_chart <- gather(table_65, Period)
 colnames(table_65_chart) <- c("Period", "Series", "Value")
 
 chart_65 <- ggplot(data = table_65_chart, aes(y = Value, x = Period, col = Series)) +
-        geom_line() + 
+        geom_line() + scale_color_manual(values = Picasso) +
  scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(chart_65 + theme_tufte() + theme(legend.position = "top"))
+ggdraw(chart_65 + theme_tufte() + theme(legend.position = "right"))
 ```
 \medskip
+
 Technically, if the first 4 periods are used, then the placement of $CMA_{t}(4)$ is between periods 2 and 3 at "period 2.5."
 $$CMA_{t}(4) = \frac{Y_{4}+Y_{3}+Y_{2}+Y_{1}}{4}$$   
 $$CMA_{2.5}(4) = \frac{389+329+368+354}{4} = 360$$   
@@ -436,7 +419,7 @@ series data use 13-period and 39-period smoothing of weekly data instead of an e
 
 
 
-```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(6,12)", fig.width = 10, fig.height = 6, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(6) and (12)", fig.width = 6, fig.height = 3, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
 smooth_6 <- round(ma(table_62_series[,2], order = 6, centre = TRUE), digits = 1)
 smooth_12 <- round(ma(table_62_series[,2], order = 12, centre = TRUE), digits = 1)
@@ -449,12 +432,11 @@ table_66_chart <- gather(table_66_series, Period)
 colnames(table_66_chart) <- c("Period", "Series", "Value")
 
 chart_66 <- ggplot(data = table_66_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
-  ggtitle("Actual ~ Centered Moving Average (6) and (12)") +
+  geom_line() + scale_color_manual(values = Picasso) +
    scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35))  
 
-ggdraw(chart_66 + theme_tufte() + theme(legend.position = "bottom"))
+ggdraw(chart_66 + theme_tufte() + theme(legend.position = "right"))
 ```
 
 \newpage
@@ -468,19 +450,13 @@ to the most recent observation and _less_ weight to observations in the past.
 
 ## 3-period Centered Weighted Moving Average
 
-A 3-period Centered Weighted Moving Average is denoted as $CWMA_t(3)$ and can be found in the margin.^[3-period Centered Weighted Moving Average. In general terms, we denote the weights by $\omega_1$, $\omega_2$, and $\omega_3$ (omega sub 1, omega sub 2, and omega sub 3). $$CWMA_{t}(3) = \frac{\omega_1 Y_{T+1}+\omega_2 Y_{T}+\omega_3 Y_{T-1}}{3}$$]   
-\medskip
+In general terms, we denote the weights by $\omega_1$, $\omega_2$, and $\omega_3$ (omega sub 1, omega sub 2, and omega sub 3).^[Consider the following $CWMA_t(3)$ notation: $$CWMA_{t}(3) = \frac{0.6 Y_{T+1}+0.3 Y_{T}+0.1 Y_{T-1}}{3}$$ All that is required is that the sum of the weights equal 1, as in:  $$0.6 + 0.3 + 0.1 = 1$$]  
 
-
-As an example, consider the following $CWMA_t(3)$ notation:
-
-$$CWMA_{t}(3) = \frac{0.6 Y_{T+1}+0.3 Y_{T}+0.1 Y_{T-1}}{3}$$
+$$CWMA_{t}(3) = \frac{\omega_1 Y_{T+1}+\omega_2 Y_{T}+\omega_3 Y_{T-1}}{3}$$
 
 \bigskip
 
-All that is required is that the sum of the weights equal 1, as in:
-
-$$0.6 + 0.3 + 0.1 = 1$$
+A 3-period Centered Weighted Moving Average is visualized below. 
 
 
 A weighted moving average may be generalized to any number of historical periods and set of weights. The choice of the number of historical periods and the weights used are determined, in part, by the Forecast Analyst who has collected the data and has some appreciation of the data structure.
@@ -495,17 +471,17 @@ colnames(table_67) <- c("Period", "Actual", "CWMA(3)", "Period", "Actual", "CWMA
 
 ```
 
-```{r, fig.margin = TRUE, fig.cap = "Centered Weighted Moving Average(3)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.cap = "Centered Weighted Moving Average(3)", fig.width=6, fig.height=3, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 
 table_67_chart <- gather(table_67_series, Period)
 colnames(table_67_chart) <- c("Period", "Series", "Value")
 
 chart_67 <- ggplot(data = table_67_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
+  geom_line() + scale_color_manual(values = Picasso) +
  scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(chart_67 + theme_tufte() + theme(legend.position = "top") )
+ggdraw(chart_67 + theme_tufte() + theme(legend.position = "right") )
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
