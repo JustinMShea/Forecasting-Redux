@@ -1,6 +1,6 @@
 # Intro to Forecasting Redux
 
-This repository contains updates to Dr. Joel Fingerman's forecasting and time series textbook manuscripts, recreated in Tufte-themed R markdown. The updates also correct various minor errors and add missing graphs to fille in the "figure x" blank place holders. In addition, I add some content and a few additional graphs for clarity and reorder some sections. These updates, along with the clarity of Tufte, should aid learners more clearly understanding the material.
+This repository contains updates to Dr. Joel Fingerman's forecasting and time series textbook manuscripts, recreated in Tufte-themed R markdown. The updates also correct various minor errors and add missing graphs to fille in the "figure x" blank place holders. In addition, I add some content and a few additional graphs for clarity and reorder some sections. With the clarity of Tufte and these updates, it is my aim that those who seek to understand the subject shall have their efforts rewarded more easily.
 
 ## Sections Completed
 
