@@ -4,6 +4,6 @@ This repository contains updates to Dr. Joel Fingerman's forecasting and time se
 
 ## Sections Completed
 
-[Introduction to Time Series](https://github.com/JustinMShea/forecasting/blob/master/Tufte-Manuscripts/Chapter-6-New.pdf).
+[Introduction to Time Series](https://github.com/JustinMShea/Forecasting-Redux/blob/master/Tufte-Manuscripts/6-Introduction-to-Time-Series.pdf).
 
 This section covers an introduction to time series graphing techniques, smoothing, and classical time series decomposition. 
