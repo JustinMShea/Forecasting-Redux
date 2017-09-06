@@ -895,4 +895,31 @@ With the linear regression model?
 
 15. Which is the better model, double exponential smoothing or linear regression? 
 Explain.
+
+\newpage
+
+# Software Bibliography
+
+JJ Allaire, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston Chang, Jeff Allen, Hadley Wickham, Aron Atkins, Rob Hyndman and Ruben Arslan (2017). rmarkdown: Dynamic Documents for R. R package version 1.6. https://CRAN.R-project.org/package=rmarkdown    
+
+Yihui Xie and JJ Allaire (2016). tufte: Tufte's Styles for R Markdown Documents. R package version 0.2. https://CRAN.R-project.org/package=tufte  
+
+Jeffrey B. Arnold (2017). ggthemes: Extra Themes, Scales and Geoms for 'ggplot2'. R package version 3.4.0. https://CRAN.R-project.org/package=ggthemes  
+
+David B. Dahl (2016). xtable: Export Tables to LaTeX or HTML. R package version 1.8-2. https://CRAN.R-project.org/package=xtable   
+
+
+Hyndman RJ (2017). _forecast: Forecasting functions for time series and linear models_. R package version 8.1, <URL:http://github.com/robjhyndman/forecast>.   
+
+R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.  
+
+H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2009.  
+  
+Hadley Wickham (2017). tidyr: Easily Tidy Data with 'spread()' and
+  'gather()' Functions. R package version 0.6.3.
+  https://CRAN.R-project.org/package=tidyr
+
+Claus O. Wilke (2016). cowplot: Streamlined Plot Theme and Plot Annotations
+  for 'ggplot2'. R package version 0.7.0.
+  https://CRAN.R-project.org/package=cowplot
  
