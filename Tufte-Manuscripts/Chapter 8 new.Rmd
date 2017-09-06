@@ -1,0 +1,190 @@
+---
+title: "Chapter 8"
+subtitle: "Smoothing Methods on Time Series"
+author: ""
+date: ""
+output:
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+library(knitr)
+# invalidate cache when the tufte version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
+options(htmltools.dir.version = FALSE)
+```
+
+
+We now examine another area of time series forecasting similar to weighted moving
+averages, called _exponential smoothing methods_. One of the major distinctions 
+between regressions methods on time series data and smoothing methods is that 
+regressions give equal weight to all of the sample data whereas smoothing methods 
+give decreasing weight to older, more distant data.
+
+> "An economist is an expert who will know tomorrow why the things he predicted yesterday
+didn't happen today."
+>
+> `r tufte::quote_footer('--- Evan Esar')`
+
+\newpage
+
+##**Single Exponential Smoothing**
+
+A popular, widely used time series smoothing and forecasting method is _single exponential smoothing_ (also called _one-parameter exponential smoothing_). Exponential smoothing is a form of weighted moving average in that recent observations carry more weight than older observations.
+
+Exponential smoothing is based on the concept that a new, one step-ahead forecast can be determined from the _previous forecast_ and the _error of the previous forecast_. We illustrate this concept below. 
+
+Suppose we have the following series:
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+ # Import data from table 6.2 text file
+Table_62_path <- paste0(getwd(),"/data/Table 6.2.txt")
+table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
+ # add column names
+colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
+
+# First, gather the time series data table into one column.
+library(tidyr)
+table_62_series <- gather(table_62[,c(2,4)])
+table_62_series$key<- as.numeric(rownames(table_62_series))
+table_62_series$forecast <- ""
+colnames(table_62_series) <- c("Period", "Actual", "Forecast")
+
+kable(table_62_series[1:3,], align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast"))
+```
+
+And, suppose a one-step ahead forecast for period 4, made at period 3, is 352.5. $\hat{Y_3}(1) = 352.5$.
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_2 <- table_62_series[1:4,]
+table_2[4,2:3] <- c("NA", 352.5)
+kable(table_2, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast"))
+```
+
+Then suppose period 4's actual value is 389.
+
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_3 <- table_2
+table_3[4,2] <- 389
+kable(table_3, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast"))
+```
+
+
+So, the forecast error is 36.5.
+
+$$\varepsilon_{3}(1) = Y_4 - \hat{Y}_3(1)$$
+$$36.5 = 389 - 352.5$$
+
+\newpage
+
+In otherwords, we _underforecast_ by 36.5.
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_4 <- table_3
+table_4$Error <- ""
+table_4[4,4] <- 36.5
+kable(table_4, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
+```
+
+Since we underforecasted, we will adjust upward our next forecast, based on the error of our previous forecast.  We adjust our next forecast upward by 20% of the forecast error. $20\%$ of $36.5$ is $7.3$.
+
+Hence, the forecast for period 5 is the old forecast of 352.5 adjusted upwarded by
+7.3. 
+$$352.5 + 7.3 = 359.8$$
+$$\hat{Y}_4(1) = 359.8$$
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_5 <- table_4
+table_5[5,] <- c(5,"NA", 359.8, "NA")
+kable(table_5, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
+```
+
+The actual value for period 5 is 350, so the one-step ahead period 5 forecast error
+is
+ 
+$$\varepsilon_{4}(1) = Y_5 - \hat{Y}_4(1)$$
+$$-9.8 = 350 - 359.8$$
+
+In otherwords, we _overforecast_ by 9.8.
+
+```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_6 <- table_4
+table_6[5,] <- c(5,350, 359.8, 9.8)
+kable(table_6, align = 'l', col.names = c("Period", "Actual($Y_t$)","Forecast", "Error"))
+```
+
+The forecast for period 5 then is adjusted by 20% of the forecast error, $20\%$ of $-9.8$ is $-1.96$.
+
+The Forecast for period 6 is:
+$$359.8 + (-1.96) = 357.8$$
+$$\hat{Y}_5(1) = 357.8$$
+
+Each new forecast, $\hat{Y}_t(1)$, is based on the preceding forecast, $\hat{Y}_{t-1}(1)$, plus an adjustment for forecast error.
+
+If we denote the adjustment factor by $\alpha$, we have:
+
+ $$\hat{Y}_t(1) = \hat{Y}_{t-1}(1)+\alpha\varepsilon_{t-1}(1)$$
+
+Algebraically, we re-arrange the last equation as the formal representation of _exponential smoothing_.
+
+
+##**Single Exponential Smoothing, one-step ahead forecast**^[Formal Notation, equation 8.1]
+
+```{marginfigure}
+$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \hat{Y}_{t-1}(1)$$
+```
+
+ In the case of $\alpha$ = 0.2, we have 
+ 
+$$\hat{Y}_t(1) = 0.2 Y_t + 0.8  \hat{Y}_{t-1}(1)$$
+
+The new forecast is the weighted average of the current observation $Y_t$ and the previous forecast $\hat{Y}_{t-1}$.
+  
+Returning to equation 8.1 displayed in the right margin, we illustrate why this approach is called _exponential smoothing_. 
+
+Since $\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \hat{Y}_{t-1}(1)$, we shift back by one period and get $\hat{Y}_{t-1}(1) = \alpha Y_{t-1} + (1-\alpha) \hat{Y}_{t-2}(1)$.^[Equation 8.2]
+
+By substituting equation 8.2 in for $\hat{Y}_t(1)$ in equation 8.1 we have:
+
+$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \left(\alpha Y_{t-1} + (1-\alpha) \hat{Y}_{t-2}(1)\right)$$
+
+Which we can then rearrange to get:
+
+$$\hat{Y}_t(1) = \alpha Y_t + \alpha(1-\alpha) Y_{t-1} + (1-\alpha)^2 \hat{Y}_{t-2}(1)$$
+  
+Using equation 8.1 again as a format, $\hat{Y}_{t-2}(1)$ is written as
+$$\hat{Y}_{t-2}(1) = \alpha Y_{t-2} + (1-\alpha) \hat{Y}_{t-3}(1)$$
+
+By substituting for $\hat{Y}_{t-2}(1)$ in equation (8.1) we have:
+$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \alpha Y_{t-1} + (1-\alpha)^2 \left(\alpha Y_{t-2} + (1-\alpha) \hat{Y}_{t-3}(1)\right)$$
+Which can then be rearranged as:
+$$\hat{Y}_t(1) = \alpha Y_t + \alpha(1-\alpha) Y_{t-1} + \alpha(1-\alpha)^2 {Y}_{t-2}(1) + \alpha(1-\alpha)^3 \hat{Y}_{t-3}(1)$$
+And so on. 
+
+Since $\alpha$ is less than 1, 
+$\alpha, \alpha(1-\alpha), \alpha(1-\alpha)^2, \dots$ are exponentially decreasing weights applied to previous observations.
+$$\hat{Y}_t(1) = \alpha Y_t + \alpha(1-\alpha) Y_{t-1} + \alpha(1-\alpha)^2 {Y}_{t-2}(1) + \alpha(1-\alpha)^3 \hat{Y}_{t-3}(1) + \alpha(1-\alpha)^4 \hat{Y}_{t-4}(1) + \dots$$
+In the case of $\alpha = 0.2$, we have
+$$\hat{Y}_t(1) = 0.2 Y_t + 0.16 Y_{t-1} + 0.128{Y}_{t-2}(1) + 0.1024 {Y}_{t-3}(1) +  0.08192 \hat{Y}_{t-4}(1) + \dots$$
+This is an infinite weighted moving average, shown that:
+$$1 = \alpha + \alpha(1-\alpha)  + \alpha(1-\alpha)^2 + \alpha(1-\alpha)^3  + \alpha(1-\alpha)^4 + \dots$$
+The attraction of exponential smoothing is that it is not necessary to use the last equation (8.7), but rather the first (8.1)
+$$\hat{Y}_t(1) = \alpha Y_t + (1-\alpha) \hat{Y}_{t-1}(1)$$
+as it is equivalent to the infinite sum
+$$\hat{Y}_t(1) = \alpha Y_t + \alpha(1-\alpha) Y_{t-1} + \alpha(1-\alpha)^2 {Y}_{t-2}(1) + \alpha(1-\alpha)^3 \hat{Y}_{t-3}(1) + \alpha(1-\alpha)^4 \hat{Y}_{t-4}(1) + \dots$$
+
+With Singe Exponential Smoothing, represented by equation 8.1, all that is needed to make a new forecast is the current observation and previous forecast.
+
+##**Starting Value for Exponential Smoothing**
+
+Exponential Smoothing just needs a starting value for forecast and a choice of $\alpha$. For our choice of  $\alpha$, we shall use $\alpha = 0.20$
+
+For a starting value, $Y_1(1)$, we shall use the average of the 30 observations of data, 
+Y = 356.53. Thus, an exponential smoothing forecast for Period 2:
+
+
