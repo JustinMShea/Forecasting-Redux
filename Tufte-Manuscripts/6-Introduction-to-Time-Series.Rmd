@@ -759,7 +759,7 @@ ggdraw(figure_Irregular_series + theme_tufte())
 \newpage
 
 ## Closing remarks
-The astute reader may have noticed that we used the 12-Period Centered Moving Average to assist in calculating the seasonal component, not the OLS linear trend used in our initial example. The 12-Period Centered Moving Average discussed on pg. 12 offers a more dynamic fit for measuring the monthly Sales trend than the rigid OLS line. This is a topic we will cover in future chapters. For now, the reader is left to consider the benefits of using a smoothing function to measure the trend of a time series. 
+The astute reader may have noticed that we used the 12-Period Centered Moving Average to assist in calculating the seasonal component, not the OLS linear trend used in our initial example. The 12-Period Centered Moving Average discussed on pg. 12 offers a more dynamic fit for measuring the monthly Sales trend than the rigid OLS line. However, this comes at the expense of 6 observations at the head and tail of the data. This is a topic we will cover in future chapters. For now, the student is left to consider the benefits of using a smoothing function to measure the trend of a time series. 
 
 
 ```{r, fig.width = 8, fig.height = 6, fig.fullwidth = TRUE, fig.cap = "Sales Data with CWMA(12) Trend and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
