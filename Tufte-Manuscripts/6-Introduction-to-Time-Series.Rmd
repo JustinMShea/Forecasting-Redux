@@ -1,8 +1,7 @@
 ---
-title: "Chapter 6"
-subtitle: "Introduction to Time Series"
-author: ""
-date: ""
+title: "Chapter 6: Introduction to Time Series"
+author: "Author: Dr. Joel Fingerman"
+date: "Compiled by Justin M. Shea"
 output:
   tufte::tufte_handout:  
     citation_package: natbib
@@ -17,8 +16,7 @@ knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
 options(htmltools.dir.version = FALSE)
 ```
 
-The preceding three chapters of this book dealt with regression methods applied to cross sectional data. When we have cross sectional data our approach to forecasting is to use the
-explanatory variables to forecast the value of the dependent variable. This approach to forecasting is often termed _interpolation_.
+The preceding three chapters of this book dealt with regression methods applied to cross sectional data. When we have cross sectional data our approach to forecasting is to use the explanatory variables to forecast the value of the dependent variable. This approach to forecasting is often termed _interpolation_.
 
 The other broad method of quantitative business forecasting is to use the history of the data we wish to forecast. We examine the historical pattern of the data we wish to forecast and try to find a discernible pattern. Using this pattern, we forecast forward the future pattern of the data. This method of forecasting is often termed _extrapolation_. The use of the historical pattern of the data to be forecast is known as _time series methods_.
 
@@ -36,10 +34,11 @@ The other broad method of quantitative business forecasting is to use the histor
 
    To create a time series of data from our example of Sales Volume data we now collect a series of Sales Volume data from _just one location over consecutive monthly periods_. We collected a data set of four years, or 48 consecutive months (48 periods), of Sales Volume.
 
-```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, tidy=TRUE,message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from table 6.1 text file
-Table_61_path <- paste0(getwd(),"/data/Table 6.1.txt")
+Table_61_path <- path.expand("~/R/Forecasting-Redux/data/Table 6.1.txt")
 table_61 <- read.delim(Table_61_path, header = FALSE, sep = " ", skip = 1)
+
  # add column names
 colnames(table_61) <- c("Period", "Year 1", "Period", "Year 2", "Period", "Year 3", "Period", "Year 4")
 
@@ -64,13 +63,20 @@ colnames(table_61_series) <- c("Period", "Sales")
 library(ggplot2)
 library(ggthemes)
 library(cowplot)
+library(RColorLisa)
+
+Picasso <- color.lisa.pal(5, "The Dream by Pablo Picasso")
+Basquiat <- color.lisa.pal(4, "DUSTHEADS by Jean-Michel Basquiat")
+vanGogh <- color.lisa.pal(4, "The Starry Night by Vincent van Gogh")
+chagall <- color.lisa.pal(4, "La MariÃ©e sous le Baldaquin by Marc Chagall")
 
 figure_61 <- ggplot(data = table_61_series, aes(y = Sales, x = Period)) +
         geom_line() + 
-        scale_y_continuous(breaks=seq(0,800,100), limits = c(0,800)) + 
-        scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+        scale_y_continuous(breaks=seq(0,800,100), limits = c(0,800), sec.axis = dup_axis()) + 
+        scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54)) +
+        scale_fill_manual(values = Picasso)
 
-ggdraw(switch_axis_position(figure_61 + theme_tufte(), axis = 'y'))
+ggdraw(figure_61 + theme_tufte())
 ```
 
 ## Tips on Graphing Times Series Data: The Practice
@@ -143,7 +149,7 @@ structure or pattern. The first, and simplest, method of smoothing time series d
 ## Smoothing Out the Data by Averaging
 
 If we believe there exists some underlying trend or pattern in the time series data,
-then by “smoothing the data" we smooth out (or average out) the random variations to reveal
+then by "smoothing the data" we smooth out (or average out) the random variations to reveal
 the underlying pattern in the series.
 
 ## The Practice: Simple Average Smoothing
@@ -154,17 +160,18 @@ As in Table 2 and Figure 2.
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  # Import data from table 6.2 text file
-Table_62_path <- paste0(getwd(),"/data/Table 6.2.txt")
+Table_62_path <-  path.expand("~/R/Forecasting-Redux/data/Table 6.2.txt")
 table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
  # add column names
 colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
+
 library(knitr)
 kable(table_62, caption = "Horizontal Data")
 ```
 
 \newpage
 
-```{r, fig.width = 5, fig.height = 2.15, fig.fullwidth = TRUE, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Page 3, create plot
 # First, gather the time series data table into one column.
 library(tidyr)
@@ -176,26 +183,25 @@ colnames(table_62_series) <- c("Period", "Horizontal Data")
 #Creat chart
 library(ggplot2)
 figure_621 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period)) +
-        geom_line() + 
-        ylim(320,400) + 
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+        geom_line(color = Picasso[1]) +
+        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35))  
 
-ggdraw(switch_axis_position(figure_621 + theme_tufte() , axis = 'y'))
+ggdraw(figure_621 + theme_tufte())
 ```
 
 
-Because the $Y_t$ are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$. In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$.^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] 
+Because the $Y_t$^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$. In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$. 
 
 
-
-```{r, fig.width = 5, fig.height = 2.15, fig.fullwidth = TRUE, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period))  +
-        geom_hline(aes(yintercept=356.5), color = "red", linetype="dashed") +
-        geom_line() + 
-        ylim(320,400) + 
+        geom_hline(aes(yintercept = 356.5), color = Picasso[2], linetype = "dashed") +
+        geom_line(color = Picasso[1]) +
+        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(figure_622 + theme_tufte(), axis = 'y'))
+ggdraw(figure_622 + theme_tufte())
 ```
 
 
@@ -219,10 +225,11 @@ colnames(period_3_example) <- c("Period", "Actual", "Smoothing")
 
 ## 3-period Centered Moving Average Smoothing for period $t$
 
-To begin with an example, examine the notation in the margin^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$]. Next, we shall use the data from Table 2 to illustrate this method. For example, a 3-period Centered Moving Average (at period 7) is:
+
+To begin with an example, we shall use the data from Table 2 to illustrate this method. 
 
 \bigskip
-$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$, and $CMA_{7}(3) = \frac{364+367+375}{3} = `r smooth`$
+
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## creating table 63
@@ -230,25 +237,29 @@ library(forecast)
 smooth_63 <- round(ma(table_62_series[,2], order = 3, centre = TRUE), digits = 1)
 table_63_series <- data.frame(table_62_series, "CMA(3)" = smooth_63)
 colnames(table_63_series) <- c("Period", "Actual", "Centered Moving Average (3)")
+
 table_63 <- data.frame(table_63_series[1:15,], table_63_series[16:30,])
 colnames(table_63) <- c("Period", "Actual", "CMA(3)", "Period", "Actual", "CMA(3)")
 ```
 
-```{r, fig.margin = TRUE, fig.cap = "Centered Moving Average(3)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.width = 6,fig.height = 3, fig.cap = "Centered Moving Average(3)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_63_chart <- table_63_series
 colnames(table_63_chart) <- c("Period", "Actual", "CMA(3)")
 table_63_chart <- gather(table_63_chart, Period)
-colnames(table_63_chart) <- c("Period", "Series", "Value")
+colnames(table_63_chart) <- c("Period", "Series", "Horizontal Data")
 
-chart_63 <- ggplot(data = table_63_chart, aes(y = Value, x = Period, col = Series)) +
-            geom_line() +
-        geom_line() + 
-        ylim(320,400) + 
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+chart_63 <- ggplot(data = table_63_chart, aes(y = `Horizontal Data`, x = Period, color = Series)) +
+            geom_line() + scale_color_manual(values = Picasso) +
+            scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+            scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
         
-ggdraw(switch_axis_position(chart_63 + theme_tufte() +
-            theme(legend.position = "top"), axis = 'y'))
+ggdraw(chart_63 + theme_tufte() + theme(legend.position = "right"))
 ```
+
+
+
+Examine the notation in the margin of a 3-period Centered Moving Average (at period 7).
+^[3-period Centered Moving Average: $$CMA_{t}(3) = \frac{Y_{T+1}+Y_{T}+Y_{T-1}}{3}$$ $$CMA_{7}(3) = \frac{Y_{8}+Y_{7}+Y_{6}}{3}$$ $$CMA_{7}(3) = \frac{364+367+375}{3}=368.66$$]
 
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -268,8 +279,6 @@ Centered Smoothing Average (3)")
 ```
 
 
-\newpage
-
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Smoothing moving average, pg 8.
 period_5_example <- table_62_series[4:10,]
@@ -278,18 +287,13 @@ period_5_example$Smoothing <- c("...","...","...",smooth5,"...","...","...")
 colnames(period_5_example) <- c("Period", "Actual", "Smoothing")
 ```
 
-## 5-period Centered Moving Average Smoothing for period $t$
+## 5-period Centered Moving Average Smoothing for period t
 
 
-A 5 period moving average smoothing is “smoother" than a 3 period because it uses
-a larger set of observations.^[5-period Centered Moving Average: $$CMA_{t}(5) = \frac{Y_{T+2}+Y_{T+1}+Y_{T}+Y_{T-1}+Y_{T-2}}{5}$$]. As an example we smooth period 7 of the data in Table 4.
+A 5 period moving average smoothing is "smoother" than a 3 period because it uses
+a larger set of observations. 
 
-$$CMA_{7}(5) = \frac{Y_{9}+Y_{8}+Y_{7}+Y_{6}+Y_{5}}{5}$$
-
-$$CMA_{7}(5) = \frac{379+364+367+375+375}{5} = `r smooth5`$$
-
-
-```{r, fig.margin = TRUE, fig.cap = "Centered Moving Average(5)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.width = 6,fig.height = 2.75, fig.cap = "Centered Moving Average (3) and (5)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
 smooth_64 <- round(ma(table_62_series[,2], order = 5, centre = TRUE), digits = 1)
 table_64_series <- data.frame(table_62_series, "CMA(3)" = smooth_63, "CMA(5)" = smooth_64)
@@ -302,19 +306,30 @@ library(ggplot2)
 table_641_chart <- table_64_series[,c(1,2,4)]
 table_641_chart <- gather(table_641_chart, Period)
 colnames(table_641_chart) <- c("Period", "Series", "Value")
-
 margin_chart_64 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
-        geom_line() + 
-        ylim(320,400) + 
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+                   geom_line() + scale_color_manual(values = Picasso) +
+                   scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+                   scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+#ggdraw(margin_chart_64 + theme_tufte() + theme(legend.position = "top"))
+# chart 2
+table_642_chart <- table_64_series
+table_642_chart <- gather(table_642_chart, Period)
+colnames(table_642_chart) <- c("Period", "Series", "Value")
 
-ggdraw(switch_axis_position(margin_chart_64 + theme_tufte() +
-            theme(legend.position = "top"), axis = 'y'))
+chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
+  geom_line() + scale_color_manual(values = Picasso) +        
+  scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+  scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+
+ggdraw(chart_642 + theme_tufte() + theme(legend.position = "right"))
 ```
+
+As an example we smooth period 7 of the data in table below.^[5-period Centered Moving Average: $$CMA_{t}(5) = \frac{Y_{T+2}+Y_{T+1}+Y_{T}+Y_{T-1}+Y_{T-2}}{5}$$$$CMA_{7}(5) = \frac{Y_{9}+Y_{8}+Y_{7}+Y_{6}+Y_{5}}{5}$$ $$CMA_{7}(5) = \frac{379+364+367+375+375}{5} = 372$$]
+
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-kable(period_5_example, align = "l", row.names=FALSE, caption="Horizontal data subset with $CMA_{t}(5)$")
+kable(period_5_example, align = "l", row.names=FALSE, caption="Horizontal data subset with $CMA_{7}(5)$")
 ```
+
 
 We list below both the 3 and 5 period moving average smoothing.
 
@@ -332,52 +347,14 @@ colnames(table_64) <- c("Period", "Actual", "CMA(3)","CMA(5)","Period", "Actual"
 kable(table_64, align = "l", row.names=FALSE, caption="Horizontal data with $CMA_{t}(3) and CMA_{t}(5)$")
 ```
    
-\newpage
-
-Below is a graph of actual values with a 5-period smoothing superimposed. The following graph adds an additiona 3-period smoothing for comparison.
-```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(5)", fig.width = 10, fig.height = 4,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-library(ggplot2)
-table_641_chart <- table_64_series[,c(1,2,4)]
-table_641_chart <- gather(table_641_chart, Period)
-colnames(table_641_chart) <- c("Period", "Series", "Value")
-
-chart_641 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
-  ggtitle("Actual ~ Centered Moving Average(5)") +
-        geom_line() + 
-        ylim(320,400) + 
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
-
-ggdraw(switch_axis_position(chart_641 + theme_tufte() +
-            theme(legend.position = "bottom"), axis = 'y'))
-```
-
-
-
-
-```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(3,5)", fig.width = 10, fig.height = 4, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-# chart 2
-table_642_chart <- table_64_series
-table_642_chart <- gather(table_642_chart, Period)
-colnames(table_642_chart) <- c("Period", "Series", "Value")
-
-chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
-  ggtitle("Actual ~ Centered Moving Average (3) and (5)") +
-        geom_line() + 
-        ylim(320,400) + 
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
-
-ggdraw(switch_axis_position(chart_642 + theme_tufte() +
-            theme(legend.position = "bottom"), axis = 'y'))
-```
 
 \newpage
-## 4-Period Centered Moving Average Smoothing
 
-A 4-period Centered Moving Average is possible, but the issue of placing the results remains.^[4-period Centered Moving Average: $$CMA_{t}(4) = \frac{Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+Y_{T-2}}{8}$$] 
+## 4-Period Centered Moving Average Smoothing^[4-period Centered Moving Average: $$CMA_{t}(4) = \frac{Y_{T+2}+2Y_{T+1}+2Y_{T}+2Y_{T-1}+Y_{T-2}}{8}$$] 
 
-```{r, fig.margin = TRUE, fig.cap = "Centered Moving Average(4)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+A 4-period Centered Moving Average is possible, but the issue of placing the results remains.
+
+```{r, fig.fullwidth = TRUE, fig.width = 6, fig.height = 3, fig.cap = "Centered Moving Average(4)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
 smooth_65 <- round(ma(table_62_series[,2], order = 4, centre = TRUE), digits = 2)
 table_65 <- data.frame(table_62_series, "CMA(4)" = smooth_65)
@@ -391,15 +368,14 @@ table_65_chart <- gather(table_65, Period)
 colnames(table_65_chart) <- c("Period", "Series", "Value")
 
 chart_65 <- ggplot(data = table_65_chart, aes(y = Value, x = Period, col = Series)) +
-            geom_line() +
-        geom_line() + 
-        ylim(320,400) + 
+        geom_line() + scale_color_manual(values = Picasso) +
+ scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(chart_65 + theme_tufte() +
-            theme(legend.position = "top"), axis = 'y'))
+ggdraw(chart_65 + theme_tufte() + theme(legend.position = "right"))
 ```
 \medskip
+
 Technically, if the first 4 periods are used, then the placement of $CMA_{t}(4)$ is between periods 2 and 3 at "period 2.5."
 $$CMA_{t}(4) = \frac{Y_{4}+Y_{3}+Y_{2}+Y_{1}}{4}$$   
 $$CMA_{2.5}(4) = \frac{389+329+368+354}{4} = 360$$   
@@ -442,7 +418,7 @@ series data use 13-period and 39-period smoothing of weekly data instead of an e
 
 
 
-```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(6,12)", fig.width = 10, fig.height = 6, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.cap = "Centered Moving Average(6) and (12)", fig.width = 6, fig.height = 3, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
 smooth_6 <- round(ma(table_62_series[,2], order = 6, centre = TRUE), digits = 1)
 smooth_12 <- round(ma(table_62_series[,2], order = 12, centre = TRUE), digits = 1)
@@ -455,14 +431,11 @@ table_66_chart <- gather(table_66_series, Period)
 colnames(table_66_chart) <- c("Period", "Series", "Value")
 
 chart_66 <- ggplot(data = table_66_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
-  ggtitle("Actual ~ Centered Moving Average (6) and (12)") +
-        geom_line() + 
-        ylim(320,400) + 
+  geom_line() + scale_color_manual(values = Picasso) +
+   scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
         scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35))  
 
-ggdraw(switch_axis_position(chart_66 + theme_tufte() +
-            theme(legend.position = "bottom"), axis = 'y'))
+ggdraw(chart_66 + theme_tufte() + theme(legend.position = "right"))
 ```
 
 \newpage
@@ -476,19 +449,13 @@ to the most recent observation and _less_ weight to observations in the past.
 
 ## 3-period Centered Weighted Moving Average
 
-A 3-period Centered Weighted Moving Average is denoted as $CWMA_t(3)$ and can be found in the margin.^[3-period Centered Weighted Moving Average. In general terms, we denote the weights by $\omega_1$, $\omega_2$, and $\omega_3$ (omega sub 1, omega sub 2, and omega sub 3). $$CWMA_{t}(3) = \frac{\omega_1 Y_{T+1}+\omega_2 Y_{T}+\omega_3 Y_{T-1}}{3}$$]   
-\medskip
+In general terms, we denote the weights by $\omega_1$, $\omega_2$, and $\omega_3$ (omega sub 1, omega sub 2, and omega sub 3).^[Consider the following $CWMA_t(3)$ notation: $$CWMA_{t}(3) = \frac{0.6 Y_{T+1}+0.3 Y_{T}+0.1 Y_{T-1}}{3}$$ All that is required is that the sum of the weights equal 1, as in:  $$0.6 + 0.3 + 0.1 = 1$$]  
 
-
-As an example, consider the following $CWMA_t(3)$ notation:
-
-$$CWMA_{t}(3) = \frac{0.6 Y_{T+1}+0.3 Y_{T}+0.1 Y_{T-1}}{3}$$
+$$CWMA_{t}(3) = \frac{\omega_1 Y_{T+1}+\omega_2 Y_{T}+\omega_3 Y_{T-1}}{3}$$
 
 \bigskip
 
-All that is required is that the sum of the weights equal 1, as in:
-
-$$0.6 + 0.3 + 0.1 = 1$$
+A 3-period Centered Weighted Moving Average is visualized below. 
 
 
 A weighted moving average may be generalized to any number of historical periods and set of weights. The choice of the number of historical periods and the weights used are determined, in part, by the Forecast Analyst who has collected the data and has some appreciation of the data structure.
@@ -503,19 +470,17 @@ colnames(table_67) <- c("Period", "Actual", "CWMA(3)", "Period", "Actual", "CWMA
 
 ```
 
-```{r, fig.margin = TRUE, fig.cap = "Centered Weighted Moving Average(3)", fig.width=4, fig.height=3.5, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.cap = "Centered Weighted Moving Average(3)", fig.width=6, fig.height=3, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 
 table_67_chart <- gather(table_67_series, Period)
 colnames(table_67_chart) <- c("Period", "Series", "Value")
 
 chart_67 <- ggplot(data = table_67_chart, aes(y = Value, x = Period, col = Series)) +
-  geom_line() +
-  geom_line() + 
-  ylim(320,400) + 
+  geom_line() + scale_color_manual(values = Picasso) +
+ scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
 
-ggdraw(switch_axis_position(chart_67 + theme_tufte() +
-                              theme(legend.position = "top"), axis = 'y'))
+ggdraw(chart_67 + theme_tufte() + theme(legend.position = "right") )
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
@@ -528,7 +493,9 @@ kable(table_67, align = "r", row.names=FALSE, caption="3 Period Centered Weighte
 
 ##Classical Time Series Decomposition
 Given an economic time series as shown in Figure 1, one of the most common approaches to understanding such data is through _classical time series decomposition_. The composition of the time series is decomposed into four components: trend, cyclical, seasonal, and irregular components. 
+
 \medskip
+
 Considering the four components collectively is the method of the _classical time series decomposition_. The components can be either added together, or multiplied by each other, to define a time series. If a time series decomposition is additive, all components are expressed in the physical units of $Y_t$ and simply added together. If a times series decomposition is expressed in multiplicative form, component values are expressed in a combination of physical units and percentage of trend $T_t$, and multiplied together. The actual value $Y_t$ is the _product_ of the trend component $T_t$ expressed in physical units, the cyclical component $C_t$ expressed as a percentage of $T_t$, the seasonal component $S_t$ as a percentage of $T_t \times C_t$ , and the irregular component expressed as a percentage of $T_t \times C_t \times S_t$.
 
 \bigskip   
@@ -548,57 +515,46 @@ cyclical component of a time series is not so direct, and is a known limitation 
 
 ##The Trend Component
 
-The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. Figure 11 below has a trend line superimposed over the actual data, indicating a upward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$]. For our example, the trend of the Sales Volume series is calculated by regressing Sales Volume against time period.
+The trend component of a time series at time $t$, denoted $T_t$, is the upward or downward progression of the data over time. The figure below has a trend line superimposed over the actual data, indicating a upward trend. The OLS regression line of $T_t$ is defined in the margin^[$$T_t = \beta_{0} + \beta_{1}TIME_t$$]. For our example, the trend of the Sales Volume series is calculated by regressing Sales Volume against time period.
 
 $$Sales_t = \beta_{0} + \beta_{1}Period_t$$
 
 
-```{r, fig.width = 10, fig.height = 6, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Plotted OLS Trend line.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.width = 6, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Plotted OLS Trend line.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 trend <- lm(Sales ~ Period, table_61_series)
 table_610 <- data.frame(table_61_series, Trend = trend$fitted.values)
 table_610_series <- gather(table_610, Period)
-colnames(table_610_series) <- c("Period", "Series", "Value")
+colnames(table_610_series) <- c("Period", "Series", "Sales")
 
-figure_610 <- ggplot(data = table_610_series, aes(y = Value, x = Period, col = Series)) +
-  geom_line() + 
-  ylim(0,800) + 
+figure_610 <- ggplot(data = table_610_series, aes(y = Sales, x = Period, col = Series)) +
+  geom_line() + scale_color_manual(values = Picasso) +
+ scale_y_continuous(breaks=seq(0,800,100), limits = c(0,800), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_610 + theme_tufte(), axis = 'y'))
+ggdraw( figure_610 + theme_tufte() )
 ```
 
 
 \newpage
 ##The Cyclical Fluctuations Component
 
-The cyclical component of a time series at each time step $t$, denoted $C_t$, and illustrated below in Figure 12 and 13, are the broad up-and-down swings of the series around it's trend line. These cycles of high and low can last more than a year, having different lengths and amplitudes. The cyclical component of a time series is usually attributable to some larger
+The cyclical component of a time series at each time step $t$, denoted $C_t$, and illustrated below, are the broad up-and-down swings of the series around it's trend line.^[$$Cycle_t = Sales_t - Trend_t$$] These cycles of high and low can last more than a year, having different lengths and amplitudes. The cyclical component of a time series is usually attributable to some larger
 aspect of the economy or business cycle by which this particular data have been affected.
 
-```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Trend line and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-table_611 <- data.frame(table_61_series, Trend = trend$fitted.values, t.Cycle = trend$residuals)
+```{r, fig.width = 6, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data with Trend line and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+table_611 <- data.frame(table_61_series, Trend = trend$fitted.values, z.Cycle = trend$residuals)
 table_611_series <- gather(table_611, Period)
-colnames(table_611_series) <- c("Period", "Series", "Value")
+colnames(table_611_series) <- c("Period", "Series", "Sales")
 
-figure_611 <- ggplot(data = table_611_series, aes(y = Value, x = Period, col = Series)) +
-  geom_line() + 
+figure_611 <- ggplot(data = table_611_series, aes(y = Sales, x = Period, col = Series)) +
+  geom_line() + scale_color_manual(values = Picasso) + 
    geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
-  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
+  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800), sec.axis = dup_axis()) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_611 + theme_tufte(), axis = 'y'))
+ggdraw( figure_611 + theme_tufte())
 ```
 
-
-
-```{r, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume Data, Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-figure_612 <- ggplot(data = table_611, aes(y = t.Cycle, x = Period, col = t.Cycle)) +
-  geom_line() + 
-  geom_hline(yintercept = 0, linetype="dashed", alpha = 1/2) +
-  ylim(-175,125) + 
-  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
-
-ggdraw(switch_axis_position(figure_612 + theme_tufte(), axis = 'y'))
-```
 
 \newpage
 
@@ -617,7 +573,7 @@ figure_smooth <- ggplot(data = table_smooth_series, aes(y = Value, x = Period, c
 ```
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-table_smooth_c <- data.frame(table_61_series, Trend = trend_smooth, t.Cycle = table_61_series[,2]-trend_smooth)
+table_smooth_c <- data.frame(table_61_series, Trend = trend_smooth, z.Cycle = table_61_series[,2]-trend_smooth)
 table_smooth_c_series <- gather(table_smooth_c, Period)
 colnames(table_smooth_c_series) <- c("Period", "Series", "Value")
 ```
@@ -713,23 +669,23 @@ The sum of the Adjusted Seasonal Indices equals 12, so their average equals 1. A
 kable(table_69_adjusted_tbl, caption = "Adjusted Seasonal Index" )
 ```
 
-```{r, fig.cap = "Sales Volum Data, Seasonal Index.",fig.width = 10, fig.height = 5, fig.fullwidth = TRUE,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.cap = "Sales Volum Data, Seasonal Index.", fig.width = 6, fig.height = 3, fig.fullwidth = TRUE,  message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 #Chart seasonal index 
 # dataframe for chart
 
-table_69_series <- data.frame("Period"=seq(1,12,1), "Unadjusted Index" =   table_69_median[1:12],"Adjusted Index"=table_69_adjusted[1:12])
+table_69_series <- data.frame("Period"=seq(1,12,1), "Unadjusted" =   table_69_median[1:12],"Adjusted"=table_69_adjusted[1:12])
 
 table_69_series <- gather(table_69_series, Period)
-colnames(table_69_series) <- c("Period", "Series", "Value")
+colnames(table_69_series) <- c("Period", "Series", "Sales")
 
 # chart object
-figure_69 <- ggplot(data = table_69_series, aes(y = Value, x = Period, col = Series)) +
-  geom_line() + 
+figure_69 <- ggplot(data = table_69_series, aes(y = Sales, x = Period, col = Series)) +
+  geom_line() + scale_color_manual(values = Picasso) +
   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
-  scale_y_continuous(breaks=seq(.9,1.3,.05), limit = c(.9,1.3)) +
+  scale_y_continuous(breaks=seq(.9,1.3,.05), limit = c(.9,1.3), sec.axis = dup_axis()) +
   scale_x_continuous(breaks=seq(1,12,1), limits = c(0,12), labels = rep(month.abb))
 # draw
-ggdraw(switch_axis_position(figure_69 + theme_tufte(), axis = 'y'))
+ggdraw( figure_69 + theme_tufte())
 ```
 
 
@@ -740,27 +696,27 @@ $$DeSeasonalized_t = \frac{Sales_t}{Seasonal Index_t}$$
 Notice in the Figure below that the periods of (11,12), (23,24), (35,36), and (47,48) are reoccurring local peaks in Sales Volume. This is the seasonality of Sales.
 
 
-```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.width = 8, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Add to table_68 series and calculate seasonally adjusted values
-table_614_seasonal <- data.frame(table_68_series, "Seasonal" = table_69_adjusted, "DeSeasonalized"= table_68_series$Sales/table_69_adjusted)
-colnames(table_614_seasonal) <- c(colnames(table_68_series), "Seasonal", "DeSeasonalized")
+table_614_seasonal <- data.frame(table_68_series, "Seasonal Index" = table_69_adjusted, "Seasonalized"= table_68_series$Sales/table_69_adjusted)
+colnames(table_614_seasonal) <- c(colnames(table_68_series), "Seasonal Index", "Seasonalized")
 
 
 # Create Series for chart
 table_614_series <- data.frame(table_614_seasonal)
 
 table_614_series2 <- gather(table_614_series[,c(1,3,7)], Period)
-colnames(table_614_series2) <- c("Period", "Series", "Value")
+colnames(table_614_series2) <- c("Period", "Series", "Sales")
 
 # Create chart object
-figure_614 <- ggplot(data = table_614_series2, aes(y = Value, x = Period, col = Series)) +
-  geom_line() + 
-  geom_vline(xintercept = c(11.5,23.5,35.5,47.5), alpha = 1/3, linetype="dashed") +
-  scale_y_continuous(breaks=seq(0,800,200), limits = c(0,800)) + 
+figure_614 <- ggplot(data = table_614_series2, aes(y = Sales, x = Period, col = Series)) +
+  geom_line()  + scale_color_manual(values = Picasso) +
+  geom_vline(xintercept = c(12,24,36,47.5), alpha = 1/3, linetype = "dashed") +
+  scale_y_continuous(breaks=seq(0,800,200), limits = c(0,800), sec.axis = dup_axis()) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
-ggdraw(switch_axis_position(figure_614 + theme_tufte(), axis = 'y'))
+ggdraw( figure_614 + theme_tufte())
 ```
 
 
@@ -782,49 +738,44 @@ In Figure 16 below, an irregular variation of the Sales Volume series occurs aro
 $$Irregular_t = \frac{Sales_t}{Trend_t \times SeasonalIndex_t}$$
 
 
-```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.width = 8, fig.height = 4, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Irregular values
 #Add to table_614_series series and calculate irregular values.
-table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = table_614_seasonal$Sales/(table_614_seasonal$CMA12*table_614_seasonal$Seasonal))
+irregular <- table_614_seasonal$Sales/(table_614_seasonal$CMA12*table_614_seasonal$`Seasonal Index`)
+
+table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = irregular)
 
 
 # Create chart object
-figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular, x = Period, col = Irregular)) +
-  geom_line() + 
-  geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
-  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular, x = Period)) +
+                                geom_line(col = Picasso[4]) +
+                                geom_hline(yintercept = 1, linetype = "dashed", alpha = 1/2) +
+                                scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
 # Call graphics Device to illustrate chart
-ggdraw(switch_axis_position(figure_Irregular_series + theme_tufte(), axis = 'y'))
+ggdraw(figure_Irregular_series + theme_tufte())
 ```
 
 \newpage
 
 ## Closing remarks
-The astute reader may have noticed that we used the 12-Period Centered Moving Average to assist in calculating the seasonal component, not the OLS linear trend used in our initial example. The 12-Period Centered Moving Average discussed on pg. 12 offers a more dynamic fit for measuring the monthly Sales trend than the rigid OLS line. This is a topic we will cover in future chapters. For now, the reader is left to consider the benefits of using a smoothing function to measure the trend of a time series. 
+The astute reader may have noticed that we used the 12-Period Centered Moving Average to assist in calculating the seasonal component, not the OLS linear trend used in our initial example. The 12-Period Centered Moving Average discussed on pg. 12 offers a more dynamic fit for measuring the monthly Sales trend than the rigid OLS line. However, this comes at the expense of 6 observations at the head and tail of the data. This is a topic we will cover in future chapters. For now, the student is left to consider the benefits of using a smoothing function to measure the trend of a time series. 
 
 
-```{r, fig.width = 10, fig.height = 5, fig.fullwidth = TRUE, fig.cap = "Sales Data with CWMA(12) Trend and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.width = 8, fig.height = 6, fig.fullwidth = TRUE, fig.cap = "Sales Data with CWMA(12) Trend and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 
 figure_smooth_c <- ggplot(data = table_smooth_c_series, aes(y = Value, x = Period, col = Series)) +
-  geom_line() + 
+  geom_line() + scale_color_manual(values = Picasso) +
    geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
-  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800)) + 
+  scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800), sec.axis = dup_axis()) + 
   scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_smooth_c + theme_tufte(), axis = 'y'))
+ggdraw( figure_smooth_c + theme_tufte())
 ```
-```{r, fig.width = 10, fig.height = 3, fig.fullwidth = TRUE, fig.cap = "Sales Data, CWMA(12) Cycle component.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
-figure_smooth_c2 <- ggplot(data = table_smooth_c, aes(y = t.Cycle, x = Period, col = t.Cycle)) +
-  geom_line() + 
-  geom_hline(yintercept = 0, linetype="dashed", alpha = 1/2) +
-  ylim(-175,125) + 
-  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
 
-ggdraw(switch_axis_position(figure_smooth_c2 + theme_tufte(), axis = 'y'))
-```
 
 \newpage
+
 
 #QUESTIONS AND PROBLEMS
 
@@ -834,7 +785,7 @@ __Constant Mean Data __
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from problem text file
-problem_1_path <- paste0(getwd(),"/data/problem table 1.txt")
+problem_1_path <-  path.expand("~/R/Forecasting-Redux/data/problem table 1.txt")
 problem_1 <- read.delim(problem_1_path, skip = 1, sep = " ")
 # add column names
 colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
@@ -862,7 +813,7 @@ __De-seasonalizing Data__
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE} 
  ## Import data from problem 4 text file
-problem_4_path <- paste0(getwd(),"/data/problem 4 table.txt")
+problem_4_path <-  path.expand("~/R/Forecasting-Redux/data/problem 4 table.txt")
 problem_4 <- read.delim(problem_4_path, sep = " ")
 # add column names and load xtable to read LaTeX notation in column names
 colnames(problem_4) <-c("Period($t$)","Quarter($Q_t$)","Actual($Y_t$)","Period($t$)","Quarter($Q_t$)","Actual($Y_t$)")
@@ -905,7 +856,7 @@ __Data with Trend__
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from problem text file
-problem_8_path <- paste0(getwd(),"/data/problem 8 table.txt")
+problem_8_path <-  path.expand("~/R/Forecasting-Redux/data/problem 8 table.txt")
 problem_8 <- read.delim(problem_8_path, skip = 1, sep = " ")
 # add column names
 colnames(problem_8) <- c("Period", "Observation", "Period", "Observation")
@@ -944,4 +895,31 @@ With the linear regression model?
 
 15. Which is the better model, double exponential smoothing or linear regression? 
 Explain.
+
+\newpage
+
+# Software Bibliography
+
+JJ Allaire, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston Chang, Jeff Allen, Hadley Wickham, Aron Atkins, Rob Hyndman and Ruben Arslan (2017). rmarkdown: Dynamic Documents for R. R package version 1.6. https://CRAN.R-project.org/package=rmarkdown    
+
+Yihui Xie and JJ Allaire (2016). tufte: Tufte's Styles for R Markdown Documents. R package version 0.2. https://CRAN.R-project.org/package=tufte  
+
+Jeffrey B. Arnold (2017). ggthemes: Extra Themes, Scales and Geoms for 'ggplot2'. R package version 3.4.0. https://CRAN.R-project.org/package=ggthemes  
+
+David B. Dahl (2016). xtable: Export Tables to LaTeX or HTML. R package version 1.8-2. https://CRAN.R-project.org/package=xtable   
+
+
+Hyndman RJ (2017). _forecast: Forecasting functions for time series and linear models_. R package version 8.1, <URL:http://github.com/robjhyndman/forecast>.   
+
+R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.  
+
+H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2009.  
+  
+Hadley Wickham (2017). tidyr: Easily Tidy Data with 'spread()' and
+  'gather()' Functions. R package version 0.6.3.
+  https://CRAN.R-project.org/package=tidyr
+
+Claus O. Wilke (2016). cowplot: Streamlined Plot Theme and Plot Annotations
+  for 'ggplot2'. R package version 0.7.0.
+  https://CRAN.R-project.org/package=cowplot
  
