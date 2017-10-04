@@ -2,7 +2,6 @@
 # Data download
 
 library(hexView)
-# C:\Users\skate_more\Documents\R\forecasting\data\Data Sets\fcst4-05
 data_path <- paste0(getwd(),"/data/Data Sets/fcst4-05/fcst5input.wf1")
 fcst5input.wf1 <- readEViews(data_path)
 
