@@ -783,7 +783,7 @@ __Constant Mean Data __
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from problem text file
 problem_1_path <-  path.expand("~/R/Forecasting-Redux/data/problem table 1.txt")
-problem_1 <- read.delim(problem_1_path, skip = 1, sep = " ")
+problem_1 <- read.delim(problem_1_path, sep = " ")
 # add column names
 colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
 # display table
@@ -854,7 +854,7 @@ __Data with Trend__
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Import data from problem text file
 problem_8_path <-  path.expand("~/R/Forecasting-Redux/data/problem 8 table.txt")
-problem_8 <- read.delim(problem_8_path, skip = 1, sep = " ")
+problem_8 <- read.delim(problem_8_path, sep = " ")
 # add column names
 colnames(problem_8) <- c("Period", "Observation", "Period", "Observation")
 # display table
