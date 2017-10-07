@@ -735,7 +735,7 @@ In Figure 16 below, an irregular variation of the Sales Volume series occurs aro
 $$Irregular_t = \frac{Sales_t}{Trend_t \times SeasonalIndex_t}$$
 
 
-```{r, fig.width = 8, fig.height = 6, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.width = 6, fig.height = 3, fig.fullwidth = TRUE, fig.cap = "Sales Volume with DeSeasonalized Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 # Irregular values
 #Add to table_614_series series and calculate irregular values.
 irregular <- table_614_seasonal$Sales/(table_614_seasonal$CMA12*table_614_seasonal$`Seasonal Index`)
@@ -747,7 +747,8 @@ table_615_Irregular <- data.frame(table_614_seasonal, "Irregular" = irregular)
 figure_Irregular_series <- ggplot(data = table_615_Irregular, aes(y = Irregular, x = Period)) +
                                 geom_line(col = Picasso[4]) +
                                 geom_hline(yintercept = 1, linetype = "dashed", alpha = 1/2) +
-                                scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+                                scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54)) +
+  scale_y_continuous(breaks=seq(0.7,1.1, 0.1), limits = c(0.7,1.1), sec.axis = dup_axis())
 
 # Call graphics Device to illustrate chart
 ggdraw(figure_Irregular_series + theme(panel.background = element_rect(fill = "white", colour = "grey50"), legend.position = "top", axis.title=element_blank()))
