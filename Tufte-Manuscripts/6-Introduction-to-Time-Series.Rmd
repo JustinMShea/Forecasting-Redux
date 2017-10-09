@@ -807,7 +807,22 @@ colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
 kable(problem_1, align = 'l')
 ```
 
+```{r, message=FALSE, eval = FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+library(tidyr)
+problem_1_long <- rbind(problem_1[,1:2], problem_1[,3:4])
+problem_1_long
 
+smooth_problem_1 <- filter(problem_1_long$Observation, c(0.6,0.3,0.1), method = "convolution", sides = 2)
+problem_1_series <- data.frame(problem_1_long, "CWMA(3)" = smooth_problem_1)
+colnames(problem_1_series) <- c("Period", "Actual", "CWMA(3)")
+table_problem_1 <- data.frame(problem_1_series[1:12,], problem_1_series[13:24,])
+colnames(table_problem_1) <- c("Period", "Actual", "CWMA(3)", "Period", "Actual", "CWMA(3)")
+
+kable(table_problem_1)
+```
+
+
+```
 __Smoothing of Data__
 
 2. Overlay on the time series graph of the data 
