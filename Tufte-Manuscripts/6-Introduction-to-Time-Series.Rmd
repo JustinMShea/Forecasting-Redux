@@ -50,7 +50,7 @@ kable(table_61, caption = "Four Years of Time Series Data")
 
 ## Graphically displaying Time Series Data: Time Series Plot
 
-```{r, fig.cap = "The corresponding time series plot or time series graph of Monthly Sales Volume.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.width = 5, fig.height = 2, fig.cap = "The corresponding time series plot or time series graph of Monthly Sales Volume.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.fullwidth = TRUE}
 ## Page 3, create plot
  # First, gather the time series data table into one column.
 library(tidyr)
@@ -168,7 +168,7 @@ kable(table_62, caption = "Horizontal Data")
 
 \newpage
 
-```{r, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.width = 6, fig.height = 2.6, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Page 3, create plot
 # First, gather the time series data table into one column.
 library(tidyr)
@@ -191,7 +191,7 @@ ggdraw(figure_621 + theme(panel.background = element_rect(fill = "white", colour
 Because the $Y_t$^[$$\bar{Y} = \sum_{t=1}^{T} Y_{t}$$] are varying around a constant mean, a first smoothing of $Y_t$ is just its mean, $\bar{Y}$. In this example, $\bar{Y} = `r round(mean(table_62_series[,2]), digits = 1)`$. 
 
 
-```{r, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.width = 6,fig.height = 2.6, fig.cap = "Horizontal Data with Plotted Mean.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 figure_622 <- ggplot(data = table_62_series, aes(y = `Horizontal Data`, x = Period))  +
         geom_hline(aes(yintercept = 356.5), color = Picasso[2], linetype = "dashed") +
         geom_line(color = Picasso[1]) +
@@ -543,11 +543,18 @@ table_611 <- data.frame(table_61_series, Trend = trend$fitted.values, z.Cycle = 
 table_611_series <- gather(table_611, Period)
 colnames(table_611_series) <- c("Period", "Series", "Sales")
 
-figure_611 <- ggplot(data = table_611_series, aes(y = Sales, x = Period, col = Series)) +
-  geom_line() + scale_color_manual(values = Picasso) + 
-   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
+
+ cols <- c("Sales"=Picasso[1],"Trend"=Picasso[2],"Cycle"=Picasso[3])
+ 
+ figure_611 <- ggplot(data = table_611, aes(x = Period)) +
+  geom_line(aes(y = Sales, color = "Sales")) + 
+  geom_line(aes(y = Trend, color = "Trend")) +  
+  geom_col(aes(y = z.Cycle, fill = "Cycle")) +        
+  geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
   scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800), sec.axis = dup_axis()) + 
-  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54)) +
+  scale_colour_manual(name="",values=cols) + 
+        scale_fill_manual(name="",values=cols)
 
 ggdraw(figure_611 + theme(panel.background = element_rect(fill = "white", colour = "grey50"), legend.position = "top", axis.title=element_blank()))
 ```
@@ -764,14 +771,21 @@ The astute reader may have noticed that we used the 12-Period Centered Moving Av
 
 ```{r, fig.width = 8, fig.height = 6, fig.fullwidth = TRUE, fig.cap = "Sales Data with CWMA(12) Trend and Cycle.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 
-figure_smooth_c <- ggplot(data = table_smooth_c_series, aes(y = Value, x = Period, col = Series)) +
-  geom_line() + scale_color_manual(values = Picasso) +
-  geom_col(subset=.(variable=="y"),stat="identity")+
+
+ cols <- c("Sales"=Picasso[1],"Trend"=Picasso[2],"Cycle"=Picasso[3])
+
+figure_smooth_c <- ggplot(data = table_smooth_c, aes(x = Period)) +
+  geom_line(aes(y = Sales, color = "Sales")) + 
+  geom_line(aes(y = Trend, color = "Trend")) +  
+  geom_col(aes(y = z.Cycle, fill = "Cycle")) +        
   geom_hline(yintercept = 1, linetype="dashed", alpha = 1/2) +
   scale_y_continuous(breaks=seq(-200,800,200), limits = c(-200,800), sec.axis = dup_axis()) + 
-  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54))
+  scale_x_continuous(breaks=seq(0,54,6), limits = c(0,54)) +
+        scale_fill_manual(name = "", values=cols) +
+  scale_colour_manual(name="",values=cols) 
 
 ggdraw(figure_smooth_c + theme(panel.background = element_rect(fill = "white", colour = "grey50"), legend.position = "top", axis.title=element_blank()))
+
 ```
 
 
@@ -794,7 +808,22 @@ colnames(problem_1) <- c("Period", "Observation", "Period", "Observation")
 kable(problem_1, align = 'l')
 ```
 
+```{r, message=FALSE, eval = FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+library(tidyr)
+problem_1_long <- rbind(problem_1[,1:2], problem_1[,3:4])
+problem_1_long
 
+smooth_problem_1 <- filter(problem_1_long$Observation, c(0.6,0.3,0.1), method = "convolution", sides = 2)
+problem_1_series <- data.frame(problem_1_long, "CWMA(3)" = smooth_problem_1)
+colnames(problem_1_series) <- c("Period", "Actual", "CWMA(3)")
+table_problem_1 <- data.frame(problem_1_series[1:12,], problem_1_series[13:24,])
+colnames(table_problem_1) <- c("Period", "Actual", "CWMA(3)", "Period", "Actual", "CWMA(3)")
+
+kable(table_problem_1)
+```
+
+
+```
 __Smoothing of Data__
 
 2. Overlay on the time series graph of the data 
