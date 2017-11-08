@@ -221,10 +221,12 @@ table_81[31, 1] <- 31
 kable(table_81)
 ```
 
-```{r, fig.fullwidth = TRUE, fig.width = 6, fig.height = 2.6, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+```{r, fig.fullwidth = TRUE, fig.cap = "Single Exponential Smoothing.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  #Creat chart
 library(RColorLisa)
 library(ggplot2)
+library(tidyr)
+
 Picasso <- color.lisa.pal(5, "The Dream by Pablo Picasso")
 
 table_81_chart <- gather(table_81, Period)
@@ -236,3 +238,5 @@ chart_81 <- ggplot(data = table_81_chart, aes(y = Actual, x = Period, color = Se
             scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
         
 chart_81 + theme(panel.background = element_rect(fill = "white", colour = "grey50"), legend.position = "top", axis.title=element_blank())
+
+```
