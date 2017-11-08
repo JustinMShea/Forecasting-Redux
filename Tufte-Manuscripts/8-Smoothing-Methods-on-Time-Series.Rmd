@@ -203,12 +203,21 @@ table_81 <- read.delim(Table_81_path, header = TRUE, sep = " ")
  # add column names
 colnames(table_81) <- c("Period", "Actual")
 
-
 # Add starting value for exponential smoothing
 table_81$Forecast <- mean(table_81$Actual)
-# Create exponential smoothing
-table_81$Forecast[2:31] <- 0.2(table_81$Actual) + 0.8(table_81$Actual)
 
+# Create exponential smoothing
+for (i in 1:nrow(table_81)) {
+  
+     table_81[i+1,3] <- (0.2*table_81[i,2])+(0.8*table_81[i,3])
+     
+     }
+
+# Round results
+table_81$Forecast <- round(table_81$Forecast, 3)
+
+# Add 
+table_81[31, 1] <- 31
 kable(table_81)
 ```
 
