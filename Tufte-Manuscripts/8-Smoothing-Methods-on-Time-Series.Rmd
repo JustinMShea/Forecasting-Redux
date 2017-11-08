@@ -42,7 +42,7 @@ Suppose we have the following series:
 
 ```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  # Import data from table 6.2 text file
-Table_62_path <- paste0(getwd(),"/data/Table 6.2.txt")
+Table_62_path <- "C:/Users/skate_more/Documents/R/Forecasting-Redux/data/Table 6.2.txt"
 table_62 <- read.delim(Table_62_path, header = FALSE, sep = " ", skip = 1)
  # add column names
 colnames(table_62) <- c("Period", "Actual", "Period", "Actual")
@@ -223,11 +223,16 @@ kable(table_81)
 
 ```{r, fig.fullwidth = TRUE, fig.width = 6, fig.height = 2.6, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  #Creat chart
-#Creat chart
+library(RColorLisa)
 library(ggplot2)
-figure_81 <- ggplot(data = table_81, aes(y = Actual, x = as.numeric(rownames(table_81)))) +
-        geom_line(color = Picasso[1]) +
-        scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
-        scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35))  
+Picasso <- color.lisa.pal(5, "The Dream by Pablo Picasso")
 
-ggdraw(figure_621 + theme(panel.background = element_rect(fill = "white", colour = "grey50"), axis.title=element_blank()))
+table_81_chart <- gather(table_81, Period)
+colnames(table_81_chart) <- c("Period", "Series", "Actual")
+
+chart_81 <- ggplot(data = table_81_chart, aes(y = Actual, x = Period, color = Series)) +
+            geom_line() + scale_color_manual(values = Picasso) +
+            scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
+            scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
+        
+chart_81 + theme(panel.background = element_rect(fill = "white", colour = "grey50"), legend.position = "top", axis.title=element_blank())
