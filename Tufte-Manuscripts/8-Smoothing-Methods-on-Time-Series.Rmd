@@ -180,23 +180,12 @@ $$\hat{Y}_t(1) = \alpha Y_t + \alpha(1-\alpha) Y_{t-1} + \alpha(1-\alpha)^2 {Y}_
 
 With Singe Exponential Smoothing, represented by equation 8.1, all that is needed to make a new forecast is the current observation and previous forecast.
 
+\newpage
+
 ##**Starting Value for Exponential Smoothing**
 
-Exponential Smoothing just needs a starting value for forecast and a choice of $\alpha$. For our choice of  $\alpha$, we shall use $\alpha = 0.20$
+```{r fig-margin, fig.margin = TRUE, fig.margin = TRUE, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 
-For a starting value, $Y_1(1)$, we shall use the average of the 30 observations of data, $\bar{Y} = 356.53$.
-
-Thus, an exponential smoothing forecast for Period 2:
-
-$$\hat{Y}_1(1) = 0.2 Y_1 + (1-0.2) \hat{Y}_0(1)$$
-$$\hat{Y}_1(1) = 0.2(368) + 0.8(356.53) = 356.02$$
-
-For Period 3: 
-
-$$\hat{Y}_2(1) = 0.2(368) + 0.8(356.02) = 358.42$$
-And so on, recursivley through all 30 observations of data.
-
-```{r, message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  # Import data from table 6.2 text file
 Table_81_path <-  path.expand("~/R/Forecasting-Redux/data/table-81.txt")
 table_81 <- read.delim(Table_81_path, header = TRUE, sep = " ")
@@ -221,7 +210,24 @@ table_81[31, 1] <- 31
 kable(table_81)
 ```
 
-```{r, fig.fullwidth = TRUE, fig.cap = "Single Exponential Smoothing.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+Exponential Smoothing just needs a starting value for forecast and a choice of $\alpha$. For our choice of  $\alpha$, we shall use $\alpha = 0.20$
+
+For a starting value, $Y_1(1)$, we shall use the average of the 30 observations of data, $\bar{Y} = 356.53$.
+
+Thus, an exponential smoothing forecast for Period 2:
+
+$$\hat{Y}_1(1) = 0.2 Y_1 + (1-0.2) \hat{Y}_0(1)$$
+$$\hat{Y}_1(1) = 0.2(368) + 0.8(356.53) = 356.02$$
+
+For Period 3: 
+
+$$\hat{Y}_2(1) = 0.2(368) + 0.8(356.02) = 358.42$$
+
+And so on, recursivley through all 30 observations of data. 
+
+
+
+```{r, fig.cap = "Single Exponential Smoothing.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
  #Creat chart
 library(RColorLisa)
 library(ggplot2)
