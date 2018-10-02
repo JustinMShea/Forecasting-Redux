@@ -53,10 +53,10 @@ kable(table_61, caption = "Four Years of Time Series Data")
 ```{r, fig.width = 5, fig.height = 2, fig.cap = "The corresponding time series plot or time series graph of Monthly Sales Volume.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE, fig.fullwidth = TRUE}
 ## Page 3, create plot
  # First, gather the time series data table into one column.
-library(tidyr)
-table_61_series <- gather(table_61, Period)
-table_61_series <- table_61_series[,-(2:5)]
-table_61_series$Period <- as.numeric(rownames(table_61_series))
+colnames(table_61) <- rep(c("Period", "Year"), 4)
+
+table_61_series <- rbind(table_61[ ,1:2], table_61[ ,3:4], table_61[ ,5:6], table_61[ ,7:8])
+
 colnames(table_61_series) <- c("Period", "Sales")
 
  #Creat chjart
@@ -171,9 +171,8 @@ kable(table_62, caption = "Horizontal Data")
 ```{r, fig.fullwidth = TRUE, fig.width = 6, fig.height = 2.6, fig.cap = "Horizontal Data.", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 ## Page 3, create plot
 # First, gather the time series data table into one column.
-library(tidyr)
-table_62_series <- gather(table_62[,c(2,4)])
-table_62_series$key<- as.numeric(rownames(table_62_series))
+table_62_series <- rbind(table_62[,1:2], table_62[,3:4])
+
 colnames(table_62_series) <- c("Period", "Horizontal Data")
 
  #Creat chart
@@ -232,6 +231,7 @@ To begin with an example, we shall use the data from Table 2 to illustrate this 
 ## creating table 63
 library(forecast)
 smooth_63 <- round(ma(table_62_series[,2], order = 3, centre = TRUE), digits = 1)
+
 table_63_series <- data.frame(table_62_series, "CMA(3)" = smooth_63)
 colnames(table_63_series) <- c("Period", "Actual", "Centered Moving Average (3)")
 
@@ -241,11 +241,15 @@ colnames(table_63) <- c("Period", "Actual", "CMA(3)", "Period", "Actual", "CMA(3
 
 ```{r, fig.fullwidth = TRUE, fig.width = 6,fig.height = 3, fig.cap = "Centered Moving Average(3)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 table_63_chart <- table_63_series
-colnames(table_63_chart) <- c("Period", "Actual", "CMA(3)")
-table_63_chart <- gather(table_63_chart, Period)
-colnames(table_63_chart) <- c("Period", "Series", "Horizontal Data")
+colnames(table_63_chart) <- c("Period", " ", " ")
 
-chart_63 <- ggplot(data = table_63_chart, aes(y = `Horizontal Data`, x = Period, color = Series)) +
+table_63_chart <- rbind(table_63_chart[,1:2], table_63_chart[,c(1,3)])
+
+table_63_chart <- data.frame(Period = table_63_chart[,1],
+                             Series = c(rep("Actual", 30), rep("CMA(3)",30)),
+                             Horizontal_Data = table_63_chart[,2])
+
+chart_63 <- ggplot(data = table_63_chart, aes(y = Horizontal_Data, x = Period, color = Series)) +
             geom_line() + scale_color_manual(values = Picasso) +
             scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
             scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
@@ -293,7 +297,9 @@ a larger set of observations.
 ```{r, fig.fullwidth = TRUE, fig.width = 6,fig.height = 2.75, fig.cap = "Centered Moving Average (3) and (5)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
 library(forecast)
 smooth_64 <- round(ma(table_62_series[,2], order = 5, centre = TRUE), digits = 1)
-table_64_series <- data.frame(table_62_series, "CMA(3)" = smooth_63, "CMA(5)" = smooth_64)
+table_64_series <- data.frame(table_62_series, 
+                              "CMA(3)" = smooth_63, 
+                              "CMA(5)" = smooth_64)
 colnames(table_64_series) <- c("Period", "Actual", "CMA(3)", "CMA(5)")
 
 table_64 <- data.frame(table_64_series[1:15,], table_64_series[16:30,])
@@ -301,17 +307,27 @@ colnames(table_64) <- c("Period", "Actual", "CMA(3)","CMA(5)","Period", "Actual"
 
 library(ggplot2)
 table_641_chart <- table_64_series[,c(1,2,4)]
-table_641_chart <- gather(table_641_chart, Period)
-colnames(table_641_chart) <- c("Period", "Series", "Value")
+
+colnames(table_641_chart) <- c("Period", " ", " ")
+
+table_63_chart <- rbind(table_641_chart[,1:2], table_641_chart[,c(1,3)])
+
+table_63_chart <- data.frame(Period = table_641_chart[,1],
+                             Series = c(rep("Actual", 30), rep("CMA(5)",30)),
+                             Value = table_641_chart[,2])
+
+
 margin_chart_64 <- ggplot(data = table_641_chart, aes(y = Value, x = Period, col = Series)) +
                    geom_line() + scale_color_manual(values = Picasso) +
                    scale_y_continuous(breaks=seq(300,400,10), limits = c(300,400), sec.axis = dup_axis()) +
                    scale_x_continuous(breaks=seq(0,35,5), limits = c(0,35)) 
-#ggdraw(margin_chart_64 + theme(panel.background = element_rect(fill = "white", colour = "grey50") + theme(legend.position = "top", axis.title=element_blank()))
+
+
 # chart 2
-table_642_chart <- table_64_series
-table_642_chart <- gather(table_642_chart, Period)
-colnames(table_642_chart) <- c("Period", "Series", "Value")
+
+table_642_chart <- data.frame(Period=1:90, 
+                              Series=c(rep("Actual", 30), rep("CMA(3)",30),rep("CMA(5)",30)),
+                              Value = c(table_62_series[,2], smooth_63, smooth_64))
 
 chart_642 <- ggplot(data = table_642_chart, aes(y = Value, x = Period, col = Series)) +
   geom_line() + scale_color_manual(values = Picasso) +        
@@ -335,6 +351,7 @@ We list below both the 3 and 5 period moving average smoothing.
 ## creating table 6.4
 library(forecast)
 smooth_64 <- round(ma(table_62_series[,2], order = 5, centre = TRUE), digits = 1)
+
 table_64_series <- data.frame(table_62_series, "CMA(3)" = smooth_63, "CMA(5)" = smooth_64)
 colnames(table_64_series) <- c("Period", "Actual", "CMA(3)", "CMA(5)")
 
@@ -352,8 +369,10 @@ kable(table_64, align = "l", row.names=FALSE, caption="Horizontal data with $CMA
 A 4-period Centered Moving Average is possible, but the issue of placing the results remains.
 
 ```{r, fig.fullwidth = TRUE, fig.width = 6, fig.height = 3, fig.cap = "Centered Moving Average(4)", message=FALSE, error=FALSE, comment=FALSE, warning=FALSE, echo=FALSE}
+
 library(forecast)
 smooth_65 <- round(ma(table_62_series[,2], order = 4, centre = TRUE), digits = 2)
+
 table_65 <- data.frame(table_62_series, "CMA(4)" = smooth_65)
 colnames(table_65) <- c("Period", "Actual", "CMA(4)")
 
@@ -361,8 +380,10 @@ table_65_table <- data.frame(table_65[1:15,], table_65[16:30,])
 colnames(table_65_table) <- c("Period", "Actual", "CMA(4)","Period", "Actual", "CMA(4)")
 
 # table for chart
-table_65_chart <- gather(table_65, Period)
-colnames(table_65_chart) <- c("Period", "Series", "Value")
+table_65_chart <- data.frame(Period = 1:60,
+                             Series = c(rep("Actual", 30), rep("CMA(4)",30)),
+                             Value = c(table_65$Actual, table_65$`CMA(4)`))
+
 
 chart_65 <- ggplot(data = table_65_chart, aes(y = Value, x = Period, col = Series)) +
         geom_line() + scale_color_manual(values = Picasso) +
